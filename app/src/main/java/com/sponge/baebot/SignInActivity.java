@@ -142,7 +142,7 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
             successText.setText("You Are Successfully Login, " + user.getDisplayName());
             findViewById(R.id.successLogin).setVisibility(View.VISIBLE);
 
-            // go to the main activate
+            // go to the welcome activate - the first screen of main app
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
