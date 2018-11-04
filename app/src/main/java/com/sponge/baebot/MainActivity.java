@@ -14,8 +14,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -25,17 +27,17 @@ public class MainActivity extends AppCompatActivity {
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
     public static final String[] EVENT_PROJECTION = new String[] {
-            CalendarContract.Calendars._ID,                           // 0
-            CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
-            CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
-            CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
+        CalendarContract.Calendars._ID,                           // 0
+        CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
+        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
+        CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
     };
 
 
     final String[] INSTANCE_PROJECTION = new String[] {
-            CalendarContract.Instances.EVENT_ID,      // 0
-            CalendarContract.Instances.BEGIN,         // 1
-            CalendarContract.Instances.TITLE          // 2
+        CalendarContract.Instances.EVENT_ID,      // 0
+        CalendarContract.Instances.BEGIN,         // 1
+        CalendarContract.Instances.TITLE          // 2
     };
 
 
@@ -182,12 +184,19 @@ public class MainActivity extends AppCompatActivity {
                 */
 
                 String eventName = null;
+                String eventBeginMill = null;
                 String eventBegin = null;
                 String eventDescription = null;
 
                 // Get the field values
                 eventName = cur.getString(1);
-                eventBegin = cur.getString(3);
+
+                eventBeginMill = cur.getString(3);
+                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                Calendar calendarTemp = Calendar.getInstance();
+                calendarTemp.setTimeInMillis(Long.parseLong(eventBeginMill));
+                eventBegin = formatter.format(calendarTemp.getTime());
+
                 eventDescription = cur.getString(2);
 
 
