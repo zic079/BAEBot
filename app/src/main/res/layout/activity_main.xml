@@ -82,7 +82,8 @@
             android:id="@+id/textView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Up Coming Event:"
+            android:background="@drawable/common_google_signin_btn_text_disabled"
+            android:text="Search"
             android:textColor="@android:color/white"
             android:textSize="24sp"
             android:textStyle="bold" />
