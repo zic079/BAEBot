@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="50dp"
             android:layout_marginTop="30dp"
-            android:backgroundTint="@android:color/holo_orange_dark"
+            android:backgroundTint="@color/colorPrimaryDark"
             android:text="@string/nav_header_sign_out"
             android:textColor="@android:color/white"
             android:textStyle="bold" />

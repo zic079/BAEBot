@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="voice_switch"
+        android:title="Voice" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="weather_switch"
+        android:title="Weather" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="alarm_switch"
+        android:title="Alarm" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="sleep_switch"
+        android:title="Sleep Time" />
+    <SwitchPreference
+        android:defaultValue="true"
+        android:key="quote_switch"
+        android:title="Daily Quote" />
+</PreferenceScreen>

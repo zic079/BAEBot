@@ -125,14 +125,14 @@ public class MainOLDActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_day) {
-            // Handle the camera action
+            // Handle the day action
         } else if (id == R.id.nav_week) {
 
         } else if (id == R.id.nav_month) {
 
         } else if (id == R.id.nav_webreg) {
 
-        } else if (id == R.id.nav_share) {
+        } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_send) {
 
