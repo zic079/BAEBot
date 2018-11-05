@@ -8,4 +8,12 @@
     tools:context=".MainActivity"
     tools:showIn="@layout/app_bar_main">
 
+
+    <Button
+        android:id="@+id/getCalendarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="44dp"
+        android:text="get calendar"
+        tools:layout_editor_absoluteX="130dp"
+        tools:layout_editor_absoluteY="60dp" />
 </android.support.constraint.ConstraintLayout>

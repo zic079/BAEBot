@@ -1,0 +1,61 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 22
+
+    defaultConfig {
+        minSdkVersion 14
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+ext {
+    bintrayRepo = 'maven'
+    bintrayName = 'providers-android'
+
+    publishedGroupId = 'me.everything'
+    libraryName = 'Providers Android'
+    artifact = 'providers-android'
+
+    libraryDescription = 'Simple API for all Android built-in providers. Get, Update, Delete, Insert.'
+
+    siteUrl = 'https://github.com/EverythingMe/easy-content-providers'
+    gitUrl = 'https://github.com/EverythingMe/easy-content-providers.git'
+
+    libraryVersion = '1.0.1'
+
+    developerId = 'sromku'
+    developerName = 'Roman Kushnarenko'
+    developerEmail = 'sromku@gmail.com'
+
+    licenseName = 'The Apache Software License, Version 2.0'
+    licenseUrl = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+    allLicenses = ["Apache-2.0"]
+}
+
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/installv1.gradle'
+apply from: 'https://raw.githubusercontent.com/nuuneoi/JCenter/master/bintrayv1.gradle'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:1.0.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        classpath 'com.github.dcendents:android-maven-plugin:1.2'
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'me.everything:providers-core:1.0.0'
+}

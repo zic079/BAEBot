@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -15,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -25,12 +27,22 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import me.everything.providers.android.calendar.Calendar;
+import me.everything.providers.android.calendar.CalendarProvider;
+import me.everything.providers.android.calendar.Event;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     private GoogleSignInClient mGoogleSignInClient;         // Google sign in client
     private FirebaseAuth mAuth;                             // Firebase authorization
 
+    private Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +85,13 @@ public class MainActivity extends AppCompatActivity
         // set up button on click listener
         View headerView = navigationView.getHeaderView(0);
         headerView.findViewById(R.id.signOutButton).setOnClickListener(this);
+
+        button = findViewById(R.id.getCalendarButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                getCalender();
+            }
+        });
     }
 
 
@@ -171,5 +190,27 @@ public class MainActivity extends AppCompatActivity
     private void switchActivity(final Class<? extends Activity> targetActivity) {
         Intent intent = new Intent(this, targetActivity);
         startActivity(intent);
+    }
+
+        private void getCalender(){
+        CalendarProvider provider = new CalendarProvider(getApplicationContext());
+        List<Calendar> calendars = provider.getCalendars().getList();
+        for (int i = 0 ; i < calendars.size(); ++i){
+            Log.w("beabot", Long.toString(calendars.get(i).id));
+            List<Event> events =  provider.getEvents(calendars.get(i).id).getList();
+            for (int j = 0; j < events.size(); ++j){
+                Log.w("beabot events 1", Long.toString(events.get(j).id));
+                Log.w("beabot events 2", events.get(j).description);
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                String enddate = sdf.format(new Date(events.get(j).dTend));
+                Log.w("beabot event 3", enddate);
+                SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+                String startdate = sdf.format(new Date(events.get(j).dTStart));
+                Log.w("beabot event 4", startdate);
+                Log.w("beabot event 5", events.get(j).accountName);
+                Log.w("beabot event 6", events.get(j).accountType);
+
+            }
+        }
     }
 }
