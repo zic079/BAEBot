@@ -9,9 +9,13 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -37,6 +41,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -48,10 +53,13 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
-
+        implements NavigationView.OnNavigationItemSelectedListener/*, View.OnClickListener*/ {
+    /*
     private GoogleSignInClient mGoogleSignInClient;         // Google sign in client
     private FirebaseAuth mAuth;                             // Firebase authorization
+    */
+
+    SwitchCompat switcher;
 
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
@@ -91,7 +99,6 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         //toolbar for navigation drawer
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -108,17 +115,33 @@ public class MainActivity extends AppCompatActivity
         });
         */
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //get the menu item from the navigation view
+        Menu menu = navigationView.getMenu();
+        MenuItem menuItem = menu.findItem(R.id.nav_switch);
+        //View actionView = menuItem.getActionView();
+        View actionView = MenuItemCompat.getActionView(menuItem);
+
+        switcher = actionView.findViewById(R.id.switcher);
+        //switcher.setChecked(true);
+        switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (switcher.isChecked()) ? "is checked!!!" : "not checked!!!", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
 
 
         // Configure google login in to access token
+        /*
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -130,10 +153,12 @@ public class MainActivity extends AppCompatActivity
         // update user info on navigation tab
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUserInfo(currentUser, navigationView);
+        */
 
         // set up button on click listener
-        View headerView = navigationView.getHeaderView(0);
+        /*View headerView = navigationView.getHeaderView(0);
         headerView.findViewById(R.id.signOutButton).setOnClickListener(this);
+        */
 
 
         // check permission
@@ -165,7 +190,7 @@ public class MainActivity extends AppCompatActivity
             successText.setText(calendarData.get(0));
         }
     }
-
+/*
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -174,7 +199,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-
+*/
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -184,6 +209,7 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
+
 
     /* This is the option menu on the top right, we are not using it for now
     @Override
@@ -215,29 +241,40 @@ public class MainActivity extends AppCompatActivity
     @Override
     // Handle navigation drawer switches here.
     public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
+        /*int id = item.getItemId();
 
         if (id == R.id.voice_switch) {
             // Handle the voice action
         }
-        else if (id == R.id.weather_switch) {
+        if (id == R.id.weather_switch) {
 
         }
-        else if (id == R.id.alarm_switch) {
+        if (id == R.id.alarm_switch) {
 
         }
-        else if (id == R.id.sleep_switch) {
+        if (id == R.id.sleep_switch) {
 
         }
-        else if (id == R.id.quote_switch) {
+        if (id == R.id.quote_switch) {
 
+        }*/
+        int id = item.getItemId();
+
+        if (id == R.id.nav_switch) {
+            switcher.setChecked(!switcher.isChecked());
+            Snackbar.make(item.getActionView(), (switcher.isChecked()) ? "is checked" : "not checked", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
+        /*else if (id == R.id.weather_switch) {
+            switcher.setChecked(!switcher.isChecked());
+            Snackbar.make(item.getActionView(), (switcher.isChecked()) ? "weather is checked" : "weather is not checked", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }*/
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
+    /*
     private void updateUserInfo(FirebaseUser user, NavigationView navView) {
         View headerView = navView.getHeaderView(0);
 
@@ -263,12 +300,12 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
     }
+    */
 
     private void switchActivity(final Class<? extends Activity> targetActivity) {
         Intent intent = new Intent(this, targetActivity);
         startActivity(intent);
     }
-
 
 
     ////// TESTING ONLY - NOT AsyncQueryHandler
@@ -393,4 +430,5 @@ public class MainActivity extends AppCompatActivity
         return calendarData;
     }
 }
+
 
