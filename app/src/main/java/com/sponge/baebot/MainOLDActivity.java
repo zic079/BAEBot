@@ -24,7 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+/*
 public class MainOLDActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
@@ -39,6 +39,7 @@ public class MainOLDActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -47,6 +48,7 @@ public class MainOLDActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -124,19 +126,22 @@ public class MainOLDActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_day) {
-            // Handle the camera action
-        } else if (id == R.id.nav_week) {
-
-        } else if (id == R.id.nav_month) {
-
-        } else if (id == R.id.nav_webreg) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
+        if (id == R.id.nav_switch) {
 
         }
+        /*else if (id == R.id.weather_switch) {
+
+        }
+        else if (id == R.id.alarm_switch) {
+
+        }
+        else if (id == R.id.sleep_switch) {
+
+        }
+        else if (id == R.id.quote_switch) {
+
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -173,3 +178,4 @@ public class MainOLDActivity extends AppCompatActivity
         startActivity(intent);
     }
 }
+*/

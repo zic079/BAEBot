@@ -9,9 +9,13 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -21,8 +25,45 @@ import java.util.Date;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.view.View;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.TextView;
+import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener/*, View.OnClickListener*/ {
+    /*
+    private GoogleSignInClient mGoogleSignInClient;         // Google sign in client
+    private FirebaseAuth mAuth;                             // Firebase authorization
+    */
+
+    SwitchCompat voice_switcher;
+    SwitchCompat weather_switcher;
+    SwitchCompat alarm_switcher;
+    SwitchCompat sleep_switcher;
+    SwitchCompat quote_switcher;
 
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
@@ -62,6 +103,122 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //toolbar for navigation drawer
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null);
+
+        /*
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
+        */
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //get the menu item from the navigation view
+        Menu menu = navigationView.getMenu();
+
+        //Voice
+        MenuItem menuItem_voice = menu.findItem(R.id.voice_switch);
+        View actionView_voice = menuItem_voice.getActionView();
+
+        voice_switcher = actionView_voice.findViewById(R.id.switcher_drawer);
+        voice_switcher.setChecked(true);
+        voice_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //voice_switcher.setChecked(!voice_switcher.isChecked());
+                Snackbar.make(v, (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Weather
+        MenuItem menuItem_weather = menu.findItem(R.id.weather_switch);
+        View actionView_weather = menuItem_weather.getActionView();
+
+        weather_switcher = actionView_weather.findViewById(R.id.switcher_drawer);
+        weather_switcher.setChecked(true);
+        weather_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Alarm
+        MenuItem menuItem_alarm = menu.findItem(R.id.alarm_switch);
+        View actionView_alarm = menuItem_alarm.getActionView();
+
+        alarm_switcher = actionView_alarm.findViewById(R.id.switcher_drawer);
+        alarm_switcher.setChecked(true);
+        alarm_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Sleep
+        MenuItem menuItem_sleep = menu.findItem(R.id.sleep_switch);
+        View actionView_sleep = menuItem_sleep.getActionView();
+
+        sleep_switcher = actionView_sleep.findViewById(R.id.switcher_drawer);
+        sleep_switcher.setChecked(true);
+        sleep_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Quote
+        MenuItem menuItem_quote = menu.findItem(R.id.quote_switch);
+        View actionView_quote = menuItem_quote.getActionView();
+
+        quote_switcher = actionView_quote.findViewById(R.id.switcher_drawer);
+        quote_switcher.setChecked(true);
+        quote_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+
+        // Configure google login in to access token
+        /*
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mAuth = FirebaseAuth.getInstance();
+
+        // update user info on navigation tab
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUserInfo(currentUser, navigationView);
+        */
+
+        // set up button on click listener
+        /*View headerView = navigationView.getHeaderView(0);
+        headerView.findViewById(R.id.signOutButton).setOnClickListener(this);
+        */
+
+
         // check permission
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             // checking permission before reading and writing calendar
@@ -91,6 +248,119 @@ public class MainActivity extends AppCompatActivity {
             successText.setText(calendarData.get(0));
         }
     }
+/*
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.signOutButton:
+                signOut();
+                break;
+        }
+    }
+*/
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+    /* This is the option menu on the top right, we are not using it for now
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    */
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    // Handle navigation drawer switches here.
+    public boolean onNavigationItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.voice_switch) {
+            voice_switcher.setChecked(!voice_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }
+        if (id == R.id.weather_switch) {
+            weather_switcher.setChecked(!weather_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }
+        if (id == R.id.alarm_switch) {
+            alarm_switcher.setChecked(!alarm_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }
+        if (id == R.id.sleep_switch) {
+            sleep_switcher.setChecked(!sleep_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }
+        if (id == R.id.quote_switch) {
+            quote_switcher.setChecked(!quote_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    /*
+    private void updateUserInfo(FirebaseUser user, NavigationView navView) {
+        View headerView = navView.getHeaderView(0);
+
+        TextView userNameText = (TextView)headerView.findViewById(R.id.userName);
+        TextView userEmailText = (TextView)headerView.findViewById(R.id.userEmail);
+        userNameText.setText(user.getDisplayName());
+        userEmailText.setText(user.getEmail());
+    }
+
+    private void signOut() {
+        // Firebase sign out
+        mAuth.signOut();
+
+        // Google sign out
+        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        switchActivity(SignInActivity.class);
+                    }
+                });
+
+        Intent intent = new Intent(this, SignInActivity.class);
+        startActivity(intent);
+    }
+    */
+
+    private void switchActivity(final Class<? extends Activity> targetActivity) {
+        Intent intent = new Intent(this, targetActivity);
+        startActivity(intent);
+    }
+
 
     ////// TESTING ONLY - NOT AsyncQueryHandler
     private ArrayList<String> readEvent() {
@@ -214,4 +484,5 @@ public class MainActivity extends AppCompatActivity {
         return calendarData;
     }
 }
+
 
