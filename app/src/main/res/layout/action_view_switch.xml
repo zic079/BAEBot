@@ -3,8 +3,9 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
     <android.support.v7.widget.SwitchCompat
-        android:id="@+id/switcher"
+        android:id="@+id/switcher_drawer"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
-        android:text=""/>
+        android:text=""
+        android:theme="@style/Switch"/>
 </LinearLayout>

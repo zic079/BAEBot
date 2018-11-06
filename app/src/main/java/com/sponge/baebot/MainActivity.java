@@ -59,7 +59,11 @@ public class MainActivity extends AppCompatActivity
     private FirebaseAuth mAuth;                             // Firebase authorization
     */
 
-    SwitchCompat switcher;
+    SwitchCompat voice_switcher;
+    SwitchCompat weather_switcher;
+    SwitchCompat alarm_switcher;
+    SwitchCompat sleep_switcher;
+    SwitchCompat quote_switcher;
 
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
@@ -126,16 +130,70 @@ public class MainActivity extends AppCompatActivity
 
         //get the menu item from the navigation view
         Menu menu = navigationView.getMenu();
-        MenuItem menuItem = menu.findItem(R.id.nav_switch);
-        //View actionView = menuItem.getActionView();
-        View actionView = MenuItemCompat.getActionView(menuItem);
 
-        switcher = actionView.findViewById(R.id.switcher);
-        //switcher.setChecked(true);
-        switcher.setOnClickListener(new View.OnClickListener() {
+        //Voice
+        MenuItem menuItem_voice = menu.findItem(R.id.voice_switch);
+        View actionView_voice = menuItem_voice.getActionView();
+
+        voice_switcher = actionView_voice.findViewById(R.id.switcher_drawer);
+        voice_switcher.setChecked(true);
+        voice_switcher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(v, (switcher.isChecked()) ? "is checked!!!" : "not checked!!!", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+                //voice_switcher.setChecked(!voice_switcher.isChecked());
+                Snackbar.make(v, (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Weather
+        MenuItem menuItem_weather = menu.findItem(R.id.weather_switch);
+        View actionView_weather = menuItem_weather.getActionView();
+
+        weather_switcher = actionView_weather.findViewById(R.id.switcher_drawer);
+        weather_switcher.setChecked(true);
+        weather_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Alarm
+        MenuItem menuItem_alarm = menu.findItem(R.id.alarm_switch);
+        View actionView_alarm = menuItem_alarm.getActionView();
+
+        alarm_switcher = actionView_alarm.findViewById(R.id.switcher_drawer);
+        alarm_switcher.setChecked(true);
+        alarm_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Sleep
+        MenuItem menuItem_sleep = menu.findItem(R.id.sleep_switch);
+        View actionView_sleep = menuItem_sleep.getActionView();
+
+        sleep_switcher = actionView_sleep.findViewById(R.id.switcher_drawer);
+        sleep_switcher.setChecked(true);
+        sleep_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Quote
+        MenuItem menuItem_quote = menu.findItem(R.id.quote_switch);
+        View actionView_quote = menuItem_quote.getActionView();
+
+        quote_switcher = actionView_quote.findViewById(R.id.switcher_drawer);
+        quote_switcher.setChecked(true);
+        quote_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }
         });
 
@@ -241,33 +299,29 @@ public class MainActivity extends AppCompatActivity
     @Override
     // Handle navigation drawer switches here.
     public boolean onNavigationItemSelected(MenuItem item) {
-        /*int id = item.getItemId();
 
-        if (id == R.id.voice_switch) {
-            // Handle the voice action
-        }
-        if (id == R.id.weather_switch) {
-
-        }
-        if (id == R.id.alarm_switch) {
-
-        }
-        if (id == R.id.sleep_switch) {
-
-        }
-        if (id == R.id.quote_switch) {
-
-        }*/
         int id = item.getItemId();
 
-        if (id == R.id.nav_switch) {
-            switcher.setChecked(!switcher.isChecked());
-            Snackbar.make(item.getActionView(), (switcher.isChecked()) ? "is checked" : "not checked", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        if (id == R.id.voice_switch) {
+            voice_switcher.setChecked(!voice_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
-        /*else if (id == R.id.weather_switch) {
-            switcher.setChecked(!switcher.isChecked());
-            Snackbar.make(item.getActionView(), (switcher.isChecked()) ? "weather is checked" : "weather is not checked", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-        }*/
+        if (id == R.id.weather_switch) {
+            weather_switcher.setChecked(!weather_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }
+        if (id == R.id.alarm_switch) {
+            alarm_switcher.setChecked(!alarm_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }
+        if (id == R.id.sleep_switch) {
+            sleep_switcher.setChecked(!sleep_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }
+        if (id == R.id.quote_switch) {
+            quote_switcher.setChecked(!quote_switcher.isChecked());
+            Snackbar.make(item.getActionView(), (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
