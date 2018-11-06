@@ -1,42 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
 
-    <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_day"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Day" />
-        <item
-            android:id="@+id/nav_week"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="Week" />
-        <item
-            android:id="@+id/nav_month"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Month" />
-        <item
-            android:id="@+id/nav_webreg"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="WebReg import" />
-        <item
-            android:id="@+id/nav_settings"
-            android:icon="@drawable/ic_menu_manage"
-            android:title="Settings" />
-    </group>
+    <item
+        android:id="@+id/voice_switch"
+        android:icon="@drawable/ic_voice"
+        android:defaultValue="true"
+        android:title="Voice"
+        app:actionLayout="@layout/switch_item" />
 
-    <item android:title="Communicate">
-        <menu>
-            <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send (Template)" />
-        </menu>
-    </item>
+    <item
+        android:id="@+id/weather_switch"
+        android:icon="@drawable/ic_weather"
+        android:defaultValue="true"
+        android:title="Weather"
+        app:actionLayout="@layout/switch_item" />
+
+    <item
+        android:id="@+id/alarm_switch"
+        android:icon="@drawable/ic_alarm"
+        android:defaultValue="true"
+        android:title="Alarm"
+        app:actionLayout="@layout/switch_item" />
+
+    <item
+        android:id="@+id/sleep_switch"
+        android:icon="@drawable/ic_sleep"
+        android:defaultValue="true"
+        android:title="Sleep time"
+        app:actionLayout="@layout/switch_item" />
+
+    <item
+        android:id="@+id/quote_switch"
+        android:icon="@drawable/ic_quote"
+        android:defaultValue="true"
+        android:title="Daily Quote"
+        app:actionLayout="@layout/switch_item" />
 
 </menu>
