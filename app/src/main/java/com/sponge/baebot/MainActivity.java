@@ -54,10 +54,10 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener/*, View.OnClickListener*/ {
-    /*
+
     private GoogleSignInClient mGoogleSignInClient;         // Google sign in client
     private FirebaseAuth mAuth;                             // Firebase authorization
-    */
+
 
     SwitchCompat voice_switcher;
     SwitchCompat weather_switcher;
@@ -108,16 +108,16 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
 
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+
+        /*FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
-        });
-        */
+        });*/
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity
 
 
         // Configure google login in to access token
-        /*
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
@@ -211,12 +211,16 @@ public class MainActivity extends AppCompatActivity
         // update user info on navigation tab
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUserInfo(currentUser, navigationView);
-        */
+
 
         // set up button on click listener
-        /*View headerView = navigationView.getHeaderView(0);
-        headerView.findViewById(R.id.signOutButton).setOnClickListener(this);
-        */
+        View headerView = navigationView.getHeaderView(0);
+        headerView.findViewById(R.id.signOutButton).setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                signOut();
+            }
+        });
+
 
 
         // check permission
@@ -248,8 +252,8 @@ public class MainActivity extends AppCompatActivity
             successText.setText(calendarData.get(0));
         }
     }
-/*
-    @Override
+
+
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.signOutButton:
@@ -257,7 +261,7 @@ public class MainActivity extends AppCompatActivity
                 break;
         }
     }
-*/
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -328,7 +332,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /*
+
     private void updateUserInfo(FirebaseUser user, NavigationView navView) {
         View headerView = navView.getHeaderView(0);
 
@@ -354,7 +358,7 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, SignInActivity.class);
         startActivity(intent);
     }
-    */
+
 
     private void switchActivity(final Class<? extends Activity> targetActivity) {
         Intent intent = new Intent(this, targetActivity);
