@@ -17,7 +17,7 @@ import java.util.TimeZone;
 
 public class CalendarQueryHandler extends AsyncQueryHandler {
     private static final String TAG = "CalendarQueryHandler";
-
+/*
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
     public static final String[] EVENT_PROJECTION = new String[] {
@@ -36,9 +36,31 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
     private static final int CALENDAR = 0;
     private static final int EVENT    = 1;
     private static final int REMINDER = 2;
+*/
+
+    // Projection array. Creating indices for this array instead of doing
+    // dynamic lookups improves performance.
+    // https://developer.android.com/reference/android/provider/CalendarContract.Events
+    public static final String[] EVENT_PROJECTION = new String[] {
+            CalendarContract.Events.CALENDAR_ID,                  // 0
+            CalendarContract.Events.TITLE,                        // 1
+            CalendarContract.Events.DESCRIPTION,                  // 2
+            CalendarContract.Events.DTSTART,                      // 3
+            CalendarContract.Events.DTEND,                        // 4
+    };
+
+    private static final int CALENDAR = 0;
+    private static final int EVENT    = 1;
+    private static final int REMINDER = 2;
+
+    // The indices for the projection array above.
+    private static final int PROJECTION_ID_INDEX = 0;
+    private static final int PROJECTION_TITLE_INDEX = 1;
+    private static final int PROJECTION_DESCRIPTION_INDEX = 2;
+    private static final int PROJECTION_TIMESTART_INDEX = 3;
+    private static final int PROJECTION_TIMEEND_INDEX = 4;
 
     private static CalendarQueryHandler calendarQueryHandler;
-
     private static ArrayList<String> calendarData = new ArrayList<>();
 
     // Public constructors: AsyncQueryHandler(ContentResolver cr)
@@ -57,6 +79,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
         ///long calendarID = cursor.getLong(PROJECTION_ID_INDEX);
 
         while (cursor.moveToNext()) {
+            /*
             long calID = 0;
             String displayName = null;
             String accountName = null;
@@ -73,6 +96,8 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
             calendarData.add(currentData);
 
             Log.d(TAG, currentData);
+            */
+
         }
 
         ///Log.d(TAG, "Calendar query complete " + calendarID);

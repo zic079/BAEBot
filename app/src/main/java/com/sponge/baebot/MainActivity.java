@@ -202,6 +202,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.signOutButton:
                 signOut();
                 break;
+
+            case R.id.button1:
+                switchActivity(CalendarActivity.class);
+                break;
         }
     }
 
@@ -281,7 +285,10 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
 
-        // What is this pieces of code for?
+        // button on main content
+        findViewById(R.id.button1).setOnClickListener(this);
+
+        // What is this pieces of code for? Doesn't seen like we have a fab.
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
