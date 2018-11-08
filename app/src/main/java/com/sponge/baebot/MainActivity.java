@@ -54,16 +54,14 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener/*, View.OnClickListener*/ {
-    /*
-    private GoogleSignInClient mGoogleSignInClient;         // Google sign in client
-    private FirebaseAuth mAuth;                             // Firebase authorization
-    */
 
+    // navigation drawer switch
     SwitchCompat voice_switcher;
     SwitchCompat weather_switcher;
     SwitchCompat alarm_switcher;
     SwitchCompat sleep_switcher;
     SwitchCompat quote_switcher;
+
 
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
@@ -74,15 +72,15 @@ public class MainActivity extends AppCompatActivity
         CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
     };
 
-
     final String[] INSTANCE_PROJECTION = new String[] {
         CalendarContract.Instances.EVENT_ID,      // 0
         CalendarContract.Instances.BEGIN,         // 1
         CalendarContract.Instances.TITLE          // 2
     };
 
-
-
+    // Initialize client for authorization
+    private GoogleSignInClient mGoogleSignInClient;         // Google sign in client
+    private FirebaseAuth mAuth;                             // Firebase authorization
 
     // The indices for the projection array above.
     private static final int PROJECTION_ID_INDEX = 0;
@@ -103,11 +101,22 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Configure google login in to access token
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        // record firebase and google client instance
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        mAuth = FirebaseAuth.getInstance();
+
         //toolbar for navigation drawer
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
 
+        // What is this pieces of code for?
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -125,6 +134,7 @@ public class MainActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        // get navigation view component
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -197,21 +207,10 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
-
-        // Configure google login in to access token
-        /*
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
-        mAuth = FirebaseAuth.getInstance();
-
         // update user info on navigation tab
         FirebaseUser currentUser = mAuth.getCurrentUser();
         updateUserInfo(currentUser, navigationView);
-        */
+
 
         // set up button on click listener
         /*View headerView = navigationView.getHeaderView(0);
@@ -361,6 +360,14 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
+    private void updateUserInfo(FirebaseUser user, NavigationView navView) {
+        View headerView = navView.getHeaderView(0);
+
+        TextView userNameText = (TextView)headerView.findViewById(R.id.userName);
+        TextView userEmailText = (TextView)headerView.findViewById(R.id.userEmail);
+        userNameText.setText(user.getDisplayName());
+        userEmailText.setText(user.getEmail());
+    }
 
     ////// TESTING ONLY - NOT AsyncQueryHandler
     private ArrayList<String> readEvent() {

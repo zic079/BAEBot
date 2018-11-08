@@ -129,7 +129,7 @@ public class MainOLDActivity extends AppCompatActivity
         if (id == R.id.nav_switch) {
 
         }
-        /*else if (id == R.id.weather_switch) {
+        else if (id == R.id.weather_switch) {
 
         }
         else if (id == R.id.alarm_switch) {
