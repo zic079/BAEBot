@@ -173,7 +173,7 @@
 
 
                         <TextView
-                            android:id="@+id/textView3"
+                            android:id="@+id/event2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Event 2"
@@ -195,7 +195,7 @@
 
 
                         <TextView
-                            android:id="@+id/textView6"
+                            android:id="@+id/event3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Event 3"
@@ -219,7 +219,7 @@
 
 
                         <TextView
-                            android:id="@+id/textView5"
+                            android:id="@+id/event4"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Event 4"

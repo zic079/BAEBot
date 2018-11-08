@@ -65,33 +65,25 @@ public class MainActivity extends AppCompatActivity
 
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
+    // https://developer.android.com/reference/android/provider/CalendarContract.Events
     public static final String[] EVENT_PROJECTION = new String[] {
-        CalendarContract.Calendars._ID,                           // 0
-        CalendarContract.Calendars.ACCOUNT_NAME,                  // 1
-        CalendarContract.Calendars.CALENDAR_DISPLAY_NAME,         // 2
-        CalendarContract.Calendars.OWNER_ACCOUNT                  // 3
+            CalendarContract.Events.CALENDAR_ID,                  // 0
+            CalendarContract.Events.TITLE,                        // 1
+            CalendarContract.Events.DESCRIPTION,                  // 2
+            CalendarContract.Events.DTSTART,                      // 3
+            CalendarContract.Events.DTEND,                        // 4
     };
 
-    final String[] INSTANCE_PROJECTION = new String[] {
-        CalendarContract.Instances.EVENT_ID,      // 0
-        CalendarContract.Instances.BEGIN,         // 1
-        CalendarContract.Instances.TITLE          // 2
-    };
+    // The indices for the projection array above.
+    private static final int PROJECTION_ID_INDEX = 0;
+    private static final int PROJECTION_TITLE_INDEX = 1;
+    private static final int PROJECTION_DESCRIPTION_INDEX = 2;
+    private static final int PROJECTION_TIMESTART_INDEX = 3;
+    private static final int PROJECTION_TIMEEND_INDEX = 4;
 
     // Initialize client for authorization
     private GoogleSignInClient mGoogleSignInClient;         // Google sign in client
     private FirebaseAuth mAuth;                             // Firebase authorization
-
-    // The indices for the projection array above.
-    private static final int PROJECTION_ID_INDEX = 0;
-    private static final int PROJECTION_ACCOUNT_NAME_INDEX = 1;
-    private static final int PROJECTION_DISPLAY_NAME_INDEX = 2;
-    private static final int PROJECTION_OWNER_ACCOUNT_INDEX = 3;
-
-    private static final int INSTANCE_ID_INDEX = 0;
-    private static final int INSTANCE_BEGIN_INDEX = 1;
-    private static final int INSTANCE_TITLE_INDEX = 2;
-
 
     private static final int PERMISSION_REQUEST_CODE = 100;
 
@@ -111,151 +103,29 @@ public class MainActivity extends AppCompatActivity
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
 
-        //toolbar for navigation drawer
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(null);
+        // checking / request user permission for calendar provider
+        requestPermission();
 
-        // What is this pieces of code for?
-        /*
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        */
-
-        DrawerLayout drawer = findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-
-        // get navigation view component
-        NavigationView navigationView = findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        //get the menu item from the navigation view
-        Menu menu = navigationView.getMenu();
-
-        //Voice
-        MenuItem menuItem_voice = menu.findItem(R.id.voice_switch);
-        View actionView_voice = menuItem_voice.getActionView();
-
-        voice_switcher = actionView_voice.findViewById(R.id.switcher_drawer);
-        voice_switcher.setChecked(true);
-        voice_switcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //voice_switcher.setChecked(!voice_switcher.isChecked());
-                Snackbar.make(v, (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            }
-        });
-
-        //Weather
-        MenuItem menuItem_weather = menu.findItem(R.id.weather_switch);
-        View actionView_weather = menuItem_weather.getActionView();
-
-        weather_switcher = actionView_weather.findViewById(R.id.switcher_drawer);
-        weather_switcher.setChecked(true);
-        weather_switcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            }
-        });
-
-        //Alarm
-        MenuItem menuItem_alarm = menu.findItem(R.id.alarm_switch);
-        View actionView_alarm = menuItem_alarm.getActionView();
-
-        alarm_switcher = actionView_alarm.findViewById(R.id.switcher_drawer);
-        alarm_switcher.setChecked(true);
-        alarm_switcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            }
-        });
-
-        //Sleep
-        MenuItem menuItem_sleep = menu.findItem(R.id.sleep_switch);
-        View actionView_sleep = menuItem_sleep.getActionView();
-
-        sleep_switcher = actionView_sleep.findViewById(R.id.switcher_drawer);
-        sleep_switcher.setChecked(true);
-        sleep_switcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            }
-        });
-
-        //Quote
-        MenuItem menuItem_quote = menu.findItem(R.id.quote_switch);
-        View actionView_quote = menuItem_quote.getActionView();
-
-        quote_switcher = actionView_quote.findViewById(R.id.switcher_drawer);
-        quote_switcher.setChecked(true);
-        quote_switcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            }
-        });
-
-        // update user info on navigation tab
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        updateUserInfo(currentUser, navigationView);
-
-
-        // set up button on click listener
-        View headerView = navigationView.getHeaderView(0);
-        headerView.findViewById(R.id.signOutButton).setOnClickListener(this);
-
-
-        // check permission
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            // checking permission before reading and writing calendar
-            if (checkSelfPermission(Manifest.permission.READ_CALENDAR)
-                    == PackageManager.PERMISSION_DENIED) {
-                Log.d("permission", "permission denied to read calendar");
-                String[] permissions = {Manifest.permission.READ_CALENDAR};
-                Log.d("permission", "requesting permission");
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            }
-
-            if (checkSelfPermission(Manifest.permission.WRITE_CALENDAR)
-                    == PackageManager.PERMISSION_DENIED) {
-                Log.d("permission", "permission denied to write calendar");
-                String[] permissions = {Manifest.permission.WRITE_CALENDAR};
-                Log.d("permission", "requesting permission");
-                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
-            }
-        }
+        // call setupNavView to initialized navigation tab
+        setupNavView();
 
         // read calendar data with AsyncQueryHandler
-        ArrayList<String> calendarData = new ArrayList<>();
-        calendarData = readEvent();
+        ArrayList<String> calendarData = readEvent();
 
+        //// Testing display event - hard code
         if(calendarData.size() > 0) {
-            TextView successText = (TextView)findViewById(R.id.event1);
-            successText.setText(calendarData.get(0));
+            TextView event1 = (TextView)findViewById(R.id.event1);
+            TextView event2 = (TextView)findViewById(R.id.event2);
+            TextView event3 = (TextView)findViewById(R.id.event3);
+            TextView event4 = (TextView)findViewById(R.id.event4);
+
+            event1.setText(calendarData.get(0));
+            event2.setText(calendarData.get(1));
+            event3.setText(calendarData.get(2));
+            event4.setText(calendarData.get(3));
         }
     }
-/*
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.signOutButton:
-                signOut();
-                break;
-        }
-    }
-*/
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -326,34 +196,6 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    /*
-    private void updateUserInfo(FirebaseUser user, NavigationView navView) {
-        View headerView = navView.getHeaderView(0);
-
-        TextView userNameText = (TextView)headerView.findViewById(R.id.userName);
-        TextView userEmailText = (TextView)headerView.findViewById(R.id.userEmail);
-        userNameText.setText(user.getDisplayName());
-        userEmailText.setText(user.getEmail());
-    }
-
-    private void signOut() {
-        // Firebase sign out
-        mAuth.signOut();
-
-        // Google sign out
-        mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        switchActivity(SignInActivity.class);
-                    }
-                });
-
-        Intent intent = new Intent(this, SignInActivity.class);
-        startActivity(intent);
-    }
-    */
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -380,14 +222,12 @@ public class MainActivity extends AppCompatActivity
         // Google sign out
         mGoogleSignInClient.signOut().addOnCompleteListener(this,
                 new OnCompleteListener<Void>() {
+                    // switch to sign in activity while complete signout from google
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         switchActivity(SignInActivity.class);
                     }
                 });
-
-        //Intent intent = new Intent(this, SignInActivity.class);
-        //startActivity(intent);
     }
 
 
@@ -397,12 +237,8 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    ////// TESTING ONLY - NOT AsyncQueryHandler
-    private ArrayList<String> readEvent() {
-
-        // still making error debug message, move to onCreate seems to fix, don't know why
-        // but whatever..... it worked as for now
-        /*
+    // helper function to ensure app has user permission to read/write calendar
+    private void requestPermission() {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
             // checking permission before reading and writing calendar
             if (checkSelfPermission(Manifest.permission.READ_CALENDAR)
@@ -412,11 +248,132 @@ public class MainActivity extends AppCompatActivity
                 Log.d("permission", "requesting permission");
                 requestPermissions(permissions, PERMISSION_REQUEST_CODE);
             }
+
+            if (checkSelfPermission(Manifest.permission.WRITE_CALENDAR)
+                    == PackageManager.PERMISSION_DENIED) {
+                Log.d("permission", "permission denied to write calendar");
+                String[] permissions = {Manifest.permission.WRITE_CALENDAR};
+                Log.d("permission", "requesting permission");
+                requestPermissions(permissions, PERMISSION_REQUEST_CODE);
+            }
         }
+    }
+
+    // setUp navigation tab view
+    private void setupNavView() {
+        // get navigation view component
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        //get the menu item from the navigation view
+        Menu menu = navigationView.getMenu();
+
+        // update user info on navigation tab
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        updateUserInfo(currentUser, navigationView);
+
+        // set up button on click listener
+        View headerView = navigationView.getHeaderView(0);
+        headerView.findViewById(R.id.signOutButton).setOnClickListener(this);
+
+        //toolbar for navigation drawer
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(null);
+
+        // What is this pieces of code for?
+        /*
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+            }
+        });
         */
 
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+
+
+        //Voice
+        MenuItem menuItem_voice = menu.findItem(R.id.voice_switch);
+        View actionView_voice = menuItem_voice.getActionView();
+
+        voice_switcher = actionView_voice.findViewById(R.id.switcher_drawer);
+        voice_switcher.setChecked(true);
+        voice_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //voice_switcher.setChecked(!voice_switcher.isChecked());
+                Snackbar.make(v, (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Weather
+        MenuItem menuItem_weather = menu.findItem(R.id.weather_switch);
+        View actionView_weather = menuItem_weather.getActionView();
+
+        weather_switcher = actionView_weather.findViewById(R.id.switcher_drawer);
+        weather_switcher.setChecked(true);
+        weather_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Alarm
+        MenuItem menuItem_alarm = menu.findItem(R.id.alarm_switch);
+        View actionView_alarm = menuItem_alarm.getActionView();
+
+        alarm_switcher = actionView_alarm.findViewById(R.id.switcher_drawer);
+        alarm_switcher.setChecked(true);
+        alarm_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Sleep
+        MenuItem menuItem_sleep = menu.findItem(R.id.sleep_switch);
+        View actionView_sleep = menuItem_sleep.getActionView();
+
+        sleep_switcher = actionView_sleep.findViewById(R.id.switcher_drawer);
+        sleep_switcher.setChecked(true);
+        sleep_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+
+        //Quote
+        MenuItem menuItem_quote = menu.findItem(R.id.quote_switch);
+        View actionView_quote = menuItem_quote.getActionView();
+
+        quote_switcher = actionView_quote.findViewById(R.id.switcher_drawer);
+        quote_switcher.setChecked(true);
+        quote_switcher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(v, (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            }
+        });
+    }
+
+    ////// TESTING ONLY - NOT AsyncQueryHandler
+    private ArrayList<String> readEvent() {
 
         // make up a time range for searching event
+        // for future "searching" usage
+        /*
         long startMillis = 0;
         long endMillis = 0;
         Calendar beginTime = Calendar.getInstance();
@@ -425,7 +382,7 @@ public class MainActivity extends AppCompatActivity
         Calendar endTime = Calendar.getInstance();
         endTime.set(2018, 11, 15, 6, 00);
         endMillis = endTime.getTimeInMillis();
-
+        */
 
         ContentResolver cr = getContentResolver();
 
@@ -455,8 +412,10 @@ public class MainActivity extends AppCompatActivity
         String selection = null;
         String[] selectionArgs = null;
 
-        cur = cr.query(CALENDAR_URI, new String[] { "calendar_id", "title", "description",
-                "dtstart", "dtend", "eventLocation" }, selection, selectionArgs, null);
+        //cur = cr.query(CALENDAR_URI, new String[] { "calendar_id", "title", "description",
+        //        "dtstart", "dtend", "eventLocation" }, selection, selectionArgs, null);
+
+        cur = cr.query(CALENDAR_URI, EVENT_PROJECTION, selection, selectionArgs, null);
         ArrayList<String> calendarData = new ArrayList<>();
 
         if(cur.getCount() > 0) {
@@ -464,50 +423,19 @@ public class MainActivity extends AppCompatActivity
 
             cur.moveToFirst();
             while (cur.moveToNext()) {
-                /*
-                long calID = 0;
-                String displayName = null;
-                String accountName = null;
-                String ownerName = null;
+                // information of event
+                String eventTitle;
+                String eventBeginMill;
+                String eventBeginDate;
 
                 // Get the field values
-                calID = cur.getLong(PROJECTION_ID_INDEX);
-                displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
-                accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
-                ownerName = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX);
-                */
+                eventTitle = cur.getString(PROJECTION_TITLE_INDEX);
+                eventBeginMill = cur.getString(PROJECTION_TIMESTART_INDEX);
+                eventBeginDate = milliToDate(eventBeginMill);
 
-                /*
-                long calID = 0;
-                String eventBegin = null;
-                String eventTitle = null;
-
-                // Get the field values
-                calID = cur.getLong(INSTANCE_ID_INDEX);
-                eventBegin = cur.getString(INSTANCE_BEGIN_INDEX);
-                eventTitle = cur.getString(INSTANCE_TITLE_INDEX);
-                */
-
-                String eventName = null;
-                String eventBeginMill = null;
-                String eventBegin = null;
-                String eventDescription = null;
-
-                // Get the field values
-                eventName = cur.getString(1);
-
-                eventBeginMill = cur.getString(3);
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                Calendar calendarTemp = Calendar.getInstance();
-                calendarTemp.setTimeInMillis(Long.parseLong(eventBeginMill));
-                eventBegin = formatter.format(calendarTemp.getTime());
-
-                eventDescription = cur.getString(2);
-
-
-                // building string of current cursor data
-                //String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
-                String currentData = String.format("Event Name: %s\nBegin Time: %s\nEvent Description: %s", eventName, eventBegin, eventDescription);
+                // Building string of current cursor data
+                // String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
+                String currentData = String.format("Event Name: %s\nBegin Time: %s", eventTitle, eventBeginDate);
                 Log.d("readEvent", currentData);
                 calendarData.add(currentData);
             }
@@ -517,6 +445,19 @@ public class MainActivity extends AppCompatActivity
         //listView.setAdapter(stringArrayAdapter);
 
         return calendarData;
+    }
+
+
+    // helper function - convert millisecond to readable date
+    private String milliToDate(String milliSec) {
+        String date;            // date convert from millisecond
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendarTemp = Calendar.getInstance();
+        calendarTemp.setTimeInMillis(Long.parseLong(milliSec));
+        date = formatter.format(calendarTemp.getTime());
+
+        return date;
     }
 }
 
