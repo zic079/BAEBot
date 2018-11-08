@@ -53,7 +53,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener/*, View.OnClickListener*/ {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     // navigation drawer switch
     SwitchCompat voice_switcher;
@@ -213,9 +213,8 @@ public class MainActivity extends AppCompatActivity
 
 
         // set up button on click listener
-        /*View headerView = navigationView.getHeaderView(0);
+        View headerView = navigationView.getHeaderView(0);
         headerView.findViewById(R.id.signOutButton).setOnClickListener(this);
-        */
 
 
         // check permission
@@ -355,9 +354,13 @@ public class MainActivity extends AppCompatActivity
     }
     */
 
-    private void switchActivity(final Class<? extends Activity> targetActivity) {
-        Intent intent = new Intent(this, targetActivity);
-        startActivity(intent);
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.signOutButton:
+                signOut();
+                break;
+        }
     }
 
     private void updateUserInfo(FirebaseUser user, NavigationView navView) {
@@ -367,6 +370,31 @@ public class MainActivity extends AppCompatActivity
         TextView userEmailText = (TextView)headerView.findViewById(R.id.userEmail);
         userNameText.setText(user.getDisplayName());
         userEmailText.setText(user.getEmail());
+    }
+
+    // signOut function - sign out from current account and return to sign in page
+    private void signOut() {
+        // Firebase sign out
+        mAuth.signOut();
+
+        // Google sign out
+        mGoogleSignInClient.signOut().addOnCompleteListener(this,
+                new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        switchActivity(SignInActivity.class);
+                    }
+                });
+
+        //Intent intent = new Intent(this, SignInActivity.class);
+        //startActivity(intent);
+    }
+
+
+    // switch Activity utility, switching to new activity given by param
+    private void switchActivity(final Class<? extends Activity> targetActivity) {
+        Intent intent = new Intent(this, targetActivity);
+        startActivity(intent);
     }
 
     ////// TESTING ONLY - NOT AsyncQueryHandler
