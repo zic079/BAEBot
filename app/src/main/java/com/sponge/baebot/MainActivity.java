@@ -371,51 +371,27 @@ public class MainActivity extends AppCompatActivity
     ////// TESTING ONLY - NOT AsyncQueryHandler
     private ArrayList<String> readEvent() {
 
-        // make up a time range for searching event
-        // for future "searching" usage
-        /*
-        long startMillis = 0;
-        long endMillis = 0;
-        Calendar beginTime = Calendar.getInstance();
-        beginTime.set(2018, 11, 02, 6, 00);
-        startMillis = beginTime.getTimeInMillis();
-        Calendar endTime = Calendar.getInstance();
-        endTime.set(2018, 11, 15, 6, 00);
-        endMillis = endTime.getTimeInMillis();
-        */
-
         ContentResolver cr = getContentResolver();
 
         // use CalendarContract.Instances for read data on calendar (rather than owner info)
-        //Uri uri = CalendarContract.Calendars.CONTENT_URI;
-        //Uri uri = CalendarContract.Instances.CONTENT_URI;
         Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
-        /*
-        Uri.Builder builder = CalendarContract.Instances.CONTENT_URI.buildUpon();
-        ContentUris.appendId(builder, startMillis);
-        ContentUris.appendId(builder, endMillis);
-        */
-
         Cursor cur = null;
 
-        // ---- current design return all calendar event (no filtering)
-        // could add the feature in the future - pass in from the parameter
-        /*
-        String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND ("
-                + Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                + Calendars.OWNER_ACCOUNT + " = ?))";
-        String[] selectionArgs = new String[] {"hera@example.com", "com.example",
-                "hera@example.com"};
-        */
+        // building selection - the start and end time range for calendar provider
+        Calendar calendarStart= Calendar.getInstance();
+        calendarStart.set(2018,10,1,0,0); //Note that months start from 0 (January)
+        Calendar calendarEnd= Calendar.getInstance();
+        calendarEnd.set(2019,2,1,0,0); //Note that months start from 0 (January)
+
 
         // set selection and selectionArgs as null
-        String selection = null;
+        String selection = "((dtstart >= " + calendarStart.getTimeInMillis() + ") AND (dtend <= " + calendarEnd.getTimeInMillis()+"))";
         String[] selectionArgs = null;
 
         //cur = cr.query(CALENDAR_URI, new String[] { "calendar_id", "title", "description",
         //        "dtstart", "dtend", "eventLocation" }, selection, selectionArgs, null);
 
-        cur = cr.query(CALENDAR_URI, EVENT_PROJECTION, selection, selectionArgs, null);
+        cur = cr.query(CALENDAR_URI, EVENT_PROJECTION, selection, selectionArgs, CalendarContract.Events.DTSTART + " ASC");
         ArrayList<String> calendarData = new ArrayList<>();
 
         if(cur.getCount() > 0) {
