@@ -386,7 +386,7 @@ public class MainActivity extends AppCompatActivity
 
         // building selection - the start and end time range for calendar provider
         Calendar calendarStart= Calendar.getInstance();
-        calendarStart.set(2018,10,1,0,0); //Note that months start from 0 (January)
+        calendarStart.set(2018,10,10,0,0); //Note that months start from 0 (January)
         Calendar calendarEnd= Calendar.getInstance();
         calendarEnd.set(2019,2,1,0,0); //Note that months start from 0 (January)
 

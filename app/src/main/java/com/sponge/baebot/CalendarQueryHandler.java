@@ -10,13 +10,20 @@ import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.TimeZone;
 
-public class CalendarQueryHandler extends AsyncQueryHandler {
+import java.lang.ref.WeakReference;
+
+public class CalendarQueryHandler extends AsyncQueryHandler{
     private static final String TAG = "CalendarQueryHandler";
+
 /*
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
@@ -60,14 +67,17 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
     private static final int PROJECTION_TIMESTART_INDEX = 3;
     private static final int PROJECTION_TIMEEND_INDEX = 4;
 
-    private static CalendarQueryHandler calendarQueryHandler;
-    private static ArrayList<String> calendarData = new ArrayList<>();
+    //private static CalendarQueryHandler calendarQueryHandler;
+    private ArrayList<String> calendarData = new ArrayList<>();
+
+    final WeakReference<AppCompatActivity> activityRef;
 
     // Public constructors: AsyncQueryHandler(ContentResolver cr)
     // https://developer.android.com/reference/android/content/AsyncQueryHandler
     // Constructor of the class
-    public CalendarQueryHandler(ContentResolver cr) {
+    public CalendarQueryHandler(AppCompatActivity activity, ContentResolver cr) {
         super(cr);
+        activityRef = new WeakReference<AppCompatActivity>(activity);
     }
 
     @Override
@@ -77,6 +87,9 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
 
         // Get the field values
         ///long calendarID = cursor.getLong(PROJECTION_ID_INDEX);
+
+        // reset calendarData
+        calendarData = new ArrayList<>();
 
         while (cursor.moveToNext()) {
             /*
@@ -98,6 +111,21 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
             Log.d(TAG, currentData);
             */
 
+            // information of event
+            String eventTitle;
+            String eventBeginMill;
+            String eventBeginDate;
+
+            // Get the field values
+            eventTitle = cursor.getString(PROJECTION_TITLE_INDEX);
+            eventBeginMill = cursor.getString(PROJECTION_TIMESTART_INDEX);
+            eventBeginDate = milliToDate(eventBeginMill);
+
+            // Building string of current cursor data
+            // String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
+            String currentData = String.format("Event Title: %s   Begin Time: %s", eventTitle, eventBeginDate);
+            Log.d("readEvent", currentData);
+            calendarData.add(currentData);
         }
 
         ///Log.d(TAG, "Calendar query complete " + calendarID);
@@ -110,6 +138,26 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
 
         startInsert(EVENT, null, CalendarContract.Events.CONTENT_URI, values);
         */
+
+        AppCompatActivity mActivity = activityRef.get();
+
+        // hardcoded test
+        TextView event1 = (TextView)mActivity.findViewById(R.id.event1);
+        TextView event2 = (TextView)mActivity.findViewById(R.id.event2);
+        TextView event3 = (TextView)mActivity.findViewById(R.id.event3);
+        TextView event4 = (TextView)mActivity.findViewById(R.id.event4);
+        TextView event5 = (TextView)mActivity.findViewById(R.id.event5);
+        TextView event6 = (TextView)mActivity.findViewById(R.id.event6);
+
+        if(calendarData.size() > 0) {
+            event1.setText(calendarData.get(0));
+            event2.setText(calendarData.get(1));
+            event3.setText(calendarData.get(2));
+            event4.setText(calendarData.get(3));
+            event5.setText(calendarData.get(4));
+            event6.setText(calendarData.get(5));
+        }
+
     }
 
     @Override
@@ -143,36 +191,36 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
         // delete() completed
     }
 
-    public static ArrayList<String> readEvent(Context context) {
+    public void readEvent(Context context) {
 
         ContentResolver cr = context.getContentResolver();
 
+        /*
         // initialize the query handler if it didn't been initialized yet
         if (calendarQueryHandler == null) {
             calendarQueryHandler = new CalendarQueryHandler(cr);
         }
-
-        // ContentResolver cr = context. getContentResolver();
-
-        // ---- current design return all calendar event (no filtering)
-        // could add the feature in the future - pass in from the parameter
-        /*
-        String selection = "((" + Calendars.ACCOUNT_NAME + " = ?) AND ("
-                + Calendars.ACCOUNT_TYPE + " = ?) AND ("
-                + Calendars.OWNER_ACCOUNT + " = ?))";
-        String[] selectionArgs = new String[] {"hera@example.com", "com.example",
-                "hera@example.com"};
         */
 
+        Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
+
+        // building selection - the start and end time range for calendar provider
+        Calendar calendarStart= Calendar.getInstance();
+        calendarStart.set(2018,10,10,0,0); //Note that months start from 0 (January)
+        Calendar calendarEnd= Calendar.getInstance();
+        calendarEnd.set(2019,2,1,0,0); //Note that months start from 0 (January)
+
+
         // set selection and selectionArgs as null
-        String selection = null;
+        String selection = "((dtstart >= " + calendarStart.getTimeInMillis() + ") AND (dtend <= " + calendarEnd.getTimeInMillis()+"))";
         String[] selectionArgs = null;
+
 
         //ArrayList<String> calendarData = new ArrayList<>();
 
         //Cursor cur = cr.query(CalendarContract.Calendars.CONTENT_URI, EVENT_PROJECTION, selection, selectionArgs, null);
-        calendarQueryHandler.startQuery(CALENDAR, null, CalendarContract.Calendars.CONTENT_URI,
-                EVENT_PROJECTION, selection, selectionArgs, null);
+        startQuery(CALENDAR, null, CALENDAR_URI,
+                   EVENT_PROJECTION, selection, selectionArgs, null);
 
 
         /*
@@ -197,19 +245,13 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
         //ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, calendarData);
         //listView.setAdapter(stringArrayAdapter);
 
-        return calendarData;
     }
 
 
     // insertEvent method
-    public static void insertEvent(Context context, long startTime,
+    public void insertEvent(Context context, long startTime,
                                    long endTime, String title, String description) {
         ContentResolver cr = context.getContentResolver();
-
-        // initialize the query handler if it didn't been initialized yet
-        if (calendarQueryHandler == null) {
-            calendarQueryHandler = new CalendarQueryHandler(cr);
-        }
 
         ContentValues values = new ContentValues();
         values.put(CalendarContract.Events.DTSTART, startTime);
@@ -224,7 +266,19 @@ public class CalendarQueryHandler extends AsyncQueryHandler {
         }
 
         // start the query
-        calendarQueryHandler.startQuery(CALENDAR, values, CalendarContract.Calendars.CONTENT_URI,
+        startQuery(CALENDAR, values, CalendarContract.Calendars.CONTENT_URI,
                 EVENT_PROJECTION, null, null, null);
+    }
+
+    // helper function - convert millisecond to readable date
+    private String milliToDate(String milliSec) {
+        String date;            // date convert from millisecond
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calendarTemp = Calendar.getInstance();
+        calendarTemp.setTimeInMillis(Long.parseLong(milliSec));
+        date = formatter.format(calendarTemp.getTime());
+
+        return date;
     }
 }
