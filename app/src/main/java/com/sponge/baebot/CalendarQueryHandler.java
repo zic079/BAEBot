@@ -56,6 +56,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
             CalendarContract.Events.DESCRIPTION,                  // 2
             CalendarContract.Events.DTSTART,                      // 3
             CalendarContract.Events.DTEND,                        // 4
+            CalendarContract.Events.ALL_DAY                       // 5
     };
 
     private static final int CALENDAR = 0;
@@ -68,9 +69,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     private static final int PROJECTION_DESCRIPTION_INDEX = 2;
     private static final int PROJECTION_TIMESTART_INDEX = 3;
     private static final int PROJECTION_TIMEEND_INDEX = 4;
-
-    //private static CalendarQueryHandler calendarQueryHandler;
-    private ArrayList<String> calendarData = new ArrayList<>();
+    private static final int PROJECTION_ALLDAY_INDEX = 5;
 
     final WeakReference<AppCompatActivity> activityRef;
 
@@ -90,8 +89,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         // Get the field values
         ///long calendarID = cursor.getLong(PROJECTION_ID_INDEX);
 
-        // reset calendarData
-        calendarData = new ArrayList<>();
+        ArrayList<String> calendarData = new ArrayList<>();
 
         while (cursor.moveToNext()) {
             /*
@@ -117,13 +115,18 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
             String eventTitle;
             String eventBeginMill;
             String eventBeginDate;
+            String isAllDay;
 
             // Get the field values
             eventTitle = cursor.getString(PROJECTION_TITLE_INDEX);
 
             // Note: event is in UTC time
             eventBeginMill = cursor.getString(PROJECTION_TIMESTART_INDEX);
-            eventBeginDate = milliToDate(eventBeginMill);
+
+            isAllDay = cursor.getString(PROJECTION_ALLDAY_INDEX);
+            Log.d("allDay", "is all day " + isAllDay);
+
+            eventBeginDate = milliToDate(eventBeginMill, Integer.parseInt(isAllDay));
 
             // Building string of current cursor data
             // String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
@@ -143,49 +146,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         startInsert(EVENT, null, CalendarContract.Events.CONTENT_URI, values);
         */
 
-        AppCompatActivity mActivity = activityRef.get();
-
-        // hardcoded test
-        TextView eventsCount = (TextView)mActivity.findViewById(R.id.eventsCount);
-        TextView event1 = (TextView)mActivity.findViewById(R.id.event1);
-        TextView event2 = (TextView)mActivity.findViewById(R.id.event2);
-        TextView event3 = (TextView)mActivity.findViewById(R.id.event3);
-        TextView event4 = (TextView)mActivity.findViewById(R.id.event4);
-        TextView event5 = (TextView)mActivity.findViewById(R.id.event5);
-        TextView event6 = (TextView)mActivity.findViewById(R.id.event6);
-
-        /*
-        if(calendarData.size() > 5) {
-            event1.setText(calendarData.get(0));
-            event2.setText(calendarData.get(1));
-            event3.setText(calendarData.get(2));
-            event4.setText(calendarData.get(3));
-            event5.setText(calendarData.get(4));
-            event6.setText(calendarData.get(5));
-        }
-        */
-
-        int numsEvent = calendarData.size();
-        eventsCount.setText("There are total " + numsEvent + " in the time range");
-
-        // set limit of display
-        if(numsEvent > 6) {
-            numsEvent = 6;
-        }
-
-        // display events info
-        switch(numsEvent) {
-            case 6: event6.setText(calendarData.get(5));
-            case 5: event5.setText(calendarData.get(4));
-            case 4: event4.setText(calendarData.get(3));
-            case 3: event3.setText(calendarData.get(2));
-            case 2: event2.setText(calendarData.get(1));
-            case 1: event1.setText(calendarData.get(0));
-                    break;
-            default: break;
-        }
-
-
+        updateEventList(calendarData);
     }
 
     @Override
@@ -306,18 +267,124 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     }
 
     // helper function - convert millisecond to readable date
-    private String milliToDate(String milliSec) {
-        String date;            // date convert from millisecond
+    private String milliToDate(String milliSec, int isAllDay) {
+        String date;                    // date convert from millisecond
+        int offset;                     // offset when event is all day event
+        SimpleDateFormat formatter;     //date formatter for millisecond conversion
 
-        // set up date formatter for millisecond conversion
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        // offset the display Timezone (PST - UTC)
-        int offset = TimeZone.getTimeZone("PST").getRawOffset() - TimeZone.getDefault().getRawOffset();
+        if(isAllDay == 1) {
+            // formatter without time, since it is all dat event
+            formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+            // set offset of the display Timezone (PST - UTC)
+            offset = TimeZone.getTimeZone("PST").getRawOffset() - TimeZone.getDefault().getRawOffset();
+        }
+
+        else {
+            formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            offset = 0;
+        }
 
         Calendar calendarTemp = Calendar.getInstance();
-        calendarTemp.setTimeInMillis(Long.parseLong(milliSec));
+        calendarTemp.setTimeInMillis(Long.parseLong(milliSec) + offset);
         date = formatter.format(calendarTemp.getTime());
 
         return date;
+    }
+
+
+    // helper function to update event list in activity
+    // hardcode, test only
+    private void updateEventList(ArrayList<String> calendarData) {
+        AppCompatActivity mActivity = activityRef.get();
+
+        // hardcoded test
+        TextView eventsCount = (TextView)mActivity.findViewById(R.id.eventsCount);
+        TextView event1 = (TextView)mActivity.findViewById(R.id.event1);
+        TextView event2 = (TextView)mActivity.findViewById(R.id.event2);
+        TextView event3 = (TextView)mActivity.findViewById(R.id.event3);
+        TextView event4 = (TextView)mActivity.findViewById(R.id.event4);
+        TextView event5 = (TextView)mActivity.findViewById(R.id.event5);
+        TextView event6 = (TextView)mActivity.findViewById(R.id.event6);
+
+        /*
+        if(calendarData.size() > 5) {
+            event1.setText(calendarData.get(0));
+            event2.setText(calendarData.get(1));
+            event3.setText(calendarData.get(2));
+            event4.setText(calendarData.get(3));
+            event5.setText(calendarData.get(4));
+            event6.setText(calendarData.get(5));
+        }
+        */
+
+        int numsEvent = calendarData.size();
+        eventsCount.setText("There are total " + numsEvent + " in the time range");
+
+
+        // set limit of display
+        if(numsEvent > 6) {
+            numsEvent = 6;
+        }
+
+        // display events info - hardcode, using list view should be better
+        switch(numsEvent) {
+            case 1:
+                event1.setText(calendarData.get(0));
+                event2.setText("");
+                event3.setText("");
+                event4.setText("");
+                event5.setText("");
+                event6.setText("");
+                break;
+            case 2:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText("");
+                event4.setText("");
+                event5.setText("");
+                event6.setText("");
+                break;
+            case 3:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText(calendarData.get(2));
+                event4.setText("");
+                event5.setText("");
+                event6.setText("");
+                break;
+            case 4:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText(calendarData.get(2));
+                event4.setText(calendarData.get(3));
+                event5.setText("");
+                event6.setText("");
+                break;
+            case 5:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText(calendarData.get(2));
+                event4.setText(calendarData.get(3));
+                event5.setText(calendarData.get(4));
+                event6.setText("");
+                break;
+            case 6:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText(calendarData.get(2));
+                event4.setText(calendarData.get(3));
+                event5.setText(calendarData.get(4));
+                event6.setText(calendarData.get(5));
+                break;
+            default:
+                event1.setText("");
+                event2.setText("");
+                event3.setText("");
+                event4.setText("");
+                event5.setText("");
+                event6.setText("");
+                break;
+        }
     }
 }
