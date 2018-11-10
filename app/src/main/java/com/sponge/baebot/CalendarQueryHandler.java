@@ -15,8 +15,10 @@ import android.util.Log;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.TimeZone;
 
 import java.lang.ref.WeakReference;
@@ -118,6 +120,8 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
 
             // Get the field values
             eventTitle = cursor.getString(PROJECTION_TITLE_INDEX);
+
+            // Note: event is in UTC time
             eventBeginMill = cursor.getString(PROJECTION_TIMESTART_INDEX);
             eventBeginDate = milliToDate(eventBeginMill);
 
@@ -142,6 +146,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         AppCompatActivity mActivity = activityRef.get();
 
         // hardcoded test
+        TextView eventsCount = (TextView)mActivity.findViewById(R.id.eventsCount);
         TextView event1 = (TextView)mActivity.findViewById(R.id.event1);
         TextView event2 = (TextView)mActivity.findViewById(R.id.event2);
         TextView event3 = (TextView)mActivity.findViewById(R.id.event3);
@@ -149,7 +154,8 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         TextView event5 = (TextView)mActivity.findViewById(R.id.event5);
         TextView event6 = (TextView)mActivity.findViewById(R.id.event6);
 
-        if(calendarData.size() > 0) {
+        /*
+        if(calendarData.size() > 5) {
             event1.setText(calendarData.get(0));
             event2.setText(calendarData.get(1));
             event3.setText(calendarData.get(2));
@@ -157,6 +163,28 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
             event5.setText(calendarData.get(4));
             event6.setText(calendarData.get(5));
         }
+        */
+
+        int numsEvent = calendarData.size();
+        eventsCount.setText("There are total " + numsEvent + " in the time range");
+
+        // set limit of display
+        if(numsEvent > 6) {
+            numsEvent = 6;
+        }
+
+        // display events info
+        switch(numsEvent) {
+            case 6: event6.setText(calendarData.get(5));
+            case 5: event5.setText(calendarData.get(4));
+            case 4: event4.setText(calendarData.get(3));
+            case 3: event3.setText(calendarData.get(2));
+            case 2: event2.setText(calendarData.get(1));
+            case 1: event1.setText(calendarData.get(0));
+                    break;
+            default: break;
+        }
+
 
     }
 
@@ -191,9 +219,12 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         // delete() completed
     }
 
-    public void readEvent(Context context) {
-
-        ContentResolver cr = context.getContentResolver();
+    /**
+     * send update query request to calendar provider
+     *
+     * @param numsDay The range of events (by days from today) to request
+     */
+    public void readEvent(int numsDay) {
 
         /*
         // initialize the query handler if it didn't been initialized yet
@@ -204,11 +235,15 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
 
         Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
 
+        // get current time
+        Date currentTime = Calendar.getInstance().getTime();
+
         // building selection - the start and end time range for calendar provider
         Calendar calendarStart= Calendar.getInstance();
-        calendarStart.set(2018,10,10,0,0); //Note that months start from 0 (January)
+        calendarStart.setTime(currentTime);
         Calendar calendarEnd= Calendar.getInstance();
-        calendarEnd.set(2019,2,1,0,0); //Note that months start from 0 (January)
+        calendarEnd.setTime(currentTime);
+        calendarEnd.add(Calendar.DATE, numsDay);
 
 
         // set selection and selectionArgs as null
@@ -220,7 +255,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
 
         //Cursor cur = cr.query(CalendarContract.Calendars.CONTENT_URI, EVENT_PROJECTION, selection, selectionArgs, null);
         startQuery(CALENDAR, null, CALENDAR_URI,
-                   EVENT_PROJECTION, selection, selectionArgs, null);
+                   EVENT_PROJECTION, selection, selectionArgs, CalendarContract.Events.DTSTART + " ASC");
 
 
         /*
@@ -274,7 +309,11 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     private String milliToDate(String milliSec) {
         String date;            // date convert from millisecond
 
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        // set up date formatter for millisecond conversion
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        // offset the display Timezone (PST - UTC)
+        int offset = TimeZone.getTimeZone("PST").getRawOffset() - TimeZone.getDefault().getRawOffset();
+
         Calendar calendarTemp = Calendar.getInstance();
         calendarTemp.setTimeInMillis(Long.parseLong(milliSec));
         date = formatter.format(calendarTemp.getTime());

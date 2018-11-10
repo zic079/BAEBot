@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.sponge.baebot.CalendarQueryHandler;
@@ -15,7 +18,8 @@ import com.sponge.baebot.CalendarQueryHandler;
 
 import java.util.ArrayList;
 
-public class CalendarActivity extends AppCompatActivity {
+public class CalendarActivity extends AppCompatActivity
+        implements OnClickListener {
 
     /*
     // hardcoded test
@@ -26,6 +30,10 @@ public class CalendarActivity extends AppCompatActivity {
     TextView event5 = (TextView)findViewById(R.id.event5);
     TextView event6 = (TextView)findViewById(R.id.event6);
     */
+
+    private Button daysButton;
+    private EditText daysEdit;
+    private int queryDays = 0;
 
     CalendarQueryHandler handler;
 
@@ -47,9 +55,25 @@ public class CalendarActivity extends AppCompatActivity {
         });
         */
 
-        // call CalendarQueryHandler to get event
+        daysButton = (Button)findViewById(R.id.buttonGetDays);
+        daysEdit = (EditText)findViewById(R.id.editTextDays);
+
+        daysButton.setOnClickListener(this);
+
+        // initialize new CalendarQueryHandler to handle calendar CRUD operation
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
-        handler.readEvent(this);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.buttonGetDays:
+                queryDays = Integer.parseInt(daysEdit.getText().toString());
+
+                // call CalendarQueryHandler to get event
+                handler.readEvent(queryDays);
+                break;
+        }
     }
 
 /*
