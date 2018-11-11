@@ -73,6 +73,8 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
 
     final WeakReference<AppCompatActivity> activityRef;
 
+    private int queryDays = 0;
+
     // Public constructors: AsyncQueryHandler(ContentResolver cr)
     // https://developer.android.com/reference/android/content/AsyncQueryHandler
     // Constructor of the class
@@ -156,6 +158,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
 
             Log.d(TAG, "Insert complete " + uri.getLastPathSegment());
 
+            /*
             switch (token)
             {
                 case EVENT:
@@ -167,6 +170,9 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
                     startInsert(REMINDER, null, CalendarContract.Reminders.CONTENT_URI, values);
                     break;
             }
+            */
+
+            readEvent(queryDays);
         }
     }
 
@@ -194,6 +200,8 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         }
         */
 
+        queryDays = numsDay;
+
         Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
 
         // get current time
@@ -204,7 +212,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         calendarStart.setTime(currentTime);
         Calendar calendarEnd= Calendar.getInstance();
         calendarEnd.setTime(currentTime);
-        calendarEnd.add(Calendar.DATE, numsDay);
+        calendarEnd.add(Calendar.DATE, queryDays);
 
 
         // set selection and selectionArgs as null
@@ -247,11 +255,15 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     // insertEvent method
     public void insertEvent(Context context, long startTime,
                                    long endTime, String title, String description) {
+
         ContentResolver cr = context.getContentResolver();
 
         ContentValues values = new ContentValues();
+        // hardcode calendar ID
+        values.put(CalendarContract.Events.CALENDAR_ID, 3);
         values.put(CalendarContract.Events.DTSTART, startTime);
         values.put(CalendarContract.Events.DTEND, endTime);
+        values.put(CalendarContract.Events.EVENT_TIMEZONE, "PST");
         values.put(CalendarContract.Events.TITLE, title);
         values.put(CalendarContract.Events.DESCRIPTION, description);
 
@@ -261,9 +273,13 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
             Log.d(TAG, "Calendar query start");
         }
 
+        startInsert(CALENDAR, null, CalendarContract.Events.CONTENT_URI, values);
+
+        /*
         // start the query
         startQuery(CALENDAR, values, CalendarContract.Calendars.CONTENT_URI,
                 EVENT_PROJECTION, null, null, null);
+        */
     }
 
     // helper function - convert millisecond to readable date

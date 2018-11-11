@@ -98,11 +98,12 @@
             android:text="Title:" />
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/editTextTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName" />
+            android:inputType="text"
+            android:imeOptions="actionDone"/>
 
         <TextView
             android:id="@+id/textView5"
@@ -110,15 +111,54 @@
             android:layout_height="wrap_content"
             android:text="Date:" />
 
-        <EditText
-            android:id="@+id/editText3"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="date" />
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextDate"
+                android:layout_width="265dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="date" />
+
+            <Button
+                android:id="@+id/buttonSelectDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select Date" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Time:" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/editTextTime"
+                android:layout_width="265dp"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="time"
+                android:imeOptions="actionDone"/>
+
+            <Button
+                android:id="@+id/buttonSelectTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Select Time" />
+        </LinearLayout>
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/buttonNewEvent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add New Event" />
