@@ -75,7 +75,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/ic_button"
-                        android:text="TEST Calendar" />
+                        android:text="TEST Calendar"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
 
                     <Space
@@ -88,7 +90,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/ic_button"
-                        android:text="Button" />
+                        android:text="Button"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
 
                     <Space
@@ -101,7 +105,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/ic_button"
-                        android:text="Button" />
+                        android:text="Button"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
                     <Space
                         android:layout_width="match_parent"
