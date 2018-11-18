@@ -121,7 +121,7 @@
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
                     android:layout_weight="0"
-                    android:background="@color/colorPrimary">
+                    android:background="@color/colorTransparent">
 
 
                     <android.support.design.widget.TextInputEditText

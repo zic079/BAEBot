@@ -3,41 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <group android:checkableBehavior="single">
 
-        <item
-            android:id="@+id/voice_switch"
-            android:icon="@drawable/ic_voice"
-            android:title="Voice"
-            app:actionLayout="@layout/action_view_switch" />
+    <item
+        android:id="@+id/voice_switch"
+        android:clickable="false"
+        android:icon="@drawable/ic_voice"
+        android:title="Voice"
+        app:actionLayout="@layout/action_view_switch" />
 
-        <item
-            android:id="@+id/weather_switch"
-            android:icon="@drawable/ic_weather"
-            android:defaultValue="true"
-            android:title="Weather"
-            app:actionLayout="@layout/action_view_switch" />
 
-        <item
-            android:id="@+id/alarm_switch"
-            android:icon="@drawable/ic_alarm"
-            android:defaultValue="true"
-            android:title="Alarm"
-            app:actionLayout="@layout/action_view_switch" />
+    <item
+        android:id="@+id/weather_switch"
+        android:defaultValue="true"
+        android:icon="@drawable/ic_weather"
+        android:title="Weather"
+        app:actionLayout="@layout/action_view_switch" />
 
-        <item
-            android:id="@+id/sleep_switch"
-            android:icon="@drawable/ic_sleep"
-            android:defaultValue="true"
-            android:title="Sleep time"
-            app:actionLayout="@layout/action_view_switch" />
 
-        <item
-            android:id="@+id/quote_switch"
-            android:icon="@drawable/ic_quote"
-            android:defaultValue="true"
-            android:title="Daily Quote"
-            app:actionLayout="@layout/action_view_switch" />
-            -->
-    </group>
+    <item
+        android:id="@+id/alarm_switch"
+        android:defaultValue="true"
+        android:icon="@drawable/ic_alarm"
+        android:title="Alarm"
+        app:actionLayout="@layout/action_view_switch" />
+
+
+    <item
+        android:id="@+id/sleep_switch"
+        android:defaultValue="true"
+        android:icon="@drawable/ic_sleep"
+        android:title="Sleep time"
+        app:actionLayout="@layout/action_view_switch" />
+
+    <item
+        android:id="@+id/quote_switch"
+        android:defaultValue="true"
+        android:icon="@drawable/ic_quote"
+        android:title="Daily Quote"
+        app:actionLayout="@layout/action_view_switch" />
+
 </menu>

@@ -5,8 +5,10 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.support.annotation.ColorInt;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -163,9 +165,10 @@ public class MainActivity extends AppCompatActivity
     }
     */
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    // Handle navigation drawer switches here.
+    // Handle navigation drawer items here. Since we are using switches we do not need this right now
     public boolean onNavigationItemSelected(MenuItem item) {
 
         int id = item.getItemId();
@@ -191,8 +194,8 @@ public class MainActivity extends AppCompatActivity
             Snackbar.make(item.getActionView(), (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        //drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
@@ -281,7 +284,7 @@ public class MainActivity extends AppCompatActivity
         headerView.findViewById(R.id.signOutButton).setOnClickListener(this);
 
         //toolbar for navigation drawer
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
 
@@ -316,6 +319,7 @@ public class MainActivity extends AppCompatActivity
         voice_switcher.setChecked(true);
         voice_switcher.setOnClickListener(new View.OnClickListener() {
             @Override
+
             public void onClick(View v) {
                 //voice_switcher.setChecked(!voice_switcher.isChecked());
                 Snackbar.make(v, (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();

@@ -18,10 +18,19 @@
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="navigation_menu_item">
-        <item name="android:textColor">#e17272</item>
+        <item name="android:textColor">@color/colorCoral</item>
         <item name="android:textSize">18dp</item>
         <item name="android:fontFamily">sans-serif</item>
     </style>
+
+    <style name="MyActionBar" parent="AppTheme.AppBarOverlay">
+        <item name="titleTextStyle">@style/MyActionBarTitle</item>
+    </style>
+
+    <style name="MyActionBarTitle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@color/colorCoral</item>
+    </style>
+
 
     <style name="Switch" parent="Theme.AppCompat.Light">
         <!-- active thumb & track color (30% transparency) -->
@@ -34,6 +43,10 @@
         <!-- inactive track color (30% transparency) -->
         <item name="android:colorForeground">#42221f1f
         </item>
+    </style>
+
+    <style name="title_activity_calendar">
+        <item name="android:textColor">@color/colorCoral</item>
     </style>
 
 </resources>

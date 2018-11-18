@@ -3,6 +3,8 @@
     <color name="colorPrimary">@android:color/transparent</color>
     <color name="colorPrimaryDark">#90000000</color>
     <color name="colorAccent">#90000000</color>
+    <color name="colorCoral">#e17272</color>
+    <color name="colorTransparent">@android:color/transparent</color>
 
     <!--Switch Colors-->
     <color name="disable_forground_grey">#42221f1f</color>
