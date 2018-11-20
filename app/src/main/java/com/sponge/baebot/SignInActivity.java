@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -21,11 +22,15 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignInActivity extends AppCompatActivity implements View.OnClickListener {
 
     private GoogleSignInClient mGoogleSignInClient;         // Google sign in client
     private FirebaseAuth mAuth;                             // Firebase authorization
+    FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
+
 
     private static final int RC_SIGN_IN = 9001;             // set sign in request code
     private static final String TAG = "GoogleActivity";     // set TAG
@@ -97,6 +102,9 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     // [START auth_with_google]
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
+        // store Google account Id with default settings
+        User myUser = new User(acct.getDisplayName(), acct.getEmail());
+        myUser.writeUserToDB(acct.getId(),acct.getDisplayName(), acct.getEmail());
 
         // [START_EXCLUDE silent] --- NOTE: testing loading time see if progress dialog is needed
         // showProgressDialog();

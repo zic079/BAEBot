@@ -7,5 +7,5 @@
     <!--Switch Colors-->
     <color name="disable_forground_grey">#42221f1f</color>
     <color name="disable_thumb_grey">#1c0000</color>
-    <color name="enable_thumb_orange">#f9a236</color>
+    <color name="enable_thumb_orange">#ffa536</color>
 </resources>
