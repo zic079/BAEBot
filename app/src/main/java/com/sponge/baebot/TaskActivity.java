@@ -94,7 +94,7 @@ public class TaskActivity extends AppCompatActivity
                     Task task = new Task(strTitle, strDescription, year, month, dayOfMonth, hour, minute);
 
                     if (userId != null) {
-                        myUser.updateIdCount();
+                        //myUser.updateIdCount();
                         long currentTime = calendar.getTimeInMillis();
                         String strCurrentTime = Long.toString(currentTime);
                         mDatabase.child("task").child(userId).child(strCurrentTime).setValue(task);

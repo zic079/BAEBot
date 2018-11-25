@@ -109,6 +109,11 @@ public class MainActivity extends AppCompatActivity
         // call setupNavView to initialized navigation tab
         setupNavView();
 
+        // button on main content
+        findViewById(R.id.calendarBtn).setOnClickListener(this);
+        findViewById(R.id.taskBtn).setOnClickListener(this);
+        findViewById(R.id.weatherBtn).setOnClickListener(this);
+
         // read calendar data with AsyncQueryHandler
         ArrayList<String> calendarData = readEvent();
 
@@ -203,11 +208,11 @@ public class MainActivity extends AppCompatActivity
                 signOut();
                 break;
 
-            case R.id.button1:
+            case R.id.calendarBtn:
                 switchActivity(CalendarActivity.class);
                 break;
 
-            case R.id.Task:
+            case R.id.taskBtn:
                 FirebaseUser currentUser = mAuth.getCurrentUser();
                 String userId = currentUser.getUid();
                 User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
@@ -215,6 +220,10 @@ public class MainActivity extends AppCompatActivity
                 i.putExtra("userId",userId);
                 i.putExtra("user", myUser);
                 startActivity(i);
+                break;
+
+            case R.id.weatherBtn:
+                switchActivity(WeatherActivity.class);
                 break;
         }
     }
@@ -294,10 +303,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
-
-        // button on main content
-        findViewById(R.id.button1).setOnClickListener(this);
-        findViewById(R.id.Task).setOnClickListener(this);
 
         // What is this pieces of code for? Doesn't seen like we have a fab.
         /*
