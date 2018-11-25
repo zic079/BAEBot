@@ -74,8 +74,8 @@ public class CalendarActivity extends AppCompatActivity
         });
         */
 
-        daysBtn = (Button)findViewById(R.id.buttonGetDays);
-        daysEdit = (EditText)findViewById(R.id.editTextDays);
+        daysBtn = findViewById(R.id.buttonGetDays);
+        daysEdit = findViewById(R.id.editTextDays);
         daysBtn.setOnClickListener(this);
 
         newEventBtn = findViewById(R.id.buttonNewEvent);
