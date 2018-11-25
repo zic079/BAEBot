@@ -103,8 +103,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // store Google account Id with default settings
-        User myUser = new User(acct.getDisplayName(), acct.getEmail());
-        myUser.writeUserToDB(acct.getId(),acct.getDisplayName(), acct.getEmail());
 
         // [START_EXCLUDE silent] --- NOTE: testing loading time see if progress dialog is needed
         // showProgressDialog();
@@ -119,6 +117,8 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(TAG, "signInWithCredential:success");
                         FirebaseUser user = mAuth.getCurrentUser();
+                        User myUser = new User(user.getDisplayName(), user.getEmail());
+                        myUser.writeUserToDB(user.getUid(), myUser);
                         updateUI(user);
                     } else {
                         // If sign in fails, display a message to the user.

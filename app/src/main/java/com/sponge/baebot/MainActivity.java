@@ -109,10 +109,6 @@ public class MainActivity extends AppCompatActivity
         // call setupNavView to initialized navigation tab
         setupNavView();
 
-        // button on main content
-        findViewById(R.id.button1).setOnClickListener(this);
-        findViewById(R.id.button2).setOnClickListener(this);
-
         // read calendar data with AsyncQueryHandler
         ArrayList<String> calendarData = readEvent();
 
@@ -211,8 +207,14 @@ public class MainActivity extends AppCompatActivity
                 switchActivity(CalendarActivity.class);
                 break;
 
-            case R.id.button2:
-                switchActivity(WeatherActivity.class);
+            case R.id.Task:
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                String userId = currentUser.getUid();
+                User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
+                Intent i = new Intent(MainActivity.this, TaskActivity.class);
+                i.putExtra("userId",userId);
+                i.putExtra("user", myUser);
+                startActivity(i);
                 break;
         }
     }
@@ -292,6 +294,10 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
+
+        // button on main content
+        findViewById(R.id.button1).setOnClickListener(this);
+        findViewById(R.id.Task).setOnClickListener(this);
 
         // What is this pieces of code for? Doesn't seen like we have a fab.
         /*

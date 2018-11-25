@@ -11,7 +11,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="51dp"
+        tools:layout_editor_absoluteY="47dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -102,8 +104,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="text"
-            android:imeOptions="actionDone"/>
+            android:imeOptions="actionDone"
+            android:inputType="text" />
 
         <TextView
             android:id="@+id/textView5"
@@ -146,8 +148,8 @@
                 android:layout_width="265dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
-                android:inputType="time"
-                android:imeOptions="actionDone"/>
+                android:imeOptions="actionDone"
+                android:inputType="time" />
 
             <Button
                 android:id="@+id/buttonSelectTime"
