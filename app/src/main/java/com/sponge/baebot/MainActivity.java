@@ -109,6 +109,10 @@ public class MainActivity extends AppCompatActivity
         // call setupNavView to initialized navigation tab
         setupNavView();
 
+        // button on main content
+        findViewById(R.id.button1).setOnClickListener(this);
+        findViewById(R.id.button2).setOnClickListener(this);
+
         // read calendar data with AsyncQueryHandler
         ArrayList<String> calendarData = readEvent();
 
@@ -206,6 +210,10 @@ public class MainActivity extends AppCompatActivity
             case R.id.button1:
                 switchActivity(CalendarActivity.class);
                 break;
+
+            case R.id.button2:
+                switchActivity(WeatherActivity.class);
+                break;
         }
     }
 
@@ -284,9 +292,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(null);
-
-        // button on main content
-        findViewById(R.id.button1).setOnClickListener(this);
 
         // What is this pieces of code for? Doesn't seen like we have a fab.
         /*
