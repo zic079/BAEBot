@@ -23,6 +23,7 @@ public class ShowCalendarActivity extends AppCompatActivity
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_calendar);
+
         mCalendarView = (CalendarView) findViewById(R.id.calendarView);
         myDate = (TextView) findViewById(R.id.myDate);
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
