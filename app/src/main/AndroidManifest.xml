@@ -39,6 +39,10 @@
             android:label="@string/title_activity_calendar"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".ShowCalendarActivity"
+            android:label="ShowCalendarActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".TaskActivity"
             android:label="TaskActivity"
             android:theme="@style/AppTheme.NoActionBar" />
