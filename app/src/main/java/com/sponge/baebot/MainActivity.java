@@ -196,8 +196,8 @@ public class MainActivity extends AppCompatActivity
             Snackbar.make(item.getActionView(), (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        //drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
