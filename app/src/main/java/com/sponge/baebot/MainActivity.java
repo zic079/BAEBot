@@ -111,6 +111,7 @@ public class MainActivity extends AppCompatActivity
 
         // button on main content
         findViewById(R.id.calendarBtn).setOnClickListener(this);
+        findViewById(R.id.showCalendarBtn).setOnClickListener(this);
         findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.weatherBtn).setOnClickListener(this);
 
@@ -210,6 +211,10 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.calendarBtn:
                 switchActivity(CalendarActivity.class);
+                break;
+
+            case R.id.showCalendarBtn:
+                switchActivity(ShowCalendarActivity.class);
                 break;
 
             case R.id.taskBtn:

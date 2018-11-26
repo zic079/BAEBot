@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -56,8 +57,10 @@ public class CalendarActivity extends AppCompatActivity
 
     CalendarQueryHandler handler;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -94,6 +97,9 @@ public class CalendarActivity extends AppCompatActivity
 
         // initialize new CalendarQueryHandler to handle calendar CRUD operation
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
+
+
+
     }
 
     @Override
