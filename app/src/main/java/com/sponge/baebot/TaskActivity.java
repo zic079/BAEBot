@@ -76,11 +76,13 @@ public class TaskActivity extends AppCompatActivity
                 searchTask();
                 tl.removeAllViews();
 
+
                 Log.d("list size", ""+Integer.toString(taskList.size()));
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         printTasks();
+
                     }
                 }, 100);
             }
