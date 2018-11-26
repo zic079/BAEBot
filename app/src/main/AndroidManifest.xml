@@ -21,7 +21,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".SignInActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -42,8 +41,11 @@
             android:name=".TaskActivity"
             android:label="TaskActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".WeatherActivity"
+            android:label="WeatherActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".WeatherActivity"></activity>
     </application>
 
 </manifest>
