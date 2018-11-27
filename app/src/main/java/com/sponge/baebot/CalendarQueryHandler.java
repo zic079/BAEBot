@@ -11,6 +11,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.TextView;
 
@@ -50,7 +52,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
     // https://developer.android.com/reference/android/provider/CalendarContract.Events
-    public static final String[] EVENT_PROJECTION = new String[] {
+    private static final String[] EVENT_PROJECTION = new String[] {
             CalendarContract.Events.CALENDAR_ID,                  // 0
             CalendarContract.Events.TITLE,                        // 1
             CalendarContract.Events.DESCRIPTION,                  // 2
@@ -71,9 +73,12 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     private static final int PROJECTION_TIMEEND_INDEX = 4;
     private static final int PROJECTION_ALLDAY_INDEX = 5;
 
-    final WeakReference<AppCompatActivity> activityRef;
+    private WeakReference<AppCompatActivity> activityRef;
 
-    private int queryDays = 0;
+    //private int queryDays = 0;
+    private Calendar queryStartDate_offset;
+    private Calendar queryStartDate;
+    private Calendar queryEndDate;
 
     // Public constructors: AsyncQueryHandler(ContentResolver cr)
     // https://developer.android.com/reference/android/content/AsyncQueryHandler
@@ -90,6 +95,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
 
         // Get the field values
         ///long calendarID = cursor.getLong(PROJECTION_ID_INDEX);
+        Log.d(TAG, "onQueryComplete: complete query");
 
         ArrayList<String> calendarData = new ArrayList<>();
 
@@ -125,16 +131,30 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
             // Note: event is in UTC time
             eventBeginMill = cursor.getString(PROJECTION_TIMESTART_INDEX);
 
+            // check event is all day event
             isAllDay = cursor.getString(PROJECTION_ALLDAY_INDEX);
             Log.d("allDay", "is all day " + isAllDay);
 
-            eventBeginDate = milliToDate(eventBeginMill, Integer.parseInt(isAllDay));
+            // check event is in searching range, all day event has offset
+            if(Long.parseLong(eventBeginMill) >= queryStartDate.getTimeInMillis() || Integer.parseInt(isAllDay) == 1) {
+                Log.d(TAG, "onQueryComplete: eventBeginMill - " + eventBeginMill);
 
-            // Building string of current cursor data
-            // String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
-            String currentData = String.format("Event Title: %s   Begin Time: %s", eventTitle, eventBeginDate);
-            Log.d("readEvent", currentData);
-            calendarData.add(currentData);
+                // Building string of current cursor data
+                // String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
+                String currentData;
+
+                if(Integer.parseInt(isAllDay) == 1) {
+                    currentData = String.format("%s          All Day", eventTitle);
+                }
+
+                else {
+                    eventBeginDate = milliToDate(eventBeginMill);
+                    currentData = String.format("%s          %s", eventTitle, eventBeginDate);
+                }
+
+                // Log.d("readEvent", currentData);
+                calendarData.add(currentData);
+            }
         }
 
         ///Log.d(TAG, "Calendar query complete " + calendarID);
@@ -172,7 +192,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
             }
             */
 
-            readEvent(queryDays);
+            readEvent(queryStartDate_offset, queryStartDate, queryEndDate);
         }
     }
 
@@ -189,9 +209,8 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     /**
      * send update query request to calendar provider
      *
-     * @param numsDay The range of events (by days from today) to request
      */
-    public void readEvent(int numsDay) {
+    public void readEvent(Calendar startDate_offset, Calendar startDate, Calendar endDate) {
 
         /*
         // initialize the query handler if it didn't been initialized yet
@@ -200,25 +219,34 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         }
         */
 
-        queryDays = numsDay;
+        //queryDays = numsDay;
+
+        // Reason for start date offset: all day event use PST time, causing offset
+        queryStartDate_offset = startDate_offset;
+        queryStartDate = startDate;
+        queryEndDate = endDate;
+
+        Log.d(TAG, "readEvent: startDate - " + startDate);
 
         Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
 
         // get current time
-        Date currentTime = Calendar.getInstance().getTime();
+        //Date currentTime = Calendar.getInstance().getTime();
 
         // building selection - the start and end time range for calendar provider
-        Calendar calendarStart= Calendar.getInstance();
-        calendarStart.setTime(currentTime);
-        Calendar calendarEnd= Calendar.getInstance();
-        calendarEnd.setTime(currentTime);
-        calendarEnd.add(Calendar.DATE, queryDays);
+        //Calendar calendarStart= Calendar.getInstance();
+        //calendarStart.setTime(startDate);
+        //Calendar calendarEnd= Calendar.getInstance();
+        //calendarEnd.setTime(endDate);
+        //calendarEnd.add(Calendar.DATE, queryDays);
 
 
         // set selection and selectionArgs as null
-        String selection = "((dtstart >= " + calendarStart.getTimeInMillis() + ") AND (dtend <= " + calendarEnd.getTimeInMillis()+"))";
+        String selection = "((dtstart >= " + startDate_offset.getTimeInMillis() + ") AND (dtend <= " + endDate.getTimeInMillis()+"))";
         String[] selectionArgs = null;
 
+        Log.d(TAG, "readEvent: startmill - " + startDate.getTimeInMillis());
+        Log.d(TAG, "readEvent: endDate - " + endDate.getTimeInMillis());
 
         //ArrayList<String> calendarData = new ArrayList<>();
 
@@ -283,11 +311,12 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     }
 
     // helper function - convert millisecond to readable date
-    private String milliToDate(String milliSec, int isAllDay) {
+    private String milliToDate(String milliSec) {
         String date;                    // date convert from millisecond
-        int offset;                     // offset when event is all day event
+        //int offset;                     // offset when event is all day event
         SimpleDateFormat formatter;     //date formatter for millisecond conversion
 
+        /*
         if(isAllDay == 1) {
             // formatter without time, since it is all dat event
             formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -300,15 +329,19 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
             formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
             offset = 0;
         }
+        */
+
+        formatter = new SimpleDateFormat("HH:mm");
 
         Calendar calendarTemp = Calendar.getInstance();
-        calendarTemp.setTimeInMillis(Long.parseLong(milliSec) + offset);
+        //calendarTemp.setTimeInMillis(Long.parseLong(milliSec) + offset);
+        calendarTemp.setTimeInMillis(Long.parseLong(milliSec));
         date = formatter.format(calendarTemp.getTime());
 
         return date;
     }
 
-
+/*
     // helper function to update event list in activity
     // hardcode, test only
     private void updateEventList(ArrayList<String> calendarData) {
@@ -323,16 +356,6 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         TextView event5 = (TextView)mActivity.findViewById(R.id.event5);
         TextView event6 = (TextView)mActivity.findViewById(R.id.event6);
 
-        /*
-        if(calendarData.size() > 5) {
-            event1.setText(calendarData.get(0));
-            event2.setText(calendarData.get(1));
-            event3.setText(calendarData.get(2));
-            event4.setText(calendarData.get(3));
-            event5.setText(calendarData.get(4));
-            event6.setText(calendarData.get(5));
-        }
-        */
 
         int numsEvent = calendarData.size();
         eventsCount.setText("There are total " + numsEvent + " in the time range");
@@ -403,4 +426,15 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
                 break;
         }
     }
+*/
+
+    private void updateEventList(ArrayList<String> calendarData) {
+        AppCompatActivity mActivity = activityRef.get();
+
+        RecyclerView recyclerView = mActivity.findViewById(R.id.recyclerView);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(calendarData, mActivity);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+    }
+
 }

@@ -1,13 +1,16 @@
 package com.sponge.baebot;
 
+import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -34,7 +37,8 @@ import java.util.Date;
 
 public class TaskActivity extends AppCompatActivity
         implements View.OnClickListener {
-    private EditText date, time, title, description, taskIdInput;
+    private Button selectDate, selectTime;
+    private EditText title, description, taskIdInput;
     private int year, month, dayOfMonth, hour, minute;
     private Calendar calendar = Calendar.getInstance();
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
@@ -57,36 +61,36 @@ public class TaskActivity extends AppCompatActivity
         Intent intent = getIntent();
         User myUser = intent.getParcelableExtra("user");
 
-        final Button deleteTask = findViewById(R.id.btnDelete);
-        taskIdInput = findViewById(R.id.taskId_input);
+//        final Button deleteTask = findViewById(R.id.btnDelete);
+//        taskIdInput = findViewById(R.id.taskId_input);
+//
+//        deleteTask.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                deleteTask();
+//            }
+//        });
 
-        deleteTask.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                deleteTask();
-            }
-        });
-
-        tl= findViewById(R.id.tastTable);
-        Button getTask = findViewById(R.id.btnGetTask);
-        getTask.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                Log.w("button", "get Task button clicked!");
-                searchTask();
-                tl.removeAllViews();
-
-
-                Log.d("list size", ""+Integer.toString(taskList.size()));
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        printTasks();
-
-                    }
-                }, 100);
-            }
-        });
+//        tl= findViewById(R.id.tastTable);
+//        Button getTask = findViewById(R.id.btnGetTask);
+//        getTask.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v){
+//                Log.w("button", "get Task button clicked!");
+//                searchTask();
+//                tl.removeAllViews();
+//
+//
+//                Log.d("list size", ""+Integer.toString(taskList.size()));
+//                Handler handler = new Handler();
+//                handler.postDelayed(new Runnable() {
+//                    public void run() {
+//                        printTasks();
+//
+//                    }
+//                }, 100);
+//            }
+//        });
 
         Button createTask = findViewById(R.id.btnTask);
         createTask.setOnClickListener(new View.OnClickListener() {
@@ -99,15 +103,14 @@ public class TaskActivity extends AppCompatActivity
         title = findViewById(R.id.title_input);
         description = findViewById(R.id.description);
 
-        Button selectDate = findViewById(R.id.btnDate);
-        date = findViewById(R.id.tvSelectedDate);
+        selectDate = findViewById(R.id.btnDate);
+        //date = findViewById(R.id.tvSelectedDate);
         selectDate.setOnClickListener(this);
 
-        Button selectTime = findViewById(R.id.btnTime);
-        time = findViewById(R.id.tvSelectedTime);
+        selectTime = findViewById(R.id.btnTime);
+        //time = findViewById(R.id.tvSelectedTime);
         selectTime.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View v){
@@ -121,7 +124,7 @@ public class TaskActivity extends AppCompatActivity
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                                date.setText(year + "-" + (month + 1) + "-" + day);
+                                selectDate.setText(year + "-" + (month + 1) + "-" + day);
                             }
                         }, year, month, dayOfMonth);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -136,7 +139,7 @@ public class TaskActivity extends AppCompatActivity
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                time.setText(hourOfDay + ":" + minute);
+                                selectTime.setText(hourOfDay + ":" + minute);
                             }
                         }, hour, minute, true);
                 timePickerDialog.show();
@@ -148,9 +151,14 @@ public class TaskActivity extends AppCompatActivity
         Log.w("button", "create task button clicked!");
         String strTitle = title.getText().toString();
         String strDescription = description.getText().toString();
+        String strDate = "";
+        String strTime = "";
 
-        String strDate = date.getText().toString();
-        String strTime = time.getText().toString();
+        if (selectDate != null && selectTime != null) {
+            strDate = selectDate.getText().toString();
+            strTime = selectTime.getText().toString();
+        }
+
         if (strDate.length() != 0 && strTime.length() != 0 && strTitle.length() != 0) {
 
 
@@ -255,11 +263,11 @@ public class TaskActivity extends AppCompatActivity
                                         public void onComplete(
                                                 @Nullable DatabaseError databaseError,
                                                 @NonNull DatabaseReference databaseReference) {
-                                                if (databaseError == null){
-                                                    Log.d("delete task", "success");
-                                                } else {
-                                                    Log.d("delete task", "failure");
-                                                }
+                                            if (databaseError == null){
+                                                Log.d("delete task", "success");
+                                            } else {
+                                                Log.d("delete task", "failure");
+                                            }
                                         }
                                     }
                             );

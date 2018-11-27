@@ -47,7 +47,6 @@
             android:name=".TaskActivity"
             android:label="TaskActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".WeatherActivity"
             android:label="WeatherActivity"
