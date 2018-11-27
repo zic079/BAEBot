@@ -26,7 +26,7 @@
 
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/sentence"
                 android:layout_width="match_parent"
                 android:layout_height="72dp"
                 android:layout_marginLeft="5dp"
@@ -65,40 +65,39 @@
 
 
                     <Button
-                        android:id="@+id/button1"
+                        android:id="@+id/eventBtn"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@android:dimen/notification_large_icon_height"
+                        android:layout_marginTop="15dp"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:background="@drawable/ic_button"
-                        android:text="TEST Calendar"
+                        android:text="events/tasks"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
 
                     <Button
-                        android:id="@+id/button2"
+                        android:id="@+id/showCalendarBtn"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:background="@drawable/ic_button"
-                        android:text="Button"
+                        android:text="Show Calendar"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
-
                     <Button
-                        android:id="@+id/button3"
+                        android:id="@+id/weatherBtn"
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:layout_marginBottom="32dp"
+                        android:layout_marginBottom="20dp"
                         android:background="@drawable/ic_button"
-                        android:text="Button"
+                        android:text="test weather"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -134,160 +133,14 @@
                         android:drawableLeft="?android:attr/actionModeWebSearchDrawable"
                         android:padding="2dp"
                         android:textSize="14sp" />
+
                 </android.support.design.widget.TextInputLayout>
 
-
-                <ScrollView
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="@dimen/nav_header_vertical_spacing"
-                    android:layout_marginRight="@dimen/nav_header_vertical_spacing"
-                    android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                    android:layout_weight="0"
-                    android:background="@drawable/calendar_inner_background">
-
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                        android:layout_marginTop="@dimen/activity_vertical_margin"
-                        android:layout_marginRight="@dimen/activity_horizontal_margin"
-                        android:orientation="vertical">
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                            android:layout_weight="0">
-
-
-                            <TextView
-                                android:id="@+id/event1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Event 1"
-                                android:textAlignment="center"
-                                android:textSize="18sp" />
-
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                            android:layout_weight="0">
-
-
-                            <TextView
-                                android:id="@+id/event2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Event 2"
-                                android:textAlignment="center"
-                                android:textSize="18sp" />
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                            android:layout_weight="0">
-
-
-                            <TextView
-                                android:id="@+id/event3"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Event 3"
-                                android:textAlignment="center"
-                                android:textSize="18sp" />
-
-
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                            android:layout_weight="0">
-
-
-                            <TextView
-                                android:id="@+id/event4"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Event 4"
-                                android:textAlignment="center"
-                                android:textSize="18sp" />
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                            android:layout_weight="0">
-
-
-                            <TextView
-                                android:id="@+id/event5"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Event 5"
-                                android:textAlignment="center"
-                                android:textSize="18sp" />
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                            android:layout_weight="0">
-
-
-                            <TextView
-                                android:id="@+id/event6"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Event 6"
-                                android:textAlignment="center"
-                                android:textSize="18sp" />
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                            android:layout_weight="0">
-
-
-                            <TextView
-                                android:id="@+id/event7"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Event 7"
-                                android:textAlignment="center"
-                                android:textSize="18sp" />
-                        </android.support.v7.widget.CardView>
-
-                        <android.support.v7.widget.CardView
-                            android:layout_width="match_parent"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                            android:layout_weight="0">
-
-
-                            <TextView
-                                android:id="@+id/event8"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Event 8"
-                                android:textAlignment="center"
-                                android:textSize="18sp" />
-                        </android.support.v7.widget.CardView>
-
-                    </LinearLayout>
-                </ScrollView>
+                    android:background="@drawable/calendar_inner_background" />
 
 
             </LinearLayout>

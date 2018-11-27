@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.CalendarView;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -56,8 +57,10 @@ public class CalendarActivity extends AppCompatActivity
 
     CalendarQueryHandler handler;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -74,8 +77,8 @@ public class CalendarActivity extends AppCompatActivity
         });
         */
 
-        daysBtn = (Button)findViewById(R.id.buttonGetDays);
-        daysEdit = (EditText)findViewById(R.id.editTextDays);
+        daysBtn = findViewById(R.id.buttonGetDays);
+        daysEdit = findViewById(R.id.editTextDays);
         daysBtn.setOnClickListener(this);
 
         newEventBtn = findViewById(R.id.buttonNewEvent);
@@ -94,6 +97,7 @@ public class CalendarActivity extends AppCompatActivity
 
         // initialize new CalendarQueryHandler to handle calendar CRUD operation
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
+
     }
 
     @Override
@@ -103,7 +107,7 @@ public class CalendarActivity extends AppCompatActivity
                 queryDays = Integer.parseInt(daysEdit.getText().toString());
 
                 // call CalendarQueryHandler to get event
-                handler.readEvent(queryDays);
+                //handler.readEvent(queryDays);
                 break;
 
             case R.id.buttonSelectDate:
@@ -167,6 +171,93 @@ public class CalendarActivity extends AppCompatActivity
                 break;
         }
     }
+
+
+    /*
+    public void onUpdateCompleted(ArrayList<String> calendarData) {
+        // hardcoded test
+        TextView eventsCount = (TextView)findViewById(R.id.eventsCount);
+        TextView event1 = (TextView)findViewById(R.id.event1);
+        TextView event2 = (TextView)findViewById(R.id.event2);
+        TextView event3 = (TextView)findViewById(R.id.event3);
+        TextView event4 = (TextView)findViewById(R.id.event4);
+        TextView event5 = (TextView)findViewById(R.id.event5);
+        TextView event6 = (TextView)findViewById(R.id.event6);
+
+
+
+
+        int numsEvent = calendarData.size();
+        eventsCount.setText("There are total " + numsEvent + " in the time range");
+
+
+        // set limit of display
+        if(numsEvent > 6) {
+            numsEvent = 6;
+        }
+
+        // display events info - hardcode, using list view should be better
+        switch(numsEvent) {
+            case 1:
+                event1.setText(calendarData.get(0));
+                event2.setText("");
+                event3.setText("");
+                event4.setText("");
+                event5.setText("");
+                event6.setText("");
+                break;
+            case 2:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText("");
+                event4.setText("");
+                event5.setText("");
+                event6.setText("");
+                break;
+            case 3:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText(calendarData.get(2));
+                event4.setText("");
+                event5.setText("");
+                event6.setText("");
+                break;
+            case 4:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText(calendarData.get(2));
+                event4.setText(calendarData.get(3));
+                event5.setText("");
+                event6.setText("");
+                break;
+            case 5:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText(calendarData.get(2));
+                event4.setText(calendarData.get(3));
+                event5.setText(calendarData.get(4));
+                event6.setText("");
+                break;
+            case 6:
+                event1.setText(calendarData.get(0));
+                event2.setText(calendarData.get(1));
+                event3.setText(calendarData.get(2));
+                event4.setText(calendarData.get(3));
+                event5.setText(calendarData.get(4));
+                event6.setText(calendarData.get(5));
+                break;
+            default:
+                event1.setText("");
+                event2.setText("");
+                event3.setText("");
+                event4.setText("");
+                event5.setText("");
+                event6.setText("");
+                break;
+        }
+    }
+
+    */
 
 /*
     public void newEvents(ArrayList<String> calendarData) {
