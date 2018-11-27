@@ -1,12 +1,13 @@
 package com.sponge.baebot;
 
 public class Task {
-    private String title, description;
+    private String title, description, taskId;
     private int year, month, dayOfMonth, hour, minute;
 
     public Task(){ }
-    public Task(String title, String description,int year, int month, int dayOfMonth,
+    public Task(String taskId, String title, String description,int year, int month, int dayOfMonth,
                 int hour, int minute){
+        this.taskId = taskId;
         this.title = title;
         this.description = description;
         this.year = year;
@@ -14,6 +15,9 @@ public class Task {
         this.dayOfMonth = dayOfMonth;
         this.hour = hour;
         this.minute = minute;
+    }
+    public  String getTaskId(){
+        return taskId;
     }
 
     public String getTitle(){
