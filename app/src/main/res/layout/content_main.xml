@@ -111,7 +111,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/nav_header_vertical_spacing"
                 android:layout_marginRight="@dimen/nav_header_vertical_spacing"
-                android:background="@drawable/calendar_background"
+                android:background="@color/colorPrimary"
                 android:orientation="vertical">
 
 
@@ -137,13 +137,30 @@
 
                 </android.support.design.widget.TextInputLayout>
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/calendar_inner_background" />
+                    android:orientation="vertical">
 
+                    <android.support.design.widget.TabLayout
+                        android:id="@+id/tablayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/calendar_background"
+                        app:tabGravity="fill"
+                        app:tabIndicatorColor="@color/common_google_signin_btn_text_dark_default"
+                        app:tabMode="fixed"
+                        app:tabTextColor="@color/common_google_signin_btn_text_dark_default" />
 
+                    <android.support.v4.view.ViewPager
+                        android:id="@+id/viewpager"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/path_56">
+
+                    </android.support.v4.view.ViewPager>
+
+                </LinearLayout>
             </LinearLayout>
 
 

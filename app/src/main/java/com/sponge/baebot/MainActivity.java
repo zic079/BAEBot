@@ -6,6 +6,8 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -53,10 +55,13 @@ public class MainActivity extends AppCompatActivity
     SwitchCompat sleep_switcher;
     SwitchCompat quote_switcher;
 
-    Button eventBtn;
-    Button calendarBtn;
-    Button weatherBtn;
-    TextView sentence;
+    private Button eventBtn;
+    private Button calendarBtn;
+    private Button weatherBtn;
+    private TextView sentence;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
 
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
@@ -126,8 +131,18 @@ public class MainActivity extends AppCompatActivity
         Calendar startDate = new GregorianCalendar(year,month,dayOfMonth);
         Calendar endDate = new GregorianCalendar(year,month,dayOfMonth+1);
 
-        handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
-        handler.readEvent(startDate_offset, startDate, endDate);
+//        handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
+//        handler.readEvent(startDate_offset, startDate, endDate);
+
+        tabLayout = (TabLayout)findViewById(R.id.tablayout);
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter.addFragment(new FragmentEvent(),"Event");
+        viewPagerAdapter.addFragment(new FragmentTask(),"Task");
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+
+
     }
 
 /*
