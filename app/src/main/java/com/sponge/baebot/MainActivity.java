@@ -131,8 +131,8 @@ public class MainActivity extends AppCompatActivity
         Calendar startDate = new GregorianCalendar(year,month,dayOfMonth);
         Calendar endDate = new GregorianCalendar(year,month,dayOfMonth+1);
 
-//        handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
-//        handler.readEvent(startDate_offset, startDate, endDate);
+        handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
+        handler.readEvent(startDate_offset, startDate, endDate);
 
         tabLayout = (TabLayout)findViewById(R.id.tablayout);
         viewPager = (ViewPager)findViewById(R.id.viewpager);
