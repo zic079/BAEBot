@@ -39,7 +39,7 @@
             android:label="@string/title_activity_calendar"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ShowCalendarActivity"
+            android:name=".ShowCalendar.ShowCalendarActivity"
             android:label="ShowCalendarActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity

@@ -1,4 +1,4 @@
-package com.sponge.baebot;
+package com.sponge.baebot.ShowCalendar;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,12 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.sponge.baebot.R;
 
 import java.util.ArrayList;
 
