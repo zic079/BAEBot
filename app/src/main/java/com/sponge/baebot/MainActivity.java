@@ -18,6 +18,8 @@ import android.widget.TextView;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity
 
     private static final int PERMISSION_REQUEST_CODE = 100;
 
+    private CalendarQueryHandler handler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,17 +113,31 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.weatherBtn).setOnClickListener(this);
 
         // read calendar data with AsyncQueryHandler
-        ArrayList<String> calendarData = readEvent();
+        //ArrayList<String> calendarData = readEvent();
+        //initRecyclerView(calendarData);
 
-        initRecyclerView(calendarData);
+        // show today's event
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+
+        Calendar startDate_offset = new GregorianCalendar(year,month,dayOfMonth-1);
+        Calendar startDate = new GregorianCalendar(year,month,dayOfMonth);
+        Calendar endDate = new GregorianCalendar(year,month,dayOfMonth+1);
+
+        handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
+        handler.readEvent(startDate_offset, startDate, endDate);
     }
 
+/*
     private void initRecyclerView(ArrayList<String> events) {
         RecyclerView recyclerView = findViewById(R.id.main_recycler);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(events,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
+*/
 
     @Override
     public void onBackPressed() {
@@ -403,6 +421,7 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    /*
     ////// TESTING ONLY - NOT AsyncQueryHandler
     private ArrayList<String> readEvent() {
 
@@ -470,6 +489,7 @@ public class MainActivity extends AppCompatActivity
 
         return date;
     }
+    */
 }
 
 

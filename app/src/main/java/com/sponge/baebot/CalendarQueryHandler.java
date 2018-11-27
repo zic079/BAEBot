@@ -52,7 +52,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
     // https://developer.android.com/reference/android/provider/CalendarContract.Events
-    public static final String[] EVENT_PROJECTION = new String[] {
+    private static final String[] EVENT_PROJECTION = new String[] {
             CalendarContract.Events.CALENDAR_ID,                  // 0
             CalendarContract.Events.TITLE,                        // 1
             CalendarContract.Events.DESCRIPTION,                  // 2
@@ -73,7 +73,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     private static final int PROJECTION_TIMEEND_INDEX = 4;
     private static final int PROJECTION_ALLDAY_INDEX = 5;
 
-    final WeakReference<AppCompatActivity> activityRef;
+    private WeakReference<AppCompatActivity> activityRef;
 
     //private int queryDays = 0;
     private Calendar queryStartDate_offset;
@@ -144,12 +144,12 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
                 String currentData;
 
                 if(Integer.parseInt(isAllDay) == 1) {
-                    currentData = String.format("%s          -All Day", eventTitle);
+                    currentData = String.format("%s          All Day", eventTitle);
                 }
 
                 else {
                     eventBeginDate = milliToDate(eventBeginMill);
-                    currentData = String.format("%s          -%s", eventTitle, eventBeginDate);
+                    currentData = String.format("%s          %s", eventTitle, eventBeginDate);
                 }
 
                 // Log.d("readEvent", currentData);

@@ -24,13 +24,9 @@ public class ShowCalendarActivity extends AppCompatActivity {
 
 
     private static final String TAG = "CalendarActivity";
-
     private CalendarView mCalendarView;
-
     private TextView myDate;
-
     private int inputYear, inputMonth, inputDay;
-
     private CalendarQueryHandler handler;
 
     @Override
