@@ -28,16 +28,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 
 public class TaskActivity extends AppCompatActivity
         implements View.OnClickListener {
-    private Button selectDate, selectTime;
+    private Button selectDate, selectTime, saveTask;
     private EditText title, description, taskIdInput;
     private int year, month, dayOfMonth, hour, minute;
     private Calendar calendar = Calendar.getInstance();
@@ -110,6 +112,15 @@ public class TaskActivity extends AppCompatActivity
         selectTime = findViewById(R.id.btnTime);
         //time = findViewById(R.id.tvSelectedTime);
         selectTime.setOnClickListener(this);
+
+        saveTask = findViewById(R.id.btnTask);
+
+        saveTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTask();
+            }
+        });
     }
 
     @Override
@@ -144,6 +155,7 @@ public class TaskActivity extends AppCompatActivity
                         }, hour, minute, true);
                 timePickerDialog.show();
                 break;
+
         }
     }
 
@@ -199,15 +211,28 @@ public class TaskActivity extends AppCompatActivity
 
 
             if (userId != null) {
-                long currentTime = calendar.getTimeInMillis();
-                String taskId = Long.toString(currentTime);
-                Task task = new Task(taskId, strTitle, strDescription, year, month,
-                        dayOfMonth, hour, minute);
-                Log.d("task id", "" + taskId);
+                String taskId = UUID.randomUUID().toString();
+                Task task = null;
+                try {
+                    Log.d("date",year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
+                    Date d = new SimpleDateFormat("yyyy/MM/dd/hh/mm").parse(year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
+                    Timestamp ts = new Timestamp(d.getTime());
+                    task = new Task(taskId,strTitle,strDescription, ts.getTime());
+                }catch (Exception e){
+                    Log.d("task", "date parsing error");
+                }
+
+                Log.d("task id", taskId);
+                if(task == null){
+                    Log.d("task","task null");
+                }else{
+                    Log.d("task","task not null");
+                }
+
                 mDatabase.child("task").child(userId).child(taskId).setValue(task);
-                Log.w("add to db", "success");
+                Log.d("add to db", "success");
             } else {
-                Log.w("dataBase error", "No such User");
+                Log.d("dataBase error", "No such User");
             }
         }
     }
@@ -233,51 +258,51 @@ public class TaskActivity extends AppCompatActivity
                 });
     }
 
-    private void printTasks(){
-        for (Task t : taskList) {
-            TableRow tr1 = new TableRow(TaskActivity.this);
-            tr1.setLayoutParams(new TableRow.LayoutParams(
-                    TableLayout.LayoutParams.MATCH_PARENT,
-                    TableLayout.LayoutParams.WRAP_CONTENT));
-            TextView textview = new TextView(TaskActivity.this);
-            textview.setText(t.getTaskId()+ " " + t.getTitle() + " " + t.getDescription() + " " +
-                    t.getYear() + "-" + t.getMonth() + "-" +
-                    t.getDayOfMonth() + " " + t.getHour() + ":" + t.getMinute());
-            textview.setTextColor(Color.BLACK);
-            tr1.addView(textview);
-            tl.addView(tr1, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
-                    TableLayout.LayoutParams.WRAP_CONTENT));
-        }
-    }
-
-    private void deleteTask(){
-        mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
-                new ValueEventListener(){
-                    String taskId = taskIdInput.getText().toString();
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child(taskId).exists()) {
-                            mDatabase.child("task").child(userId).child(taskId).removeValue(
-                                    new DatabaseReference.CompletionListener() {
-                                        @Override
-                                        public void onComplete(
-                                                @Nullable DatabaseError databaseError,
-                                                @NonNull DatabaseReference databaseReference) {
-                                            if (databaseError == null){
-                                                Log.d("delete task", "success");
-                                            } else {
-                                                Log.d("delete task", "failure");
-                                            }
-                                        }
-                                    }
-                            );
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-    }
+//    private void printTasks(){
+//        for (Task t : taskList) {
+//            TableRow tr1 = new TableRow(TaskActivity.this);
+//            tr1.setLayoutParams(new TableRow.LayoutParams(
+//                    TableLayout.LayoutParams.MATCH_PARENT,
+//                    TableLayout.LayoutParams.WRAP_CONTENT));
+//            TextView textview = new TextView(TaskActivity.this);
+//            textview.setText(t.getTaskId()+ " " + t.getTitle() + " " + t.getDescription() + " " +
+//                    t.getYear() + "-" + t.getMonth() + "-" +
+//                    t.getDayOfMonth() + " " + t.getHour() + ":" + t.getMinute());
+//            textview.setTextColor(Color.BLACK);
+//            tr1.addView(textview);
+//            tl.addView(tr1, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+//                    TableLayout.LayoutParams.WRAP_CONTENT));
+//        }
+//    }
+//
+//    private void deleteTask(){
+//        mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
+//                new ValueEventListener(){
+//                    String taskId = taskIdInput.getText().toString();
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        if (dataSnapshot.child(taskId).exists()) {
+//                            mDatabase.child("task").child(userId).child(taskId).removeValue(
+//                                    new DatabaseReference.CompletionListener() {
+//                                        @Override
+//                                        public void onComplete(
+//                                                @Nullable DatabaseError databaseError,
+//                                                @NonNull DatabaseReference databaseReference) {
+//                                            if (databaseError == null){
+//                                                Log.d("delete task", "success");
+//                                            } else {
+//                                                Log.d("delete task", "failure");
+//                                            }
+//                                        }
+//                                    }
+//                            );
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
 }
