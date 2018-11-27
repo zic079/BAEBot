@@ -431,7 +431,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     private void updateEventList(ArrayList<String> calendarData) {
         AppCompatActivity mActivity = activityRef.get();
 
-        RecyclerView recyclerView = mActivity.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = mActivity.findViewById(R.id.event_recyclerView);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(calendarData, mActivity);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
