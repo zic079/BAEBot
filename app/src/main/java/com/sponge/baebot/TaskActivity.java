@@ -1,11 +1,16 @@
 package com.sponge.baebot;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -25,11 +30,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.UUID;
 
 
 public class TaskActivity extends AppCompatActivity
@@ -73,7 +76,8 @@ public class TaskActivity extends AppCompatActivity
             @Override
             public void onClick(View v){
                 Log.w("button", "get Task button clicked!");
-                searchTask();
+//                searchTask();
+                reschedule();
                 tl.removeAllViews();
 
 
@@ -81,7 +85,8 @@ public class TaskActivity extends AppCompatActivity
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
-                        printTasks();
+//                        printTasks();
+
 
                     }
                 }, 100);
@@ -191,15 +196,28 @@ public class TaskActivity extends AppCompatActivity
 
 
             if (userId != null) {
-                long currentTime = calendar.getTimeInMillis();
-                String taskId = Long.toString(currentTime);
-                Task task = new Task(taskId, strTitle, strDescription, year, month,
-                        dayOfMonth, hour, minute);
-                Log.d("task id", "" + taskId);
+                String taskId = UUID.randomUUID().toString();
+                Task task = null;
+                try {
+                    Log.d("date",year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
+                    Date d = new SimpleDateFormat("yyyy/MM/dd/hh/mm").parse(year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
+                    Timestamp ts = new Timestamp(d.getTime());
+                    task = new Task(taskId,strTitle,strDescription, ts.getTime());
+                }catch (Exception e){
+                    Log.d("task", "date parsing error");
+                }
+
+                Log.d("task id", taskId);
+                if(task == null){
+                    Log.d("task","task null");
+                }else{
+                    Log.d("task","task not null");
+                }
+
                 mDatabase.child("task").child(userId).child(taskId).setValue(task);
-                Log.w("add to db", "success");
+                Log.d("add to db", "success");
             } else {
-                Log.w("dataBase error", "No such User");
+                Log.d("dataBase error", "No such User");
             }
         }
     }
@@ -225,22 +243,22 @@ public class TaskActivity extends AppCompatActivity
                 });
     }
 
-    private void printTasks(){
-        for (Task t : taskList) {
-            TableRow tr1 = new TableRow(TaskActivity.this);
-            tr1.setLayoutParams(new TableRow.LayoutParams(
-                    TableLayout.LayoutParams.MATCH_PARENT,
-                    TableLayout.LayoutParams.WRAP_CONTENT));
-            TextView textview = new TextView(TaskActivity.this);
-            textview.setText(t.getTaskId()+ " " + t.getTitle() + " " + t.getDescription() + " " +
-                    t.getYear() + "-" + t.getMonth() + "-" +
-                    t.getDayOfMonth() + " " + t.getHour() + ":" + t.getMinute());
-            textview.setTextColor(Color.BLACK);
-            tr1.addView(textview);
-            tl.addView(tr1, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
-                    TableLayout.LayoutParams.WRAP_CONTENT));
-        }
-    }
+//    private void printTasks(){
+//        for (Task t : taskList) {
+//            TableRow tr1 = new TableRow(TaskActivity.this);
+//            tr1.setLayoutParams(new TableRow.LayoutParams(
+//                    TableLayout.LayoutParams.MATCH_PARENT,
+//                    TableLayout.LayoutParams.WRAP_CONTENT));
+//            TextView textview = new TextView(TaskActivity.this);
+//            textview.setText(t.getTaskId()+ " " + t.getTitle() + " " + t.getDescription() + " " +
+//                    t.getYear() + "-" + t.getMonth() + "-" +
+//                    t.getDayOfMonth() + " " + t.getHour() + ":" + t.getMinute());
+//            textview.setTextColor(Color.BLACK);
+//            tr1.addView(textview);
+//            tl.addView(tr1, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+//                    TableLayout.LayoutParams.WRAP_CONTENT));
+//        }
+//    }
 
     private void deleteTask(){
         mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
@@ -263,6 +281,43 @@ public class TaskActivity extends AppCompatActivity
                                         }
                                     }
                             );
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    public void reschedule(){
+        Log.d("rechedule","in reschedule");
+        final String taskId = null;
+        mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
+                new ValueEventListener(){
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        if (dataSnapshot.child(taskId).exists()) {
+//                            Task temp = dataSnapshot.child(taskId).getValue(Task.class);
+//                            mDatabase.child("task").child(userId).child(taskId).removeValue(
+//                                    new DatabaseReference.CompletionListener() {
+//                                        @Override
+//                                        public void onComplete(
+//                                                @Nullable DatabaseError databaseError,
+//                                                @NonNull DatabaseReference databaseReference) {
+//                                            if (databaseError == null){
+//                                                Log.d("delete task", "success");
+//                                            } else {
+//                                                Log.d("delete task", "failure");
+//                                            }
+//                                        }
+//                                    }
+//                            );
+//                        }
+                        Log.d("reschedule","in ondatechange");
+                        for(DataSnapshot ds : dataSnapshot.getChildren()){
+                            System.out.println(ds.getValue(Task.class).getTitle());
                         }
                     }
 

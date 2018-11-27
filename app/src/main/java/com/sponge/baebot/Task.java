@@ -4,6 +4,16 @@ public class Task {
     private String title, description, taskId;
     private long timestamp;
 
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    private boolean isCompleted = false;
+
 
     public Task(String taskId, String title, String description, long timestamp) {
         this.taskId = taskId;
