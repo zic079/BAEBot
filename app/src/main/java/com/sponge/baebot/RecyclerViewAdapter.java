@@ -1,4 +1,4 @@
-package com.sponge.baebot.ShowCalendar;
+package com.sponge.baebot;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -10,8 +10,6 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.sponge.baebot.R;
 
 import java.util.ArrayList;
 

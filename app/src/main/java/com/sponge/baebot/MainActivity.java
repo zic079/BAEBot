@@ -39,8 +39,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.sponge.baebot.ShowCalendar.RecyclerViewAdapter;
-import com.sponge.baebot.ShowCalendar.ShowCalendarActivity;
 
 
 public class MainActivity extends AppCompatActivity
