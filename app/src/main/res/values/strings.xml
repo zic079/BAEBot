@@ -12,7 +12,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_calendar">CalendarActivity</string>
-
+    <string name="save">Save</string>
 
 
 </resources>

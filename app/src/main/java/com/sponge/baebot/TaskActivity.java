@@ -49,9 +49,13 @@ public class TaskActivity extends AppCompatActivity
                 Log.w("button", "create task button clicked!");
                 String strTitle = title.getText().toString();
                 String strDescription = description.getText().toString();
+                String strDate = "";
+                String strTime = "";
+                if (selectDate != null && selectTime != null) {
+                    strDate = selectDate.getText().toString();
+                    strTime = selectTime.getText().toString();
+                }
 
-                String strDate = date.getText().toString();
-                String strTime = time.getText().toString();
                 if (strDate.length() != 0 && strTime.length() != 0 && strTitle.length() != 0) {
 
 
@@ -110,12 +114,12 @@ public class TaskActivity extends AppCompatActivity
         description = findViewById(R.id.description);
 
         selectDate = findViewById(R.id.btnDate);
-        date = findViewById(R.id.tvSelectedDate);
         selectDate.setOnClickListener(this);
 
         selectTime = findViewById(R.id.btnTime);
-        time = findViewById(R.id.tvSelectedTime);
         selectTime.setOnClickListener(this);
+        String temp1 = selectTime.getText().toString();
+        selectTime.setText(temp1);
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -139,7 +143,7 @@ public class TaskActivity extends AppCompatActivity
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                                date.setText(year + "-" + (month + 1) + "-" + day);
+                                selectDate.setText(year + "-" + (month + 1) + "-" + day);
                             }
                         }, year, month, dayOfMonth);
                 datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
@@ -154,7 +158,7 @@ public class TaskActivity extends AppCompatActivity
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                time.setText(hourOfDay + ":" + minute);
+                                selectTime.setText(hourOfDay + ":" + minute);
                             }
                         }, hour, minute, true);
                 timePickerDialog.show();
