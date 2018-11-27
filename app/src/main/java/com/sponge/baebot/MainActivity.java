@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity
             case R.id.weatherBtn:
                 if (weatherBtn.getText().equals("Return")) {
                     eventBtn.setText("events/tasks");
-                    calendarBtn.setText("showCalendar");
+                    calendarBtn.setText("Show Calendar");
                     weatherBtn.setText("Weather");
                     sentence.setText("What would you like assistance on?");
                 }
