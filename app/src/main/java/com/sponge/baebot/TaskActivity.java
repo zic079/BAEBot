@@ -38,7 +38,7 @@ import java.util.Date;
 public class TaskActivity extends AppCompatActivity
         implements View.OnClickListener {
     private Button selectDate, selectTime;
-    private EditText date, time, title, description, taskIdInput;
+    private EditText title, description, taskIdInput;
     private int year, month, dayOfMonth, hour, minute;
     private Calendar calendar = Calendar.getInstance();
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
@@ -151,9 +151,14 @@ public class TaskActivity extends AppCompatActivity
         Log.w("button", "create task button clicked!");
         String strTitle = title.getText().toString();
         String strDescription = description.getText().toString();
+        String strDate = "";
+        String strTime = "";
 
-        String strDate = date.getText().toString();
-        String strTime = time.getText().toString();
+        if (selectDate != null && selectTime != null) {
+            strDate = selectDate.getText().toString();
+            strTime = selectTime.getText().toString();
+        }
+
         if (strDate.length() != 0 && strTime.length() != 0 && strTitle.length() != 0) {
 
 

@@ -118,7 +118,6 @@
                             android:id="@+id/btnDate"
                             android:layout_width="wrap_content"
                             android:layout_height="35dp"
-                            android:layout_below="@+id/title_input"
                             android:layout_marginLeft="15dp"
                             android:layout_marginTop="0dp"
                             android:background="@drawable/rectangle_19"
