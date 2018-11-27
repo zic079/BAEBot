@@ -2,46 +2,35 @@ package com.sponge.baebot;
 
 import android.Manifest;
 import android.content.ContentResolver;
-import android.content.ContentUris;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
-import android.widget.CompoundButton;
-import android.widget.Switch;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -62,6 +51,10 @@ public class MainActivity extends AppCompatActivity
     SwitchCompat sleep_switcher;
     SwitchCompat quote_switcher;
 
+    Button eventBtn;
+    Button calendarBtn;
+    Button weatherBtn;
+    TextView sentence;
 
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
@@ -110,26 +103,22 @@ public class MainActivity extends AppCompatActivity
         setupNavView();
 
         // button on main content
-        findViewById(R.id.calendarBtn).setOnClickListener(this);
+        findViewById(R.id.eventBtn).setOnClickListener(this);
         findViewById(R.id.showCalendarBtn).setOnClickListener(this);
-        findViewById(R.id.taskBtn).setOnClickListener(this);
+       // findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.weatherBtn).setOnClickListener(this);
 
         // read calendar data with AsyncQueryHandler
         ArrayList<String> calendarData = readEvent();
 
-        //// Testing display event - hard code
-        if(calendarData.size() > 0) {
-            TextView event1 = (TextView)findViewById(R.id.event1);
-            TextView event2 = (TextView)findViewById(R.id.event2);
-            TextView event3 = (TextView)findViewById(R.id.event3);
-            TextView event4 = (TextView)findViewById(R.id.event4);
+        initRecyclerView(calendarData);
+    }
 
-            event1.setText(calendarData.get(0));
-            event2.setText(calendarData.get(1));
-            event3.setText(calendarData.get(2));
-            event4.setText(calendarData.get(3));
-        }
+    private void initRecyclerView(ArrayList<String> events) {
+        RecyclerView recyclerView = findViewById(R.id.main_recycler);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(events,this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -204,31 +193,49 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
+        eventBtn = (Button)findViewById(R.id.eventBtn);
+        calendarBtn = (Button)findViewById(R.id.showCalendarBtn);
+        weatherBtn = (Button)findViewById(R.id.weatherBtn);
+        sentence = (TextView)findViewById(R.id.sentence);
         switch (v.getId()) {
             case R.id.signOutButton:
                 signOut();
                 break;
 
-            case R.id.calendarBtn:
-                switchActivity(CalendarActivity.class);
+            case R.id.eventBtn:
+                if ((eventBtn.getText()).equals("events/tasks")) {
+                    eventBtn.setText("Add events");
+                    calendarBtn.setText("Add tasks");
+                    weatherBtn.setText("Return");
+                    sentence.setText("Would you like to add a new event or task?");
+                }
+                else
+                    switchActivity(CalendarActivity.class);
                 break;
 
             case R.id.showCalendarBtn:
-                switchActivity(ShowCalendarActivity.class);
-                break;
-
-            case R.id.taskBtn:
-                FirebaseUser currentUser = mAuth.getCurrentUser();
-                String userId = currentUser.getUid();
-                User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
-                Intent i = new Intent(MainActivity.this, TaskActivity.class);
-                i.putExtra("userId",userId);
-                i.putExtra("user", myUser);
-                startActivity(i);
+                if (calendarBtn.getText().equals("Add tasks")){
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    String userId = currentUser.getUid();
+                    User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
+                    Intent i = new Intent(MainActivity.this, TaskActivity.class);
+                    i.putExtra("userId",userId);
+                    i.putExtra("user", myUser);
+                    startActivity(i);
+                }else {
+                    switchActivity(ShowCalendarActivity.class);
+                }
                 break;
 
             case R.id.weatherBtn:
-                switchActivity(WeatherActivity.class);
+                if (weatherBtn.getText().equals("Return")) {
+                    eventBtn.setText("events/tasks");
+                    calendarBtn.setText("Show Calendar");
+                    weatherBtn.setText("Weather");
+                    sentence.setText("What would you like assistance on?");
+                }
+                else
+                    switchActivity(WeatherActivity.class);
                 break;
         }
     }
