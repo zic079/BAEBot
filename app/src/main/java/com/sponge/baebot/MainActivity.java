@@ -152,10 +152,15 @@ public class MainActivity extends AppCompatActivity
         int resultTime = Integer.parseInt(time);
         //final MediaPlayer gt;
         //int greet;
-        if(resultTime < 12) {
+        if(resultTime < 12 && resultTime > 6) {
             sentence.setText("Good morning");
             rId = R.raw.good_morning;
-        } else {
+        }
+        else if(resultTime < 18 && resultTime > 12) {
+            sentence.setText("Good afternoon");
+            //rId = R.raw.good_afternoon;
+        }
+        else {
             sentence.setText("Good evening");
             rId = R.raw.good_evening;
         }
