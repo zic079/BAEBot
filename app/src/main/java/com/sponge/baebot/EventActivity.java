@@ -94,7 +94,7 @@ public class EventActivity extends AppCompatActivity
         });
 
         title = findViewById(R.id.title_input_event);
-        description = findViewById(R.id.description);
+        description = findViewById(R.id.description_event);
 
         selectDate = findViewById(R.id.btnDate_event);
         //date = findViewById(R.id.tvSelectedDate);
