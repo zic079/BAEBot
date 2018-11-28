@@ -47,13 +47,6 @@ public class ShowCalendarActivity extends AppCompatActivity implements PopupMenu
         setContentView(R.layout.activity_view_calendar);
 
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
-        tabLayout = (TabLayout)findViewById(R.id.tablayout);
-        viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new FragmentEvent(),"Event");
-        viewPagerAdapter.addFragment(new FragmentTask(),"Task");
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
 
         mCalendarView = (CalendarView) findViewById(R.id.calendarView);
         myDate = (TextView) findViewById(R.id.myDate);
