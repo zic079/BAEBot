@@ -36,7 +36,7 @@
             android:layout_weight="0"
             android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
             android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:text="You have added the task. Don't forgot to finish it!"
+            android:text="You have added the event. Don't forgot about it!"
             android:textAlignment="viewStart"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -70,7 +70,7 @@
                 android:layout_marginBottom="50dp"
                 android:background="@drawable/path_56"
                 android:gravity="center_vertical"
-                android:text="Add Task Successfully!"
+                android:text="Add Event Successfully!"
                 android:textAlignment="center"
                 android:textColor="@color/common_google_signin_btn_text_dark_pressed"
                 android:textSize="24sp"
