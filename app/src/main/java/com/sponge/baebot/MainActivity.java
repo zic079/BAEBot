@@ -233,6 +233,7 @@ public class MainActivity extends AppCompatActivity
         calendarBtn = (Button)findViewById(R.id.showCalendarBtn);
         weatherBtn = (Button)findViewById(R.id.weatherBtn);
         sentence = (TextView)findViewById(R.id.sentence);
+        final View waifu = findViewById(R.id.Waifu);
         switch (v.getId()) {
             case R.id.signOutButton:
                 signOut();
@@ -258,8 +259,9 @@ public class MainActivity extends AppCompatActivity
                     Intent i = new Intent(MainActivity.this, TaskActivity.class);
                     i.putExtra("userId",userId);
                     i.putExtra("user", myUser);
-                    startActivity(i);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                    ActivityOptions options = ActivityOptions
+                            .makeSceneTransitionAnimation(this, waifu, "waifu");
+                    startActivity(i, options.toBundle());
                 }else {
                     switchActivity(ShowCalendarActivity.class);
                 }
