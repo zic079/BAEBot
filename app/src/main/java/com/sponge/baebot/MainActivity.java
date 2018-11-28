@@ -2,11 +2,16 @@
 package com.sponge.baebot;
 
 import android.Manifest;
+import android.app.ActivityOptions;
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.CalendarContract;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +19,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -21,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -34,6 +42,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -42,10 +51,15 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,PopupMenu.OnMenuItemClickListener {
 
     // navigation drawer switch
     SwitchCompat voice_switcher;
@@ -54,10 +68,21 @@ public class MainActivity extends AppCompatActivity
     SwitchCompat sleep_switcher;
     SwitchCompat quote_switcher;
 
-    Button eventBtn;
-    Button calendarBtn;
-    Button weatherBtn;
-    TextView sentence;
+    private Button eventBtn;
+    private Button calendarBtn;
+    private Button weatherBtn;
+    private ImageButton Waifu;
+    private TextView sentence;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
+
+    // Preprocess for voice
+    private static MediaPlayer rv;
+    int rId = R.raw.how_are_u_doing_today;
+
+    private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
+    private static DatabaseReference mDatabase = database.getReference();
 
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
@@ -83,13 +108,18 @@ public class MainActivity extends AppCompatActivity
 
     private static final int PERMISSION_REQUEST_CODE = 100;
 
-    private CalendarQueryHandler handler;
+    //private CalendarQueryHandler handler;
+
+    private ArrayList<com.sponge.baebot.Task> taskList = new ArrayList<>();
+    private ArrayList<com.sponge.baebot.Task> myList = new ArrayList<>();
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("Main activity", "onCreate called");
 
         // Configure google login in to access token
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -112,11 +142,46 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.showCalendarBtn).setOnClickListener(this);
        // findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.weatherBtn).setOnClickListener(this);
+        findViewById(R.id.Waifu).setOnClickListener(this);
+
+
+        // Get current System time to play different greetings.
+        sentence = (TextView)findViewById(R.id.sentence);
+        Calendar vu = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH");
+        String time = sdf.format(vu.getTime());
+        int resultTime = Integer.parseInt(time);
+        //final MediaPlayer gt;
+        //int greet;
+        if(resultTime < 12) {
+            sentence.setText("Good morning");
+            rId = R.raw.good_morning;
+        } else {
+            sentence.setText("Good evening");
+            rId = R.raw.good_evening;
+        }
+
+        rv = MediaPlayer.create(MainActivity.this, rId);
+
+        if(voice_switcher.isChecked()) {
+            rv.start();
+        }
+
+        rv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                rv.release();
+                rv = null;
+            }
+        });
+
+
 
         // read calendar data with AsyncQueryHandler
         //ArrayList<String> calendarData = readEvent();
         //initRecyclerView(calendarData);
 
+/*
         // show today's event
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -129,16 +194,25 @@ public class MainActivity extends AppCompatActivity
 
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
         handler.readEvent(startDate_offset, startDate, endDate);
+*/
+        Waifu = findViewById(R.id.Waifu);
+        tabLayout = (TabLayout)findViewById(R.id.tablayout);
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter.addFragment(new FragmentEvent(),"Event");
+        viewPagerAdapter.addFragment(new FragmentTask(),"Task");
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
+
     }
 
-/*
+
     private void initRecyclerView(ArrayList<String> events) {
         RecyclerView recyclerView = findViewById(R.id.main_recycler);
         RecyclerViewAdapter adapter = new RecyclerViewAdapter(events,this);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-*/
 
     @Override
     public void onBackPressed() {
@@ -148,6 +222,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
 
@@ -216,6 +291,7 @@ public class MainActivity extends AppCompatActivity
         calendarBtn = (Button)findViewById(R.id.showCalendarBtn);
         weatherBtn = (Button)findViewById(R.id.weatherBtn);
         sentence = (TextView)findViewById(R.id.sentence);
+        final View waifu = findViewById(R.id.Waifu);
         switch (v.getId()) {
             case R.id.signOutButton:
                 signOut();
@@ -227,9 +303,10 @@ public class MainActivity extends AppCompatActivity
                     calendarBtn.setText("Add tasks");
                     weatherBtn.setText("Return");
                     sentence.setText("Would you like to add a new event or task?");
-                }
-                else
+                } else {
                     switchActivity(CalendarActivity.class);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
                 break;
 
             case R.id.showCalendarBtn:
@@ -240,7 +317,9 @@ public class MainActivity extends AppCompatActivity
                     Intent i = new Intent(MainActivity.this, TaskActivity.class);
                     i.putExtra("userId",userId);
                     i.putExtra("user", myUser);
-                    startActivity(i);
+                    ActivityOptions options = ActivityOptions
+                            .makeSceneTransitionAnimation(this, waifu, "waifu");
+                    startActivity(i, options.toBundle());
                 }else {
                     switchActivity(ShowCalendarActivity.class);
                 }
@@ -255,6 +334,47 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                     switchActivity(WeatherActivity.class);
+                break;
+
+            case R.id.Waifu:
+                // Prevent multiple media being played simultaneously.
+                if(voice_switcher.isChecked() && rv != null) {
+                    rv.reset();
+                }
+                Random rand = new Random();
+                int n = rand.nextInt(4) + 1;
+                switch (n) {
+                    case 1:
+                        rId = R.raw.good_evening;
+                        sentence.setText("Good evening");
+                        break;
+
+                    case 2:
+                        rId = R.raw.how_are_u_doing_today;
+                        sentence.setText("How are you doing today?");
+                        break;
+
+                    case 3:
+                        rId = R.raw.good_morning;
+                        sentence.setText("Good morning!");
+                        break;
+                    case 4:
+                        rId = R.raw.thank_you;
+                        sentence.setText("Thank you !");
+                        break;
+                }
+                rv = MediaPlayer.create(MainActivity.this, rId);
+                if(voice_switcher.isChecked()) {
+                    rv.start();
+                }
+                rv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        rv.release();
+                        rv = null;
+                    }
+                });
+
                 break;
         }
     }
@@ -421,6 +541,42 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
+
+    public void showPopup(View v) {
+        PopupMenu popupMenu = new PopupMenu(this,v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.delete:
+                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    public String getUserId(){
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String userId = currentUser.getUid();
+        return userId;
+    }
+
+    public DatabaseReference getmDatabaseRef(){
+        return mDatabase;
+    }
+
+    public ArrayList<com.sponge.baebot.Task> getTaskList(){
+        return myList;
+    }
+
 
     /*
     ////// TESTING ONLY - NOT AsyncQueryHandler
