@@ -30,11 +30,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 
 public class TaskActivity extends AppCompatActivity
-        implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+        implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, TaskAdapter.ItemClickListener {
     private Button selectDate, selectTime, saveTask;
     private EditText title, description, taskIdInput;
     private int year, month, dayOfMonth, hour, minute;
@@ -48,11 +49,18 @@ public class TaskActivity extends AppCompatActivity
     private ArrayList<String> strTasks = new ArrayList<>();
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
+    private TaskAdapter adapter;
 
     private interface FirebaseCallback{
         void onCallback(ArrayList<com.sponge.baebot.Task> list);
     }
 
+    @Override
+    public void onItemClick(View view, int position){
+        mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
+        Toast.makeText(this, "You deleted" + adapter.getItem(position) +
+        "on row number" + position, Toast.LENGTH_SHORT).show();
+    }
     @Override
     public void onBackPressed(){
         super.onBackPressed();
@@ -139,9 +147,12 @@ public class TaskActivity extends AppCompatActivity
                     strTasks.add(t.toString());
                 }
                 recyclerView = findViewById(R.id.task_recyclerView);
-                recyclerViewAdapter = new RecyclerViewAdapter(strTasks, TaskActivity.this);
-                recyclerView.setAdapter(recyclerViewAdapter);
                 recyclerView.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
+                adapter = new TaskAdapter(TaskActivity.this, tasks);
+                adapter.setClickListener(TaskActivity.this);
+//                recyclerViewAdapter = new RecyclerViewAdapter(strTasks, TaskActivity.this);
+//                recyclerView.setAdapter(recyclerViewAdapter);
+                recyclerView.setAdapter(adapter);
             }
         });
     }

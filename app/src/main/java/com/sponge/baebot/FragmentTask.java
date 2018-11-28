@@ -28,7 +28,6 @@ public class FragmentTask extends Fragment {
     private ArrayList<com.sponge.baebot.Task> tasks = new ArrayList<>();
     private ArrayList<com.sponge.baebot.Task> taskList = new ArrayList<>();
     private ArrayList<String> strTasks = new ArrayList<>();
-    private int i = 0;
     private String userId;
     private static DatabaseReference mDatabase;
 
@@ -48,9 +47,7 @@ public class FragmentTask extends Fragment {
             public void onCallback(ArrayList<com.sponge.baebot.Task> list) {
                 Log.e("On resume!!!!", list.toString());
                 tasks = list;
-                i = 0;
                 for (Task t : tasks) {
-                    i++;
                     strTasks.add(t.toString());
                 }
                 Log.e("On resume!!!!", strTasks.toString());
@@ -82,11 +79,8 @@ public class FragmentTask extends Fragment {
                 public void onCallback(ArrayList<com.sponge.baebot.Task> list) {
                     Log.e("get task main", list.toString());
                     tasks = list;
-                    i = 0;
                     for (Task t : tasks) {
-                        i++;
                         strTasks.add(t.toString());
-                        Log.e("int !!!!!!!!!!!", Integer.toString(i));
                     }
                     Log.e("here!!!!!", strTasks.toString());
                     recyclerView = (RecyclerView) v.findViewById(R.id.task_recyclerView);
