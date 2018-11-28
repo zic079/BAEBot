@@ -7,14 +7,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.CalendarView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sponge.baebot.CalendarQueryHandler;
 
 import com.sponge.baebot.R;
 import com.sponge.baebot.RecyclerViewAdapter;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,7 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class ShowCalendarActivity extends AppCompatActivity {
+public class ShowCalendarActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
 
 
     private static final String TAG = "CalendarActivity";
@@ -33,6 +38,7 @@ public class ShowCalendarActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
+    private Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -41,16 +47,11 @@ public class ShowCalendarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_calendar);
 
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
-        tabLayout = (TabLayout)findViewById(R.id.tablayout);
-        viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new FragmentEvent(),"Event");
-        viewPagerAdapter.addFragment(new FragmentTask(),"Task");
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
 
         mCalendarView = (CalendarView) findViewById(R.id.calendarView);
         myDate = (TextView) findViewById(R.id.myDate);
+        DateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
+        myDate.setText(format1.format(calendar.getTime()));
 
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
@@ -85,6 +86,26 @@ public class ShowCalendarActivity extends AppCompatActivity {
 
 
 
+    }
+    public void showPopup(View v) {
+        PopupMenu popupMenu = new PopupMenu(this,v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.delete:
+                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return false;
+        }
     }
 
 //    private boolean checkDate (int year, int month, int dayOfMonth) {
