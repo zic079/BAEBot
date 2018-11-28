@@ -58,8 +58,7 @@ public class TaskActivity extends AppCompatActivity
     @Override
     public void onItemClick(View view, int position){
         mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
-        Toast.makeText(this, "You deleted" + adapter.getItem(position) +
-        "on row number" + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Delete Successfully!", Toast.LENGTH_SHORT).show();
     }
     @Override
     public void onBackPressed(){

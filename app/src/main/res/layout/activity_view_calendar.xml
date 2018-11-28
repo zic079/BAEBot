@@ -21,7 +21,7 @@
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="352dp"
         android:layout_marginTop="0dp"
         android:background="@drawable/path_56" />
 
