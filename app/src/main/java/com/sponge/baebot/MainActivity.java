@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final int PERMISSION_REQUEST_CODE = 100;
 
-    private CalendarQueryHandler handler;
+    //private CalendarQueryHandler handler;
 
 
     @Override
@@ -123,6 +123,7 @@ public class MainActivity extends AppCompatActivity
         //ArrayList<String> calendarData = readEvent();
         //initRecyclerView(calendarData);
 
+/*
         // show today's event
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -135,6 +136,7 @@ public class MainActivity extends AppCompatActivity
 
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
         handler.readEvent(startDate_offset, startDate, endDate);
+*/
 
         tabLayout = (TabLayout)findViewById(R.id.tablayout);
         viewPager = (ViewPager)findViewById(R.id.viewpager);
@@ -143,8 +145,6 @@ public class MainActivity extends AppCompatActivity
         viewPagerAdapter.addFragment(new FragmentTask(),"Task");
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
-
     }
 
 /*
