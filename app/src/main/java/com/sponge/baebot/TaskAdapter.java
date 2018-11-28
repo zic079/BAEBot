@@ -56,11 +56,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
     }
 
-    String getItem(int id) {
+    String getTaskId(int id) {
         return mTask.get(id).getTaskId();
     }
+
     void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
+    }
+
+    com.sponge.baebot.Task getItem(int id){
+        return mTask.get(id);
     }
 
     public interface ItemClickListener{
