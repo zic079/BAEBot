@@ -5,11 +5,11 @@ import android.app.ActivityOptions;
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.CalendarContract;
-import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -64,13 +65,16 @@ public class MainActivity extends AppCompatActivity
     SwitchCompat sleep_switcher;
     SwitchCompat quote_switcher;
 
-    private Button eventBtn;
-    private Button calendarBtn;
-    private Button weatherBtn;
-    private TextView sentence;
-    private TabLayout tabLayout;
-    private ViewPager viewPager;
-    private ViewPagerAdapter viewPagerAdapter;
+    Button eventBtn;
+    Button calendarBtn;
+    Button weatherBtn;
+    TextView sentence;
+
+    // Preprocess for voice
+    private static MediaPlayer rv;
+    int rId = R.raw.how_are_u_doing_today;
+
+
 
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
@@ -129,11 +133,45 @@ public class MainActivity extends AppCompatActivity
         // call setupNavView to initialized navigation tab
         setupNavView();
 
+        // Get current System time to play different greetings.
+        sentence = (TextView)findViewById(R.id.sentence);
+        Calendar vu = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH");
+        String time = sdf.format(vu.getTime());
+        int resultTime = Integer.parseInt(time);
+        //final MediaPlayer gt;
+        //int greet;
+        if(resultTime < 12) {
+            sentence.setText("Good morning");
+            rId = R.raw.good_morning;
+        } else {
+            sentence.setText("Good evening");
+            rId = R.raw.good_evening;
+        }
+
+        rv = MediaPlayer.create(MainActivity.this, rId);
+
+        if(voice_switcher.isChecked()) {
+            rv.start();
+        }
+
+        rv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                rv.release();
+                rv = null;
+            }
+        });
+
+
+
+
         // button on main content
         findViewById(R.id.eventBtn).setOnClickListener(this);
         findViewById(R.id.showCalendarBtn).setOnClickListener(this);
-       // findViewById(R.id.taskBtn).setOnClickListener(this);
+        // findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.weatherBtn).setOnClickListener(this);
+        findViewById(R.id.Waifu).setOnClickListener(this);
 
         // read calendar data with AsyncQueryHandler
         //ArrayList<String> calendarData = readEvent();
@@ -145,22 +183,13 @@ public class MainActivity extends AppCompatActivity
         int year = cal.get(Calendar.YEAR);
         int month = cal.get(Calendar.MONTH);
         int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-
         Calendar startDate_offset = new GregorianCalendar(year,month,dayOfMonth-1);
         Calendar startDate = new GregorianCalendar(year,month,dayOfMonth);
         Calendar endDate = new GregorianCalendar(year,month,dayOfMonth+1);
-
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
         handler.readEvent(startDate_offset, startDate, endDate);
 */
 
-        tabLayout = (TabLayout)findViewById(R.id.tablayout);
-        viewPager = (ViewPager)findViewById(R.id.viewpager);
-        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new FragmentEvent(),"Event");
-        viewPagerAdapter.addFragment(new FragmentTask(),"Task");
-        viewPager.setAdapter(viewPagerAdapter);
-        tabLayout.setupWithViewPager(viewPager);
 
     }
 
@@ -191,21 +220,16 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
-
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
     */
@@ -249,7 +273,9 @@ public class MainActivity extends AppCompatActivity
         calendarBtn = (Button)findViewById(R.id.showCalendarBtn);
         weatherBtn = (Button)findViewById(R.id.weatherBtn);
         sentence = (TextView)findViewById(R.id.sentence);
+
         final View waifu = findViewById(R.id.Waifu);
+
         switch (v.getId()) {
             case R.id.signOutButton:
                 signOut();
@@ -292,6 +318,47 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                     switchActivity(WeatherActivity.class);
+                break;
+
+            case R.id.Waifu:
+                // Prevent multiple media being played simultaneously.
+                if(voice_switcher.isChecked() && rv != null) {
+                    rv.reset();
+                }
+                Random rand = new Random();
+                int n = rand.nextInt(4) + 1;
+                switch (n) {
+                    case 1:
+                        rId = R.raw.good_evening;
+                        sentence.setText("Good evening");
+                        break;
+
+                    case 2:
+                        rId = R.raw.how_are_u_doing_today;
+                        sentence.setText("How are you doing today?");
+                        break;
+
+                    case 3:
+                        rId = R.raw.good_morning;
+                        sentence.setText("Good morning!");
+                        break;
+                    case 4:
+                        rId = R.raw.thank_you;
+                        sentence.setText("Thank you !");
+                        break;
+                }
+                rv = MediaPlayer.create(MainActivity.this, rId);
+                if(voice_switcher.isChecked()) {
+                    rv.start();
+                }
+                rv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        rv.release();
+                        rv = null;
+                    }
+                });
+
                 break;
         }
     }
@@ -498,45 +565,34 @@ public class MainActivity extends AppCompatActivity
     /*
     ////// TESTING ONLY - NOT AsyncQueryHandler
     private ArrayList<String> readEvent() {
-
         ContentResolver cr = getContentResolver();
-
         // use CalendarContract.Instances for read data on calendar (rather than owner info)
         Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
         Cursor cur = null;
-
         // building selection - the start and end time range for calendar provider
         Calendar calendarStart= Calendar.getInstance();
         calendarStart.set(2018,10,10,0,0); //Note that months start from 0 (January)
         Calendar calendarEnd= Calendar.getInstance();
         calendarEnd.set(2019,2,1,0,0); //Note that months start from 0 (January)
-
-
         // set selection and selectionArgs as null
         String selection = "((dtstart >= " + calendarStart.getTimeInMillis() + ") AND (dtend <= " + calendarEnd.getTimeInMillis()+"))";
         String[] selectionArgs = null;
-
         //cur = cr.query(CALENDAR_URI, new String[] { "calendar_id", "title", "description",
         //        "dtstart", "dtend", "eventLocation" }, selection, selectionArgs, null);
-
         cur = cr.query(CALENDAR_URI, EVENT_PROJECTION, selection, selectionArgs, CalendarContract.Events.DTSTART + " ASC");
         ArrayList<String> calendarData = new ArrayList<>();
-
         if(cur.getCount() > 0) {
             Log.d("readEvent", "events found");
-
             cur.moveToFirst();
             while (cur.moveToNext()) {
                 // information of event
                 String eventTitle;
                 String eventBeginMill;
                 String eventBeginDate;
-
                 // Get the field values
                 eventTitle = cur.getString(PROJECTION_TITLE_INDEX);
                 eventBeginMill = cur.getString(PROJECTION_TIMESTART_INDEX);
                 eventBeginDate = milliToDate(eventBeginMill);
-
                 // Building string of current cursor data
                 // String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
                 String currentData = String.format("Event Name: %s\nBegin Time: %s", eventTitle, eventBeginDate);
@@ -544,26 +600,18 @@ public class MainActivity extends AppCompatActivity
                 calendarData.add(currentData);
             }
         }
-
         //ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, calendarData);
         //listView.setAdapter(stringArrayAdapter);
-
         return calendarData;
     }
-
-
     // helper function - convert millisecond to readable date
     private String milliToDate(String milliSec) {
         String date;            // date convert from millisecond
-
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calendarTemp = Calendar.getInstance();
         calendarTemp.setTimeInMillis(Long.parseLong(milliSec));
         date = formatter.format(calendarTemp.getTime());
-
         return date;
     }
     */
 }
-
-
