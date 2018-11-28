@@ -25,6 +25,11 @@
         android:layout_marginTop="5dp"
         android:background="@drawable/path_56" />
 
+    <Button
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:background="@drawable/ic_close_24px" />
+
     <LinearLayout
         android:id="@+id/linearLayout3"
         android:layout_width="match_parent"
