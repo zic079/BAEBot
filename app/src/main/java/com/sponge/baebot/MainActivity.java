@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
 import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -45,6 +46,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity
@@ -64,6 +70,10 @@ public class MainActivity extends AppCompatActivity
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
+
+
+    private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
+    private static DatabaseReference mDatabase = database.getReference();
 
     // Projection array. Creating indices for this array instead of doing
     // dynamic lookups improves performance.
@@ -91,11 +101,16 @@ public class MainActivity extends AppCompatActivity
 
     private CalendarQueryHandler handler;
 
+    private ArrayList<com.sponge.baebot.Task> taskList = new ArrayList<>();
+    private ArrayList<com.sponge.baebot.Task> myList = new ArrayList<>();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d("Main activity", "onCreate called");
 
         // Configure google login in to access token
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -144,17 +159,7 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-
     }
-
-/*
-    private void initRecyclerView(ArrayList<String> events) {
-        RecyclerView recyclerView = findViewById(R.id.main_recycler);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(events,this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-*/
 
     @Override
     public void onBackPressed() {
@@ -164,6 +169,7 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+
     }
 
 
@@ -458,6 +464,21 @@ public class MainActivity extends AppCompatActivity
                 return false;
         }
     }
+
+    public String getUserId(){
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        String userId = currentUser.getUid();
+        return userId;
+    }
+
+    public DatabaseReference getmDatabaseRef(){
+        return mDatabase;
+    }
+
+    public ArrayList<com.sponge.baebot.Task> getTaskList(){
+        return myList;
+    }
+
 
     /*
     ////// TESTING ONLY - NOT AsyncQueryHandler
