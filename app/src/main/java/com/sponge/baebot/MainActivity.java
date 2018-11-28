@@ -227,6 +227,15 @@ public class MainActivity extends AppCompatActivity
                     weatherBtn.setText("Return");
                     sentence.setText("Would you like to add a new event or task?");
                 }
+                else if (eventBtn.getText().equals("Add events")) {
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    String userId = currentUser.getUid();
+                    User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
+                    Intent i = new Intent(MainActivity.this, EventActivity.class);
+                    i.putExtra("userId",userId);
+                    i.putExtra("user", myUser);
+                    startActivity(i);
+                }
                 else
                     switchActivity(CalendarActivity.class);
                 break;
