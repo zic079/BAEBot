@@ -15,7 +15,7 @@
     <string name="save">Save</string>
 
     <!-- Tutorial Page -->
-    <string name="app_name">Intro Slider</string>
+    <!--<string name="app_name">Intro Slider</string>-->
     <string name="title_activity_welcome">Home Screen</string>
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
