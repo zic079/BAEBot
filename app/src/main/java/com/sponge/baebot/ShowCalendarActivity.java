@@ -15,6 +15,7 @@ import com.sponge.baebot.CalendarQueryHandler;
 import com.sponge.baebot.R;
 import com.sponge.baebot.RecyclerViewAdapter;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class ShowCalendarActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
+    private Calendar calendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -51,6 +53,8 @@ public class ShowCalendarActivity extends AppCompatActivity {
 
         mCalendarView = (CalendarView) findViewById(R.id.calendarView);
         myDate = (TextView) findViewById(R.id.myDate);
+        DateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
+        myDate.setText(format1.format(calendar.getTime()));
 
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
