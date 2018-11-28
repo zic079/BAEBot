@@ -1,6 +1,8 @@
 package com.sponge.baebot;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,6 +30,9 @@ public class ShowCalendarActivity extends AppCompatActivity {
     private TextView myDate;
     private int inputYear, inputMonth, inputDay;
     private CalendarQueryHandler handler;
+    private TabLayout tabLayout;
+    private ViewPager viewPager;
+    private ViewPagerAdapter viewPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -36,6 +41,13 @@ public class ShowCalendarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_calendar);
 
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
+        tabLayout = (TabLayout)findViewById(R.id.tablayout);
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+        viewPagerAdapter.addFragment(new FragmentEvent(),"Event");
+        viewPagerAdapter.addFragment(new FragmentTask(),"Task");
+        viewPager.setAdapter(viewPagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
 
         mCalendarView = (CalendarView) findViewById(R.id.calendarView);
         myDate = (TextView) findViewById(R.id.myDate);
@@ -83,11 +95,11 @@ public class ShowCalendarActivity extends AppCompatActivity {
 //        return false;
 //    }
 
-    private void initRecyclerView(ArrayList<String> events) {
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(events,this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
+//    private void initRecyclerView(ArrayList<String> events) {
+//        RecyclerView recyclerView = findViewById(R.id.event_recyclerView);
+//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(events,this);
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//    }
 
 }
