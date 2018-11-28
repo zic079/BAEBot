@@ -1,16 +1,9 @@
 package com.sponge.baebot;
 
-import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -18,8 +11,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +20,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,7 +69,7 @@ public class TaskActivity extends AppCompatActivity
 //            @Override
 //            public void onClick(View v){
 //                Log.w("button", "get Task button clicked!");
-//                searchTask();
+//                getAllTasks();
 //                tl.removeAllViews();
 //
 //
@@ -93,14 +83,6 @@ public class TaskActivity extends AppCompatActivity
 //                }, 100);
 //            }
 //        });
-
-        Button createTask = findViewById(R.id.btnTask);
-        createTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTask();
-            }
-        });
 
         title = findViewById(R.id.title_input);
         description = findViewById(R.id.description);
@@ -119,6 +101,8 @@ public class TaskActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 addTask();
+                getAllTasks();
+                Log.d("size!!!",Integer.toString(taskList.size()));
             }
         });
     }
@@ -217,7 +201,7 @@ public class TaskActivity extends AppCompatActivity
                     Log.d("date",year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
                     Date d = new SimpleDateFormat("yyyy/MM/dd/hh/mm").parse(year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
                     Timestamp ts = new Timestamp(d.getTime());
-                    task = new Task(taskId,strTitle,strDescription, ts.getTime());
+                    task = new Task(taskId,strTitle,strDescription, ts.getTime()/1000 - 28800);
                 }catch (Exception e){
                     Log.d("task", "date parsing error");
                 }
@@ -237,17 +221,25 @@ public class TaskActivity extends AppCompatActivity
         }
     }
 
-    private void searchTask(){
+    private void getAllTasks(){
         mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener(){
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.d("Tasks", "onDataChange!");
                         taskList.clear();
+                        int i = 0;
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            Log.d("Tasks", "" + ds.getKey());
+//                            Log.d("Tasks", "" + ds.getKey());
                             Task t = ds.getValue(Task.class);
+//                            taskList.add(t);
+//                            Task tt = (Task)t;
+                            i++;
+//                            Log.d("task-getAllTasks",tt.toString());
+                            Log.d("task-getAllTasks",t.toString());
+                            Log.d("task-getAllTasks",Integer.toString(i));
                             taskList.add(t);
+                            Log.d("task-getAllTasks",Integer.toString(taskList.size()));
                         }
                     }
 

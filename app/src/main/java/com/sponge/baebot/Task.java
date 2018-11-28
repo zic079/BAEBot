@@ -4,22 +4,31 @@ public class Task {
     private String title, description, taskId;
     private long timestamp;
 
+    public Task(){}
+
     public boolean isCompleted() {
-        return isCompleted;
+        return completed;
     }
 
     public void setCompleted(boolean completed) {
-        isCompleted = completed;
+        this.completed = completed;
     }
 
-    private boolean isCompleted = false;
-
+    private boolean completed = false;
 
     public Task(String taskId, String title, String description, long timestamp) {
         this.taskId = taskId;
         this.title = title;
         this.description = description;
         this.timestamp = timestamp;
+    }
+
+    public Task(String taskId, String title, String description, long timestamp, boolean completed) {
+        this.taskId = taskId;
+        this.title = title;
+        this.description = description;
+        this.timestamp = timestamp;
+        this.completed = completed;
     }
 
     public void setTimestamp(long timestamp) {
@@ -54,6 +63,10 @@ public class Task {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public String toString(){
+        return this.title + " " + this.taskId + " " + Long.toString(this.timestamp) + " " + this.description;
     }
 
 
