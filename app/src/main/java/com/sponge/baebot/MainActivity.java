@@ -1,6 +1,7 @@
 package com.sponge.baebot;
 
 import android.Manifest;
+import android.app.ActivityOptions;
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -89,7 +90,7 @@ public class MainActivity extends AppCompatActivity
 
     private static final int PERMISSION_REQUEST_CODE = 100;
 
-    private CalendarQueryHandler handler;
+    //private CalendarQueryHandler handler;
 
 
     @Override
@@ -123,6 +124,7 @@ public class MainActivity extends AppCompatActivity
         //ArrayList<String> calendarData = readEvent();
         //initRecyclerView(calendarData);
 
+/*
         // show today's event
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -135,6 +137,7 @@ public class MainActivity extends AppCompatActivity
 
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
         handler.readEvent(startDate_offset, startDate, endDate);
+*/
 
         tabLayout = (TabLayout)findViewById(R.id.tablayout);
         viewPager = (ViewPager)findViewById(R.id.viewpager);
@@ -143,8 +146,6 @@ public class MainActivity extends AppCompatActivity
         viewPagerAdapter.addFragment(new FragmentTask(),"Task");
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
-
-
     }
 
 /*
@@ -232,6 +233,7 @@ public class MainActivity extends AppCompatActivity
         calendarBtn = (Button)findViewById(R.id.showCalendarBtn);
         weatherBtn = (Button)findViewById(R.id.weatherBtn);
         sentence = (TextView)findViewById(R.id.sentence);
+        final View waifu = findViewById(R.id.Waifu);
         switch (v.getId()) {
             case R.id.signOutButton:
                 signOut();
@@ -243,9 +245,10 @@ public class MainActivity extends AppCompatActivity
                     calendarBtn.setText("Add tasks");
                     weatherBtn.setText("Return");
                     sentence.setText("Would you like to add a new event or task?");
-                }
-                else
+                } else {
                     switchActivity(CalendarActivity.class);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
                 break;
 
             case R.id.showCalendarBtn:
@@ -256,7 +259,9 @@ public class MainActivity extends AppCompatActivity
                     Intent i = new Intent(MainActivity.this, TaskActivity.class);
                     i.putExtra("userId",userId);
                     i.putExtra("user", myUser);
-                    startActivity(i);
+                    ActivityOptions options = ActivityOptions
+                            .makeSceneTransitionAnimation(this, waifu, "waifu");
+                    startActivity(i, options.toBundle());
                 }else {
                     switchActivity(ShowCalendarActivity.class);
                 }
