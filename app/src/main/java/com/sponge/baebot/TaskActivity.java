@@ -1,26 +1,23 @@
 package com.sponge.baebot;
 
-import android.annotation.TargetApi;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,26 +25,41 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.text.ParseException;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.UUID;
 
 
 public class TaskActivity extends AppCompatActivity
-        implements View.OnClickListener {
-    private Button selectDate, selectTime;
+        implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
+    private Button selectDate, selectTime, saveTask;
     private EditText title, description, taskIdInput;
     private int year, month, dayOfMonth, hour, minute;
     private Calendar calendar = Calendar.getInstance();
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
     private static DatabaseReference mDatabase = database.getReference();
     private String userId;
-    private TableLayout tl;
+    //private TableLayout tl;
     private ArrayList<Task> taskList = new ArrayList<>();
+    private ArrayList<Task> tasks = new ArrayList<>();
+    private ArrayList<String> strTasks = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
+    private interface FirebaseCallback{
+        void onCallback(ArrayList<com.sponge.baebot.Task> list);
+    }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        this.startActivity(new Intent(TaskActivity.this,MainActivity.class));
+        Log.w("Task Activity", "on back pressed");
+        return;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +89,7 @@ public class TaskActivity extends AppCompatActivity
 //            @Override
 //            public void onClick(View v){
 //                Log.w("button", "get Task button clicked!");
-//                searchTask();
+//                getAllTasks();
 //                tl.removeAllViews();
 //
 //
@@ -92,14 +104,6 @@ public class TaskActivity extends AppCompatActivity
 //            }
 //        });
 
-        Button createTask = findViewById(R.id.btnTask);
-        createTask.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addTask();
-            }
-        });
-
         title = findViewById(R.id.title_input);
         description = findViewById(R.id.description);
 
@@ -110,6 +114,36 @@ public class TaskActivity extends AppCompatActivity
         selectTime = findViewById(R.id.btnTime);
         //time = findViewById(R.id.tvSelectedTime);
         selectTime.setOnClickListener(this);
+
+        saveTask = findViewById(R.id.btnTask);
+
+        saveTask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addTask();
+                getAllTasks(new FirebaseCallback() {
+                    @Override
+                    public void onCallback(ArrayList<Task> list) {
+                        Intent intent = getIntent();
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+
+        getAllTasks(new FirebaseCallback() {
+            @Override
+            public void onCallback(ArrayList<Task> list) {
+                tasks = list;
+                for (Task t : tasks) {
+                    strTasks.add(t.toString());
+                }
+                recyclerView = findViewById(R.id.task_recyclerView);
+                recyclerViewAdapter = new RecyclerViewAdapter(strTasks, TaskActivity.this);
+                recyclerView.setAdapter(recyclerViewAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
+            }
+        });
     }
 
     @Override
@@ -144,6 +178,7 @@ public class TaskActivity extends AppCompatActivity
                         }, hour, minute, true);
                 timePickerDialog.show();
                 break;
+
         }
     }
 
@@ -199,31 +234,55 @@ public class TaskActivity extends AppCompatActivity
 
 
             if (userId != null) {
-                long currentTime = calendar.getTimeInMillis();
-                String taskId = Long.toString(currentTime);
-                Task task = new Task(taskId, strTitle, strDescription, year, month,
-                        dayOfMonth, hour, minute);
-                Log.d("task id", "" + taskId);
+                String taskId = UUID.randomUUID().toString();
+                Task task = null;
+                try {
+                    Log.d("date",year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
+                    Date d = new SimpleDateFormat("yyyy/MM/dd/hh/mm").parse(year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
+                    Timestamp ts = new Timestamp(d.getTime());
+                    task = new Task(taskId,strTitle,strDescription, ts.getTime()/1000 - 28800);
+                }catch (Exception e){
+                    Log.d("task", "date parsing error");
+                }
+
+                Log.d("task id", taskId);
+                if(task == null){
+                    Log.d("task","task null");
+                }else{
+                    Log.d("task","task not null");
+                }
+
                 mDatabase.child("task").child(userId).child(taskId).setValue(task);
-                Log.w("add to db", "success");
+                Log.d("add to db", "success");
             } else {
-                Log.w("dataBase error", "No such User");
+                Log.d("dataBase error", "No such User");
             }
         }
     }
 
-    private void searchTask(){
+    private void getAllTasks(final FirebaseCallback firebaseCallback){
         mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener(){
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         Log.d("Tasks", "onDataChange!");
                         taskList.clear();
+                        int i = 0;
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            Log.d("Tasks", "" + ds.getKey());
+//                            Log.d("Tasks", "" + ds.getKey());
                             Task t = ds.getValue(Task.class);
+//                            taskList.add(t);
+//                            Task tt = (Task)t;
+                            i++;
+//                            Log.d("task-getAllTasks",tt.toString());
+                            Log.d("task-getAllTasks",t.toString());
+                            Log.d("task-getAllTasks",Integer.toString(i));
                             taskList.add(t);
+                            Log.d("task-getAllTasks",Integer.toString(taskList.size()));
                         }
+                        tasks.clear();
+                        firebaseCallback.onCallback(taskList);
+
                     }
 
                     @Override
@@ -232,52 +291,83 @@ public class TaskActivity extends AppCompatActivity
                     }
                 });
     }
+//    private void showTasks(){
+//        RecyclerView recyclerView = findViewById(R.id.task_recyclerView);
+//        ArrayList<String> tasks = new ArrayList<>();
+//        for (Task t : taskList){
+//            tasks.add(t.toString());
+//        }
+//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(tasks, this);
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//    }
 
-    private void printTasks(){
-        for (Task t : taskList) {
-            TableRow tr1 = new TableRow(TaskActivity.this);
-            tr1.setLayoutParams(new TableRow.LayoutParams(
-                    TableLayout.LayoutParams.MATCH_PARENT,
-                    TableLayout.LayoutParams.WRAP_CONTENT));
-            TextView textview = new TextView(TaskActivity.this);
-            textview.setText(t.getTaskId()+ " " + t.getTitle() + " " + t.getDescription() + " " +
-                    t.getYear() + "-" + t.getMonth() + "-" +
-                    t.getDayOfMonth() + " " + t.getHour() + ":" + t.getMinute());
-            textview.setTextColor(Color.BLACK);
-            tr1.addView(textview);
-            tl.addView(tr1, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
-                    TableLayout.LayoutParams.WRAP_CONTENT));
+    public void showPopup(View v) {
+        PopupMenu popupMenu = new PopupMenu(this,v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.delete:
+                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return false;
         }
     }
 
-    private void deleteTask(){
-        mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
-                new ValueEventListener(){
-                    String taskId = taskIdInput.getText().toString();
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.child(taskId).exists()) {
-                            mDatabase.child("task").child(userId).child(taskId).removeValue(
-                                    new DatabaseReference.CompletionListener() {
-                                        @Override
-                                        public void onComplete(
-                                                @Nullable DatabaseError databaseError,
-                                                @NonNull DatabaseReference databaseReference) {
-                                            if (databaseError == null){
-                                                Log.d("delete task", "success");
-                                            } else {
-                                                Log.d("delete task", "failure");
-                                            }
-                                        }
-                                    }
-                            );
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-    }
+//    private void printTasks(){
+//        for (Task t : taskList) {
+//            TableRow tr1 = new TableRow(TaskActivity.this);
+//            tr1.setLayoutParams(new TableRow.LayoutParams(
+//                    TableLayout.LayoutParams.MATCH_PARENT,
+//                    TableLayout.LayoutParams.WRAP_CONTENT));
+//            TextView textview = new TextView(TaskActivity.this);
+//            textview.setText(t.getTaskId()+ " " + t.getTitle() + " " + t.getDescription() + " " +
+//                    t.getYear() + "-" + t.getMonth() + "-" +
+//                    t.getDayOfMonth() + " " + t.getHour() + ":" + t.getMinute());
+//            textview.setTextColor(Color.BLACK);
+//            tr1.addView(textview);
+//            tl.addView(tr1, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
+//                    TableLayout.LayoutParams.WRAP_CONTENT));
+//        }
+//    }
+//
+//    private void deleteTask(){
+//        mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
+//                new ValueEventListener(){
+//                    String taskId = taskIdInput.getText().toString();
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//                        if (dataSnapshot.child(taskId).exists()) {
+//                            mDatabase.child("task").child(userId).child(taskId).removeValue(
+//                                    new DatabaseReference.CompletionListener() {
+//                                        @Override
+//                                        public void onComplete(
+//                                                @Nullable DatabaseError databaseError,
+//                                                @NonNull DatabaseReference databaseReference) {
+//                                            if (databaseError == null){
+//                                                Log.d("delete task", "success");
+//                                            } else {
+//                                                Log.d("delete task", "failure");
+//                                            }
+//                                        }
+//                                    }
+//                            );
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
 }

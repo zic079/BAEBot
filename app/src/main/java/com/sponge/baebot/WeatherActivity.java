@@ -33,11 +33,11 @@ public class WeatherActivity extends AppCompatActivity {
 
     // from tutorial https://androstock.com/tutorials/create-a-weather-app-on-android-android-studio.html
 
-    TextView selectCity, cityField, detailsField, temperatureField, humidityField, pressure_field, weatherIcon, updatedField;
+    TextView selectCity, cityField, detailsField, temperatureField, humidityField, pressure_field, weatherIcon, reminderField, updatedField;
     //ProgressBar loader;
     Typeface weatherFont;
     String city = "San Diego, US";          // set default city as san diego
-
+    //String description;
     // OpenWeatherApp API KEY
     String OPEN_WEATHER_MAP_API = "85c4869d24fc29549362f8d8f172f5f0";
 
@@ -54,6 +54,7 @@ public class WeatherActivity extends AppCompatActivity {
         temperatureField = (TextView) findViewById(R.id.temperatureValue);
         humidityField = (TextView) findViewById(R.id.humidityValue);
         //pressure_field = (TextView) findViewById(R.id.pressure_field);
+        //reminderField = (TextView) findViewById(R.id.weatherReminder);
 
         weatherIcon = (TextView) findViewById(R.id.weatherIcon);
         weatherFont = Typeface.createFromAsset(getAssets(), "fonts/weathericons-regular-webfont.ttf");
@@ -143,7 +144,10 @@ public class WeatherActivity extends AppCompatActivity {
                             json.getJSONObject("sys").getLong("sunset") * 1000)));
 
                     //loader.setVisibility(View.GONE);
-
+                    //description = details.getString("description").toUpperCase(Locale.US);
+                    //if(description == "CLEAR SKY"){
+                    //    reminderField.setText("Nice weather, use sunscreen to protect your skin if you are going out");
+                    //}
                 }
             } catch (JSONException e) {
                 Toast.makeText(getApplicationContext(), "Error, Check City", Toast.LENGTH_SHORT).show();
