@@ -44,7 +44,14 @@ public class TaskActivity extends AppCompatActivity
     private String userId;
     //private TableLayout tl;
     private ArrayList<Task> taskList = new ArrayList<>();
+    private ArrayList<Task> tasks = new ArrayList<>();
+    private ArrayList<String> strTasks = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
+    private interface FirebaseCallback{
+        void onCallback(ArrayList<com.sponge.baebot.Task> list);
+    }
 
     @Override
     public void onBackPressed(){
@@ -114,14 +121,27 @@ public class TaskActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 addTask();
-                getAllTasks();
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        showTasks();
-
+                getAllTasks(new FirebaseCallback() {
+                    @Override
+                    public void onCallback(ArrayList<Task> list) {
+                        Intent intent = getIntent();
+                        startActivity(intent);
                     }
-                }, 200);
+                });
+            }
+        });
+
+        getAllTasks(new FirebaseCallback() {
+            @Override
+            public void onCallback(ArrayList<Task> list) {
+                tasks = list;
+                for (Task t : tasks) {
+                    strTasks.add(t.toString());
+                }
+                recyclerView = findViewById(R.id.task_recyclerView);
+                recyclerViewAdapter = new RecyclerViewAdapter(strTasks, TaskActivity.this);
+                recyclerView.setAdapter(recyclerViewAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
             }
         });
     }
@@ -240,7 +260,7 @@ public class TaskActivity extends AppCompatActivity
         }
     }
 
-    private void getAllTasks(){
+    private void getAllTasks(final FirebaseCallback firebaseCallback){
         mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener(){
                     @Override
@@ -260,6 +280,9 @@ public class TaskActivity extends AppCompatActivity
                             taskList.add(t);
                             Log.d("task-getAllTasks",Integer.toString(taskList.size()));
                         }
+                        tasks.clear();
+                        firebaseCallback.onCallback(taskList);
+
                     }
 
                     @Override
@@ -268,16 +291,16 @@ public class TaskActivity extends AppCompatActivity
                     }
                 });
     }
-    private void showTasks(){
-        RecyclerView recyclerView = findViewById(R.id.task_recyclerView);
-        ArrayList<String> tasks = new ArrayList<>();
-        for (Task t : taskList){
-            tasks.add(t.toString());
-        }
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(tasks, this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
+//    private void showTasks(){
+//        RecyclerView recyclerView = findViewById(R.id.task_recyclerView);
+//        ArrayList<String> tasks = new ArrayList<>();
+//        for (Task t : taskList){
+//            tasks.add(t.toString());
+//        }
+//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(tasks, this);
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//    }
 
     public void showPopup(View v) {
         PopupMenu popupMenu = new PopupMenu(this,v);
