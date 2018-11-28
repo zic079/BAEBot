@@ -1,6 +1,7 @@
 package com.sponge.baebot;
 
 import android.Manifest;
+import android.app.ActivityOptions;
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -243,9 +244,10 @@ public class MainActivity extends AppCompatActivity
                     calendarBtn.setText("Add tasks");
                     weatherBtn.setText("Return");
                     sentence.setText("Would you like to add a new event or task?");
-                }
-                else
+                } else {
                     switchActivity(CalendarActivity.class);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
                 break;
 
             case R.id.showCalendarBtn:
@@ -257,6 +259,7 @@ public class MainActivity extends AppCompatActivity
                     i.putExtra("userId",userId);
                     i.putExtra("user", myUser);
                     startActivity(i);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 }else {
                     switchActivity(ShowCalendarActivity.class);
                 }
