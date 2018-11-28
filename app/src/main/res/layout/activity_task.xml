@@ -57,6 +57,7 @@
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
                 android:scaleType="fitCenter"
+                android:transitionName="waifu"
                 app:srcCompat="@drawable/maid1" />
 
 
@@ -316,7 +317,7 @@
             </android.support.design.widget.TextInputLayout>
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/main_recycler"
+                android:id="@+id/task_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/calendar_inner_background" />

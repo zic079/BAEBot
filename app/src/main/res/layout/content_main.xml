@@ -56,6 +56,7 @@
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
                     android:scaleType="fitCenter"
+                    android:transitionName="waifu"
                     app:srcCompat="@drawable/maid1" />
 
 
@@ -70,7 +71,7 @@
                         style="@style/Widget.AppCompat.Button.Colored"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp"
+                        android:layout_marginTop="@android:dimen/notification_large_icon_height"
                         android:layout_marginBottom="@dimen/activity_vertical_margin"
                         android:background="@drawable/ic_button"
                         android:text="events/tasks"
@@ -98,7 +99,7 @@
                         android:layout_marginTop="@dimen/activity_vertical_margin"
                         android:layout_marginBottom="20dp"
                         android:background="@drawable/ic_button"
-                        android:text="test weather"
+                        android:text="weather"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -118,7 +119,6 @@
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
                     android:layout_weight="0"
                     android:background="@color/colorPrimary">
@@ -132,8 +132,8 @@
                         android:background="@drawable/ic_button"
                         android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
                         android:drawableLeft="?android:attr/actionModeWebSearchDrawable"
-                        android:padding="2dp"
                         android:inputType="textMultiLine"
+                        android:padding="2dp"
                         android:textSize="14sp" />
 
                 </android.support.design.widget.TextInputLayout>
@@ -165,6 +165,12 @@
                         android:background="@color/colorPrimary">
 
                     </android.support.v4.view.ViewPager>
+
+                    <!--<android.support.v7.widget.RecyclerView-->
+                        <!--android:id="@+id/task_recyclerView"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:background="@drawable/calendar_inner_background" />-->
 
                 </LinearLayout>
             </LinearLayout>

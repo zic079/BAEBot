@@ -65,6 +65,7 @@ public class Task {
         return timestamp;
     }
 
+    @Override
     public String toString(){
         return this.title + " " + this.taskId + " " + Long.toString(this.timestamp) + " " + this.description;
     }

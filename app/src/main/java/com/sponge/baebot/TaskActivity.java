@@ -4,14 +4,20 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.PopupMenu;
 import android.widget.TableLayout;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -28,7 +34,7 @@ import java.util.UUID;
 
 
 public class TaskActivity extends AppCompatActivity
-        implements View.OnClickListener {
+        implements View.OnClickListener, PopupMenu.OnMenuItemClickListener {
     private Button selectDate, selectTime, saveTask;
     private EditText title, description, taskIdInput;
     private int year, month, dayOfMonth, hour, minute;
@@ -36,10 +42,24 @@ public class TaskActivity extends AppCompatActivity
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
     private static DatabaseReference mDatabase = database.getReference();
     private String userId;
-    private TableLayout tl;
+    //private TableLayout tl;
     private ArrayList<Task> taskList = new ArrayList<>();
+    private ArrayList<Task> tasks = new ArrayList<>();
+    private ArrayList<String> strTasks = new ArrayList<>();
+    private RecyclerView recyclerView;
+    private RecyclerViewAdapter recyclerViewAdapter;
 
+    private interface FirebaseCallback{
+        void onCallback(ArrayList<com.sponge.baebot.Task> list);
+    }
 
+    @Override
+    public void onBackPressed(){
+        super.onBackPressed();
+        this.startActivity(new Intent(TaskActivity.this,MainActivity.class));
+        Log.w("Task Activity", "on back pressed");
+        return;
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,8 +121,27 @@ public class TaskActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
                 addTask();
-                getAllTasks();
-                Log.d("size!!!",Integer.toString(taskList.size()));
+                getAllTasks(new FirebaseCallback() {
+                    @Override
+                    public void onCallback(ArrayList<Task> list) {
+                        Intent intent = getIntent();
+                        startActivity(intent);
+                    }
+                });
+            }
+        });
+
+        getAllTasks(new FirebaseCallback() {
+            @Override
+            public void onCallback(ArrayList<Task> list) {
+                tasks = list;
+                for (Task t : tasks) {
+                    strTasks.add(t.toString());
+                }
+                recyclerView = findViewById(R.id.task_recyclerView);
+                recyclerViewAdapter = new RecyclerViewAdapter(strTasks, TaskActivity.this);
+                recyclerView.setAdapter(recyclerViewAdapter);
+                recyclerView.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
             }
         });
     }
@@ -221,7 +260,7 @@ public class TaskActivity extends AppCompatActivity
         }
     }
 
-    private void getAllTasks(){
+    private void getAllTasks(final FirebaseCallback firebaseCallback){
         mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
                 new ValueEventListener(){
                     @Override
@@ -241,6 +280,9 @@ public class TaskActivity extends AppCompatActivity
                             taskList.add(t);
                             Log.d("task-getAllTasks",Integer.toString(taskList.size()));
                         }
+                        tasks.clear();
+                        firebaseCallback.onCallback(taskList);
+
                     }
 
                     @Override
@@ -248,6 +290,37 @@ public class TaskActivity extends AppCompatActivity
 
                     }
                 });
+    }
+//    private void showTasks(){
+//        RecyclerView recyclerView = findViewById(R.id.task_recyclerView);
+//        ArrayList<String> tasks = new ArrayList<>();
+//        for (Task t : taskList){
+//            tasks.add(t.toString());
+//        }
+//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(tasks, this);
+//        recyclerView.setAdapter(adapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+//    }
+
+    public void showPopup(View v) {
+        PopupMenu popupMenu = new PopupMenu(this,v);
+        popupMenu.setOnMenuItemClickListener(this);
+        popupMenu.inflate(R.menu.popup_menu);
+        popupMenu.show();
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.edit:
+                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.delete:
+                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return false;
+        }
     }
 
 //    private void printTasks(){
