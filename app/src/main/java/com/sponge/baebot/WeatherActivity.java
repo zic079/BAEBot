@@ -135,7 +135,7 @@ public class WeatherActivity extends AppCompatActivity {
 
                     cityField.setText(json.getString("name").toUpperCase(Locale.US) + ", " + json.getJSONObject("sys").getString("country"));
                     detailsField.setText(details.getString("description").toUpperCase(Locale.US));
-                    temperatureField.setText(String.format("%.2f", main.getDouble("temp")) + "°");
+                    temperatureField.setText(main.getInt("temp")*9/5+32 + "°");
                     humidityField.setText("Humidity: " + main.getString("humidity") + "%");
                     //pressure_field.setText("Pressure: " + main.getString("pressure") + " hPa");
                     //updatedField.setText(df.format(new Date(json.getLong("dt") * 1000)));
