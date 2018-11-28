@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.content.ContentResolver;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Handler;
 import android.provider.CalendarContract;
@@ -17,6 +18,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.Random;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -67,11 +70,15 @@ public class MainActivity extends AppCompatActivity
     private Button eventBtn;
     private Button calendarBtn;
     private Button weatherBtn;
+    private ImageButton Waifu;
     private TextView sentence;
     private TabLayout tabLayout;
     private ViewPager viewPager;
     private ViewPagerAdapter viewPagerAdapter;
 
+    // Preprocess for voice
+    private static MediaPlayer rv;
+    int rId = R.raw.how_are_u_doing_today;
 
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
     private static DatabaseReference mDatabase = database.getReference();
@@ -134,6 +141,40 @@ public class MainActivity extends AppCompatActivity
         findViewById(R.id.showCalendarBtn).setOnClickListener(this);
        // findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.weatherBtn).setOnClickListener(this);
+        findViewById(R.id.Waifu).setOnClickListener(this);
+
+
+        // Get current System time to play different greetings.
+        sentence = (TextView)findViewById(R.id.sentence);
+        Calendar vu = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH");
+        String time = sdf.format(vu.getTime());
+        int resultTime = Integer.parseInt(time);
+        //final MediaPlayer gt;
+        //int greet;
+        if(resultTime < 12) {
+            sentence.setText("Good morning");
+            rId = R.raw.good_morning;
+        } else {
+            sentence.setText("Good evening");
+            rId = R.raw.good_evening;
+        }
+
+        rv = MediaPlayer.create(MainActivity.this, rId);
+
+        if(voice_switcher.isChecked()) {
+            rv.start();
+        }
+
+        rv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                rv.release();
+                rv = null;
+            }
+        });
+
+
 
         // read calendar data with AsyncQueryHandler
         //ArrayList<String> calendarData = readEvent();
@@ -153,7 +194,7 @@ public class MainActivity extends AppCompatActivity
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
         handler.readEvent(startDate_offset, startDate, endDate);
 */
-
+        Waifu = findViewById(R.id.Waifu);
         tabLayout = (TabLayout)findViewById(R.id.tablayout);
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -292,6 +333,47 @@ public class MainActivity extends AppCompatActivity
                 }
                 else
                     switchActivity(WeatherActivity.class);
+                break;
+
+            case R.id.Waifu:
+                // Prevent multiple media being played simultaneously.
+                if(voice_switcher.isChecked() && rv != null) {
+                    rv.reset();
+                }
+                Random rand = new Random();
+                int n = rand.nextInt(4) + 1;
+                switch (n) {
+                    case 1:
+                        rId = R.raw.good_evening;
+                        sentence.setText("Good evening");
+                        break;
+
+                    case 2:
+                        rId = R.raw.how_are_u_doing_today;
+                        sentence.setText("How are you doing today?");
+                        break;
+
+                    case 3:
+                        rId = R.raw.good_morning;
+                        sentence.setText("Good morning!");
+                        break;
+                    case 4:
+                        rId = R.raw.thank_you;
+                        sentence.setText("Thank you !");
+                        break;
+                }
+                rv = MediaPlayer.create(MainActivity.this, rId);
+                if(voice_switcher.isChecked()) {
+                    rv.start();
+                }
+                rv.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                    @Override
+                    public void onCompletion(MediaPlayer mp) {
+                        rv.release();
+                        rv = null;
+                    }
+                });
+
                 break;
         }
     }
