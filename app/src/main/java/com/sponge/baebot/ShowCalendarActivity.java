@@ -64,23 +64,6 @@ public class ShowCalendarActivity extends AppCompatActivity implements PopupMenu
                 Calendar endDate = new GregorianCalendar(year,month,dayOfMonth+1);
 
                 handler.readEvent(startDate_offset, startDate, endDate);
-
-                /*
-                ArrayList<String> eventList = new ArrayList<>();
-                initRecyclerView(eventList);
-
-                if (year == 2018 && month+1 == 10 && dayOfMonth == 26) {
-                    eventList.add("find a boyfriend");
-                    eventList.add("review CSE110 quiz1");
-                    eventList.add("review CSE110 quiz2");
-                    eventList.add("review CSE110 quiz3");
-                    eventList.add("review CSE110 quiz4");
-                    eventList.add("review CSE110 quiz5");
-                    eventList.add("review CSE110 final");
-                    initRecyclerView(eventList);
-                }
-
-                */
             }
         });
 
