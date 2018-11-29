@@ -3,12 +3,15 @@ package com.sponge.baebot;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -35,7 +38,7 @@ import java.util.UUID;
 
 
 public class TaskActivity extends AppCompatActivity
-        implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, TaskAdapter.ItemClickListener {
+        implements View.OnClickListener, TaskAdapter.ItemClickListener {
     private Button selectDate, selectTime, saveTask;
     private EditText title, description, taskIdInput;
     private int year, month, dayOfMonth, hour, minute;
@@ -55,11 +58,34 @@ public class TaskActivity extends AppCompatActivity
         void onCallback(ArrayList<com.sponge.baebot.Task> list);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onItemClick(View view, int position){
-        mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
-        Toast.makeText(this, "Delete Successfully!", Toast.LENGTH_SHORT).show();
+    public void onItemClick(View view, final int position){
+        PopupMenu popup = new PopupMenu(this, view);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.edit:
+                        Toast.makeText(selectDate.getContext(), "Hello Edit!", Toast.LENGTH_SHORT).show();
+                        return true;
+                        case R.id.delete:
+                            mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
+                            Toast.makeText(selectDate.getContext(), "Delete Successfully!", Toast.LENGTH_SHORT).show();
+                            adapter.removeAt(position);
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            });
+            // here you can inflate your menu
+            popup.inflate(R.menu.popup_menu);
+            popup.setGravity(Gravity.RIGHT);
+            popup.show();
+
     }
+
     @Override
     public void onBackPressed(){
         super.onBackPressed();
@@ -127,14 +153,16 @@ public class TaskActivity extends AppCompatActivity
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTask();
-                getAllTasks(new FirebaseCallback() {
-                    @Override
-                    public void onCallback(ArrayList<Task> list) {
-                        Intent intent = getIntent();
-                        startActivity(intent);
-                    }
-                });
+                if (addTask()) {
+                    getAllTasks(new FirebaseCallback() {
+                        @Override
+                        public void onCallback(ArrayList<Task> list) {
+                            Intent intent = getIntent();
+                            startActivity(intent);
+                        }
+                    });
+                    Toast.makeText(selectDate.getContext(), "Save Successfully", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -192,9 +220,9 @@ public class TaskActivity extends AppCompatActivity
         }
     }
 
-    private void addTask(){
+    private boolean addTask(){
         Log.w("button", "create task button clicked!");
-        String strTitle = title.getText().toString();
+        String strTitle = "";
         String strDescription = description.getText().toString();
         String strDate = "";
         String strTime = "";
@@ -202,10 +230,10 @@ public class TaskActivity extends AppCompatActivity
         if (selectDate != null && selectTime != null) {
             strDate = selectDate.getText().toString();
             strTime = selectTime.getText().toString();
+            strTitle = title.getText().toString().replaceAll("\n", "");
         }
 
         if (strDate.length() != 0 && strTime.length() != 0 && strTitle.length() != 0) {
-
 
             // xxxx-xx-xx or xxxx-x-xx or xxxx-xx-x or xxxx-x-x
             year = Integer.parseInt(strDate.substring(0, 4));
@@ -267,6 +295,11 @@ public class TaskActivity extends AppCompatActivity
             } else {
                 Log.d("dataBase error", "No such User");
             }
+            return true;
+        }
+        else {
+            Toast.makeText(this, "Missing information", Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
@@ -312,26 +345,26 @@ public class TaskActivity extends AppCompatActivity
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 //    }
 
-    public void showPopup(View v) {
-        PopupMenu popupMenu = new PopupMenu(this,v);
-        popupMenu.setOnMenuItemClickListener(this);
-        popupMenu.inflate(R.menu.popup_menu);
-        popupMenu.show();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.edit:
-                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.delete:
-                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return false;
-        }
-    }
+//    public void showPopup(View v) {
+//        PopupMenu popupMenu = new PopupMenu(this,v);
+//        popupMenu.setOnMenuItemClickListener(this);
+//        popupMenu.inflate(R.menu.popup_menu);
+//        popupMenu.show();
+//    }
+//
+//    @Override
+//    public boolean onMenuItemClick(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.edit:
+//                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
+//                return true;
+//            case R.id.delete:
+//                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
+//                return true;
+//            default:
+//                return false;
+//        }
+//    }
 
 //    private void printTasks(){
 //        for (Task t : taskList) {

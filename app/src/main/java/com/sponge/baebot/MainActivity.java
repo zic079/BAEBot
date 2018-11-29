@@ -58,7 +58,7 @@ import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener,PopupMenu.OnMenuItemClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, View.OnClickListener {
 
     // navigation drawer switch
     SwitchCompat voice_switcher;
@@ -298,8 +298,8 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.eventBtn:
                 if ((eventBtn.getText()).equals("events/tasks")) {
-                    eventBtn.setText("Add events");
-                    calendarBtn.setText("Add tasks");
+                    eventBtn.setText("Events");
+                    calendarBtn.setText("Tasks");
                     weatherBtn.setText("Return");
                     sentence.setText("Would you like to add a new event or task?");
                 } else {
@@ -309,7 +309,7 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.showCalendarBtn:
-                if (calendarBtn.getText().equals("Add tasks")){
+                if (calendarBtn.getText().equals("Tasks")){
                     FirebaseUser currentUser = mAuth.getCurrentUser();
                     String userId = currentUser.getUid();
                     User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
@@ -540,27 +540,27 @@ public class MainActivity extends AppCompatActivity
             }
         });
     }
-
-    public void showPopup(View v) {
-        PopupMenu popupMenu = new PopupMenu(this,v);
-        popupMenu.setOnMenuItemClickListener(this);
-        popupMenu.inflate(R.menu.popup_menu);
-        popupMenu.show();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.edit:
-                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.delete:
-                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return false;
-        }
-    }
+//
+//    public void showPopup(View v) {
+//        PopupMenu popupMenu = new PopupMenu(this,v);
+//        popupMenu.setOnMenuItemClickListener(this);
+//        popupMenu.inflate(R.menu.popup_menu);
+//        popupMenu.show();
+//    }
+//
+//    @Override
+//    public boolean onMenuItemClick(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.edit:
+//                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
+//                return true;
+//            case R.id.delete:
+//                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
+//                return true;
+//            default:
+//                return false;
+//        }
+//    }
 
     public String getUserId(){
         FirebaseUser currentUser = mAuth.getCurrentUser();
