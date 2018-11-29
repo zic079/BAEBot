@@ -164,7 +164,7 @@
                     <android.support.design.widget.TabLayout
                         android:id="@+id/tablayout"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="34dp"
                         android:background="@drawable/ic_button2"
                         android:backgroundTint="@color/enable_thumb_orange"
                         app:tabGravity="fill"
