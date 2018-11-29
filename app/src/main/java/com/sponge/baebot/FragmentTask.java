@@ -48,7 +48,7 @@ public class FragmentTask extends Fragment {
                 Log.e("On resume!!!!", list.toString());
                 tasks = list;
                 for (Task t : tasks) {
-                    strTasks.add(t.toString());
+                    strTasks.add(t.getTitle());
                 }
                 Log.e("On resume!!!!", strTasks.toString());
 //                recyclerViewAdapter.notifyDataSetChanged();
@@ -80,7 +80,7 @@ public class FragmentTask extends Fragment {
                     Log.e("get task main", list.toString());
                     tasks = list;
                     for (Task t : tasks) {
-                        strTasks.add(t.toString());
+                        strTasks.add(t.getTitle());
                     }
                     Log.e("here!!!!!", strTasks.toString());
                     recyclerView = (RecyclerView) v.findViewById(R.id.task_recyclerView);
