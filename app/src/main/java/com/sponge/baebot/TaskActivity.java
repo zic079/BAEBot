@@ -1,5 +1,6 @@
 package com.sponge.baebot;
 
+import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
@@ -173,6 +174,8 @@ public class TaskActivity extends AppCompatActivity
 //            }
 //        });
 
+        findViewById(R.id.search_bar).setOnClickListener(this);
+
         title = findViewById(R.id.title_input);
         description = findViewById(R.id.description);
 
@@ -222,7 +225,16 @@ public class TaskActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v){
+        final View search = findViewById(R.id.search);
+
         switch (v.getId()) {
+            case R.id.search_bar:
+                Intent intent = new Intent(TaskActivity.this, SearchActivity.class);
+                ActivityOptions options1 = ActivityOptions
+                        .makeSceneTransitionAnimation(this, search, "search");
+                startActivity(intent, options1.toBundle());
+                break;
+
             case R.id.btnDate:
                 Log.w("button", "select date button clicked!");
                 year = calendar.get(Calendar.YEAR);
