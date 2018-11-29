@@ -56,6 +56,7 @@
                 android:layout_marginTop="@dimen/activity_horizontal_margin"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:paddingTop="@dimen/activity_horizontal_margin"
                 android:scaleType="fitCenter"
                 android:transitionName="waifu"
                 app:srcCompat="@drawable/maid1" />
@@ -286,12 +287,12 @@
 
             </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/nav_header_vertical_spacing"
             android:layout_marginRight="@dimen/nav_header_vertical_spacing"
-            android:background="@drawable/calendar_background"
             android:orientation="vertical">
 
 
@@ -321,7 +322,11 @@
                 android:id="@+id/task_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/calendar_inner_background" />
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/calendar_background"
+                android:backgroundTint="#FFFFC57E"
+                android:padding="@dimen/activity_horizontal_margin" />
 
 
         </LinearLayout>

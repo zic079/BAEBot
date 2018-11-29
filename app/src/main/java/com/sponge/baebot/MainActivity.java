@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Handler;
 import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -142,6 +143,7 @@ public class MainActivity extends AppCompatActivity
        // findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.weatherBtn).setOnClickListener(this);
         findViewById(R.id.Waifu).setOnClickListener(this);
+        findViewById(R.id.search_bar).setOnClickListener(this);
 
 
         // Get current System time to play different greetings.
@@ -295,8 +297,17 @@ public class MainActivity extends AppCompatActivity
         calendarBtn = (Button)findViewById(R.id.showCalendarBtn);
         weatherBtn = (Button)findViewById(R.id.weatherBtn);
         sentence = (TextView)findViewById(R.id.sentence);
+        final View search = findViewById(R.id.search);
         final View waifu = findViewById(R.id.Waifu);
+
         switch (v.getId()) {
+            case R.id.search_bar:
+                Intent intent = new Intent(MainActivity.this, SearchActivity.class);
+                ActivityOptions options1 = ActivityOptions
+                        .makeSceneTransitionAnimation(this, search, "search");
+                startActivity(intent, options1.toBundle());
+                break;
+
             case R.id.signOutButton:
                 signOut();
                 break;
