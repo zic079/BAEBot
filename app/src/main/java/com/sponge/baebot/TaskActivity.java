@@ -40,7 +40,7 @@ import java.util.UUID;
 public class TaskActivity extends AppCompatActivity
         implements View.OnClickListener, TaskAdapter.ItemClickListener {
     private Button selectDate, selectTime, saveTask;
-    private EditText title, description, taskIdInput;
+    private EditText title, description;
     private int year, month, dayOfMonth, hour, minute;
     private Calendar calendar = Calendar.getInstance();
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
@@ -53,9 +53,32 @@ public class TaskActivity extends AppCompatActivity
     private RecyclerView recyclerView;
     private RecyclerViewAdapter recyclerViewAdapter;
     private TaskAdapter adapter;
+    private Task editedTask;
 
     private interface FirebaseCallback{
         void onCallback(ArrayList<com.sponge.baebot.Task> list);
+    }
+    private interface FirebaseCallbackEdit{
+        void onCallback(Task taskToEdit);
+    }
+
+    public void getTaskToEdit(String id, final FirebaseCallbackEdit firebaseCallbackEdit){
+        mDatabase.child("task").child(userId).child(id).addListenerForSingleValueEvent(
+                new ValueEventListener(){
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+//                        Log.e("Task Activity", "edit task!");
+                        Task t = dataSnapshot.getValue(Task.class);
+                        Log.e("Task Activity edit",t.toString());
+                        firebaseCallbackEdit.onCallback(t);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -68,6 +91,19 @@ public class TaskActivity extends AppCompatActivity
                 switch (item.getItemId()) {
                     case R.id.edit:
                         Toast.makeText(selectDate.getContext(), "Hello Edit!", Toast.LENGTH_SHORT).show();
+                        getTaskToEdit(adapter.getItem(position),new FirebaseCallbackEdit() {
+                            @Override
+                            public void onCallback(Task taskToEdit) {
+                                editedTask = taskToEdit;
+                                title.setText(editedTask.getTitle());
+                                description.setText(editedTask.getDescription());
+
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                                String dateAndTime = sdf.format(new Date((editedTask.getTimestamp()+28800)*1000));
+                                selectDate.setText(dateAndTime.substring(0,10));
+                                selectTime.setText(dateAndTime.substring(11));
+                            }
+                        });
                         return true;
                         case R.id.delete:
                             mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
@@ -269,7 +305,7 @@ public class TaskActivity extends AppCompatActivity
             }
             hour = Integer.parseInt(strHour);
             minute = Integer.parseInt(strTime.substring(idx+1));
-
+            Timestamp ts;
 
             if (userId != null) {
                 String taskId = UUID.randomUUID().toString();
@@ -277,8 +313,19 @@ public class TaskActivity extends AppCompatActivity
                 try {
                     Log.d("date",year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
                     Date d = new SimpleDateFormat("yyyy/MM/dd/hh/mm").parse(year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
-                    Timestamp ts = new Timestamp(d.getTime());
+                    ts = new Timestamp(d.getTime());
                     task = new Task(taskId,strTitle,strDescription, ts.getTime()/1000 - 28800);
+
+                    if (editedTask == null) {
+                        mDatabase.child("task").child(userId).child(taskId).setValue(task);
+
+                    } else {
+                        task = new Task(editedTask.getTaskId(), strTitle, strDescription, ts.getTime()/1000 - 28800);
+                        mDatabase.child("task").child(userId).child(editedTask.getTaskId()).setValue(task);
+                        editedTask = null;
+                    }
+
+                    Log.d("add to db", "success");
                 }catch (Exception e){
                     Log.d("task", "date parsing error");
                 }
@@ -290,8 +337,6 @@ public class TaskActivity extends AppCompatActivity
                     Log.d("task","task not null");
                 }
 
-                mDatabase.child("task").child(userId).child(taskId).setValue(task);
-                Log.d("add to db", "success");
             } else {
                 Log.d("dataBase error", "No such User");
             }
