@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-public class ShowCalendarActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
+public class ShowCalendarActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener, View.OnClickListener {
 
 
     private static final String TAG = "CalendarActivity";
@@ -67,7 +67,9 @@ public class ShowCalendarActivity extends AppCompatActivity implements PopupMenu
             }
         });
 
-
+        ////TESTING
+        View mBtn = findViewById(R.id.imageButton);
+        mBtn.setOnClickListener(this);
 
     }
     public void showPopup(View v) {
@@ -88,6 +90,15 @@ public class ShowCalendarActivity extends AppCompatActivity implements PopupMenu
                 return true;
             default:
                 return false;
+        }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.imageButton:
+                Log.d(TAG, "onClick: CLICKED");
+                handler.deleteEvent();
         }
     }
 

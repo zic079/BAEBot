@@ -28,7 +28,7 @@ public class FragmentEvent extends Fragment {
     private ArrayList<String> eventList;
 
     private static final String[] EVENT_PROJECTION = new String[] {
-            CalendarContract.Events.CALENDAR_ID,                  // 0
+            CalendarContract.Events._ID,                          // 0
             CalendarContract.Events.TITLE,                        // 1
             CalendarContract.Events.DESCRIPTION,                  // 2
             CalendarContract.Events.DTSTART,                      // 3
@@ -94,6 +94,7 @@ public class FragmentEvent extends Fragment {
         if(cur != null && cur.getCount() > 0) {
             Log.d("readEvent", "events found");
 
+
             cur.moveToFirst();
             while (cur.moveToNext()) {
                 // information of event
@@ -101,6 +102,9 @@ public class FragmentEvent extends Fragment {
                 String eventBeginMill;
                 String eventBeginDate;
                 String isAllDay;
+
+                Log.d("readEvent", "Event title: " + cur.getString(PROJECTION_TITLE_INDEX));
+                Log.d("readEvent", "Event ID: " + cur.getString(PROJECTION_ID_INDEX));
 
                 // Get the field values
                 eventTitle = cur.getString(PROJECTION_TITLE_INDEX);

@@ -5,6 +5,7 @@ package com.sponge.baebot;
 
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -32,7 +33,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     // dynamic lookups improves performance.
     // https://developer.android.com/reference/android/provider/CalendarContract.Events
     private static final String[] EVENT_PROJECTION = new String[] {
-            CalendarContract.Events.CALENDAR_ID,                  // 0
+            CalendarContract.Events._ID,                          // 0
             CalendarContract.Events.TITLE,                        // 1
             CalendarContract.Events.DESCRIPTION,                  // 2
             CalendarContract.Events.DTSTART,                      // 3
@@ -85,6 +86,9 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
             String eventBeginMill;
             String eventBeginDate;
             String isAllDay;
+
+            Log.d("readEvent", "Event title: " + cursor.getString(PROJECTION_TITLE_INDEX));
+            Log.d("readEvent", "Event ID: " + cursor.getString(PROJECTION_ID_INDEX));
 
             // Get the field values
             eventTitle = cursor.getString(PROJECTION_TITLE_INDEX);
@@ -139,6 +143,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     @Override
     protected void onDeleteComplete(int token, Object cookie, int result) {
         // delete() completed
+        readEvent(queryStartDate_offset, queryStartDate, queryEndDate);
     }
 
     /**
@@ -186,7 +191,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         //ArrayList<String> calendarData = new ArrayList<>();
 
         //Cursor cur = cr.query(CalendarContract.Calendars.CONTENT_URI, EVENT_PROJECTION, selection, selectionArgs, null);
-        startQuery(CALENDAR, null, CALENDAR_URI,
+        startQuery(EVENT, null, CALENDAR_URI,
                    EVENT_PROJECTION, selection, selectionArgs, CalendarContract.Events.DTSTART + " ASC");
 
 
@@ -243,6 +248,20 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         startQuery(CALENDAR, values, CalendarContract.Calendars.CONTENT_URI,
                 EVENT_PROJECTION, null, null, null);
         */
+    }
+
+    public void deleteEvent() {
+        Log.d(TAG, "deleteEvent: !!!!!!");
+
+        // hard code test
+        long eventID = 55;
+
+        //ContentResolver cr = context.getContentResolver();
+        Uri deleteUri = null;
+        deleteUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, eventID);
+        //int rows = cr.delete(deleteUri, null, null);
+        startDelete(EVENT, null, deleteUri, null,null);
+
     }
 
     // helper function - convert millisecond to readable date
