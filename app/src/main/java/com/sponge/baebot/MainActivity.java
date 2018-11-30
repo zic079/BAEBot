@@ -1,22 +1,39 @@
 package com.sponge.baebot;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.ActivityOptions;
+import android.content.ClipboardManager;
+import android.content.ContentResolver;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
 import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.Locale;
 import java.util.Random;
 
 import android.app.Activity;
@@ -31,6 +48,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -39,8 +57,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity
@@ -53,6 +74,9 @@ public class MainActivity extends AppCompatActivity
     SwitchCompat sleep_switcher;
     SwitchCompat quote_switcher;
 
+    private Button eventBtn;
+    private Button calendarBtn;
+    private Button weatherBtn;
     private ImageButton Waifu;
     private TextView sentence;
     private TabLayout tabLayout;
@@ -95,6 +119,10 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<com.sponge.baebot.Task> taskList = new ArrayList<>();
     private ArrayList<com.sponge.baebot.Task> myList = new ArrayList<>();
 
+    // alarm
+    TimeInfo timeInfo;
+    int hour, min;
+
 
 
     @Override
@@ -120,7 +148,7 @@ public class MainActivity extends AppCompatActivity
         setupNavView();
 
         // button on main content
-        findViewById(R.id.taskBtn).setOnClickListener(this);
+        findViewById(R.id.eventBtn).setOnClickListener(this);
         findViewById(R.id.showCalendarBtn).setOnClickListener(this);
        // findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.weatherBtn).setOnClickListener(this);
@@ -192,6 +220,21 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        // Alarm for tasks 8am
+        timeInfo = new TimeInfo(getApplicationContext());
+        timeInfo.set_hour(2);
+        timeInfo.set_min(33);
+        Log.d("Alarm", "8am reminder");
+        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, timeInfo.get_hour(), timeInfo.get_min());
+
+    }
+
+
+    private void initRecyclerView(ArrayList<String> events) {
+        RecyclerView recyclerView = findViewById(R.id.main_recycler);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(events,this);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
@@ -267,6 +310,9 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
+        eventBtn = (Button)findViewById(R.id.eventBtn);
+        calendarBtn = (Button)findViewById(R.id.showCalendarBtn);
+        weatherBtn = (Button)findViewById(R.id.weatherBtn);
         sentence = (TextView)findViewById(R.id.sentence);
         final View search = findViewById(R.id.search);
         final View waifu = findViewById(R.id.Waifu);
@@ -283,26 +329,43 @@ public class MainActivity extends AppCompatActivity
                 signOut();
                 break;
 
-            case R.id.taskBtn:
-                if (mAuth == null)
-                    throw new NullPointerException();
-                FirebaseUser currentUser = mAuth.getCurrentUser();
-                String userId = currentUser.getUid();
-                User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
-                Intent i = new Intent(MainActivity.this, TaskActivity.class);
-                i.putExtra("userId",userId);
-                i.putExtra("user", myUser);
-                ActivityOptions options = ActivityOptions
-                        .makeSceneTransitionAnimation(this, waifu, "waifu");
-                startActivity(i, options.toBundle());
+            case R.id.eventBtn:
+                if ((eventBtn.getText()).equals("events/tasks")) {
+                    eventBtn.setText("Events");
+                    calendarBtn.setText("Tasks");
+                    weatherBtn.setText("Return");
+                    sentence.setText("Would you like to add a new event or task?");
+                } else {
+                    switchActivity(CalendarActivity.class);
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                }
                 break;
 
             case R.id.showCalendarBtn:
-                switchActivity(ShowCalendarActivity.class);
+                if (calendarBtn.getText().equals("Tasks")){
+                    FirebaseUser currentUser = mAuth.getCurrentUser();
+                    String userId = currentUser.getUid();
+                    User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
+                    Intent i = new Intent(MainActivity.this, TaskActivity.class);
+                    i.putExtra("userId",userId);
+                    i.putExtra("user", myUser);
+                    ActivityOptions options = ActivityOptions
+                            .makeSceneTransitionAnimation(this, waifu, "waifu");
+                    startActivity(i, options.toBundle());
+                }else {
+                    switchActivity(ShowCalendarActivity.class);
+                }
                 break;
 
             case R.id.weatherBtn:
-                switchActivity(WeatherActivity.class);
+                if (weatherBtn.getText().equals("Return")) {
+                    eventBtn.setText("events/tasks");
+                    calendarBtn.setText("Show Calendar");
+                    weatherBtn.setText("Weather");
+                    sentence.setText("What would you like assistance on?");
+                }
+                else
+                    switchActivity(WeatherActivity.class);
                 break;
 
             case R.id.Waifu:
@@ -533,8 +596,6 @@ public class MainActivity extends AppCompatActivity
 //    }
 
     public String getUserId(){
-        if (mAuth == null)
-            throw new NullPointerException();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String userId = currentUser.getUid();
         return userId;
@@ -548,7 +609,34 @@ public class MainActivity extends AppCompatActivity
         return myList;
     }
 
+    public String getFormatedTime(int h, int m) {
+        final String OLD_FORMAT = "HH:mm";
+        final String NEW_FORMAT = "hh:mm a";
 
+        String oldDateString = h + ":" + m;
+        String newDateString = "";
+
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat(OLD_FORMAT, getCurrentLocale());
+            Date d = sdf.parse(oldDateString);
+            sdf.applyPattern(NEW_FORMAT);
+            newDateString = sdf.format(d);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return newDateString;
+    }
+
+    @TargetApi(Build.VERSION_CODES.N)
+    public Locale getCurrentLocale() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return getResources().getConfiguration().getLocales().get(0);
+        } else {
+            //noinspection deprecation
+            return getResources().getConfiguration().locale;
+        }
+    }
     /*
     ////// TESTING ONLY - NOT AsyncQueryHandler
     private ArrayList<String> readEvent() {
