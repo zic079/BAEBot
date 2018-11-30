@@ -45,8 +45,8 @@ public class CalendarActivity extends AppCompatActivity
 
     private Button newEventBtn;
     private EditText titleEdit;
-    private EditText dateEdit;
-    private EditText timeEdit;
+    //private EditText dateEdit;
+    //private EditText timeEdit;
     private Button dateSelectBtn;
     private Button timeSelectBtn;
 
@@ -62,9 +62,9 @@ public class CalendarActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_calendar);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_event);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
 
         /*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -77,14 +77,14 @@ public class CalendarActivity extends AppCompatActivity
         });
         */
 
-        daysBtn = findViewById(R.id.buttonGetDays);
-        daysEdit = findViewById(R.id.editTextDays);
-        daysBtn.setOnClickListener(this);
+        //daysBtn = findViewById(R.id.buttonGetDays);
+        //daysEdit = findViewById(R.id.editTextDays);
+        //daysBtn.setOnClickListener(this);
 
         newEventBtn = findViewById(R.id.buttonNewEvent);
         titleEdit = findViewById(R.id.editTextTitle);
-        dateEdit = findViewById(R.id.editTextDate);
-        timeEdit = findViewById(R.id.editTextTime);
+        //dateEdit = findViewById(R.id.editTextDate);
+        //timeEdit = findViewById(R.id.editTextTime);
         dateSelectBtn = findViewById(R.id.buttonSelectDate);
         timeSelectBtn = findViewById(R.id.buttonSelectTime);
 
@@ -103,12 +103,12 @@ public class CalendarActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.buttonGetDays:
-                queryDays = Integer.parseInt(daysEdit.getText().toString());
-
-                // call CalendarQueryHandler to get event
-                //handler.readEvent(queryDays);
-                break;
+//            case R.id.buttonGetDays:
+//                queryDays = Integer.parseInt(daysEdit.getText().toString());
+//
+//                // call CalendarQueryHandler to get event
+//                //handler.readEvent(queryDays);
+//                break;
 
             case R.id.buttonSelectDate:
                 inputYear = mCalendar.get(Calendar.YEAR);
@@ -120,7 +120,7 @@ public class CalendarActivity extends AppCompatActivity
                             @Override
                             public void onDateSet(DatePicker view, int year,
                                                   int month, int day) {
-                                dateEdit.setText( year + "-" + (month + 1) + '-' + day);
+                                dateSelectBtn.setText( year + "-" + (month + 1) + '-' + day);
 
                             }
                         }, inputYear, inputMonth, inputDay);
@@ -136,7 +136,7 @@ public class CalendarActivity extends AppCompatActivity
                             @Override
                             public void onTimeSet(TimePicker view, int hour,
                                                   int minute) {
-                                timeEdit.setText(hour + ":" + minute);
+                                timeSelectBtn.setText(hour + ":" + minute);
                             }
                         }, inputHour, inputMinute, true);
                 timePickerDialog.show();
@@ -148,7 +148,7 @@ public class CalendarActivity extends AppCompatActivity
 
                 String newEventTitle = titleEdit.getText().toString();
                 SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-                String datetimeStr = dateEdit.getText().toString() + " " + timeEdit.getText().toString();
+                String datetimeStr = dateSelectBtn.getText().toString() + " " + timeSelectBtn.getText().toString();
 
                 try {
                     Date startTime = dateFormat.parse(datetimeStr);

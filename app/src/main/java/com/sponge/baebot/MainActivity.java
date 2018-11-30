@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity
     SwitchCompat sleep_switcher;
     SwitchCompat quote_switcher;
 
-    private Button eventBtn;
+    private Button taskBtn;
     private Button calendarBtn;
     private Button weatherBtn;
     private ImageButton Waifu;
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity
         setupNavView();
 
         // button on main content
-        findViewById(R.id.eventBtn).setOnClickListener(this);
+        findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.showCalendarBtn).setOnClickListener(this);
        // findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.weatherBtn).setOnClickListener(this);
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        eventBtn = (Button)findViewById(R.id.eventBtn);
+        taskBtn = (Button)findViewById(R.id.taskBtn);
         calendarBtn = (Button)findViewById(R.id.showCalendarBtn);
         weatherBtn = (Button)findViewById(R.id.weatherBtn);
         sentence = (TextView)findViewById(R.id.sentence);
@@ -312,43 +312,24 @@ public class MainActivity extends AppCompatActivity
                 signOut();
                 break;
 
-            case R.id.eventBtn:
-                if ((eventBtn.getText()).equals("events/tasks")) {
-                    eventBtn.setText("Events");
-                    calendarBtn.setText("Tasks");
-                    weatherBtn.setText("Return");
-                    sentence.setText("Would you like to add a new event or task?");
-                } else {
-                    switchActivity(CalendarActivity.class);
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                }
+            case R.id.taskBtn:
+                FirebaseUser currentUser = mAuth.getCurrentUser();
+                String userId = currentUser.getUid();
+                User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
+                Intent i = new Intent(MainActivity.this, TaskActivity.class);
+                i.putExtra("userId",userId);
+                i.putExtra("user", myUser);
+                ActivityOptions options = ActivityOptions
+                        .makeSceneTransitionAnimation(this, waifu, "waifu");
+                startActivity(i, options.toBundle());
                 break;
 
             case R.id.showCalendarBtn:
-                if (calendarBtn.getText().equals("Tasks")){
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                    String userId = currentUser.getUid();
-                    User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
-                    Intent i = new Intent(MainActivity.this, TaskActivity.class);
-                    i.putExtra("userId",userId);
-                    i.putExtra("user", myUser);
-                    ActivityOptions options = ActivityOptions
-                            .makeSceneTransitionAnimation(this, waifu, "waifu");
-                    startActivity(i, options.toBundle());
-                }else {
-                    switchActivity(ShowCalendarActivity.class);
-                }
+                switchActivity(ShowCalendarActivity.class);
                 break;
 
             case R.id.weatherBtn:
-                if (weatherBtn.getText().equals("Return")) {
-                    eventBtn.setText("events/tasks");
-                    calendarBtn.setText("Show Calendar");
-                    weatherBtn.setText("Weather");
-                    sentence.setText("What would you like assistance on?");
-                }
-                else
-                    switchActivity(WeatherActivity.class);
+                switchActivity(WeatherActivity.class);
                 break;
 
             case R.id.Waifu:
