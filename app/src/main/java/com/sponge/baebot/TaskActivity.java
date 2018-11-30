@@ -7,19 +7,26 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -47,6 +54,8 @@ public class TaskActivity extends AppCompatActivity
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
     private static DatabaseReference mDatabase = database.getReference();
     private String userId;
+    private PopupWindow popupWindow;
+    //private LayoutInflater layoutInflater;
     //private TableLayout tl;
     private ArrayList<Task> taskList = new ArrayList<>();
     private ArrayList<Task> tasks = new ArrayList<>();
@@ -55,6 +64,7 @@ public class TaskActivity extends AppCompatActivity
     private RecyclerViewAdapter recyclerViewAdapter;
     private TaskAdapter adapter;
     private Task editedTask;
+    private LinearLayout linearLayout;
 
     private interface FirebaseCallback{
         void onCallback(ArrayList<com.sponge.baebot.Task> list);
@@ -90,6 +100,21 @@ public class TaskActivity extends AppCompatActivity
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
+                    case R.id.view:
+                        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                        ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.popup_layout,null);
+                        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                        popupWindow.showAtLocation(linearLayout, Gravity.CENTER,0,0);
+                        TextView pop_content = (TextView)container.findViewById(R.id.pop_content);
+                        pop_content.setText("Hello!!!");
+                        container.setOnTouchListener(new View.OnTouchListener(){
+                            @Override
+                            public boolean onTouch(View v, MotionEvent event) {
+                                popupWindow.dismiss();
+                                return true;
+                            }
+                        });
+                        return true;
                     case R.id.edit:
                         Toast.makeText(selectDate.getContext(), "Hello Edit!", Toast.LENGTH_SHORT).show();
                         getTaskToEdit(adapter.getItem(position),new FirebaseCallbackEdit() {
@@ -142,6 +167,7 @@ public class TaskActivity extends AppCompatActivity
         }
         Intent intent = getIntent();
         User myUser = intent.getParcelableExtra("user");
+        linearLayout = (LinearLayout)findViewById(R.id.linearLayout_task);
 
 //        final Button deleteTask = findViewById(R.id.btnDelete);
 //        taskIdInput = findViewById(R.id.taskId_input);
@@ -175,6 +201,7 @@ public class TaskActivity extends AppCompatActivity
 //        });
 
         findViewById(R.id.search_bar).setOnClickListener(this);
+
 
         title = findViewById(R.id.title_input);
         description = findViewById(R.id.description);
