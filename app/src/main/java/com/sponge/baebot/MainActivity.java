@@ -2,32 +2,21 @@ package com.sponge.baebot;
 
 import android.Manifest;
 import android.app.ActivityOptions;
-import android.content.ContentResolver;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.media.MediaPlayer;
-import android.net.Uri;
-import android.os.Handler;
 import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.Random;
 
 import android.app.Activity;
@@ -42,7 +31,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -51,11 +39,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
 public class MainActivity extends AppCompatActivity
@@ -68,9 +53,6 @@ public class MainActivity extends AppCompatActivity
     SwitchCompat sleep_switcher;
     SwitchCompat quote_switcher;
 
-    private Button taskBtn;
-    private Button calendarBtn;
-    private Button weatherBtn;
     private ImageButton Waifu;
     private TextView sentence;
     private TabLayout tabLayout;
@@ -212,14 +194,6 @@ public class MainActivity extends AppCompatActivity
 
     }
 
-
-    private void initRecyclerView(ArrayList<String> events) {
-        RecyclerView recyclerView = findViewById(R.id.main_recycler);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(events,this);
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-    }
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -293,9 +267,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        taskBtn = (Button)findViewById(R.id.taskBtn);
-        calendarBtn = (Button)findViewById(R.id.showCalendarBtn);
-        weatherBtn = (Button)findViewById(R.id.weatherBtn);
         sentence = (TextView)findViewById(R.id.sentence);
         final View search = findViewById(R.id.search);
         final View waifu = findViewById(R.id.Waifu);
@@ -313,6 +284,8 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.taskBtn:
+                if (mAuth == null)
+                    throw new NullPointerException();
                 FirebaseUser currentUser = mAuth.getCurrentUser();
                 String userId = currentUser.getUid();
                 User myUser = new User(currentUser.getDisplayName(),currentUser.getEmail() );
@@ -560,6 +533,8 @@ public class MainActivity extends AppCompatActivity
 //    }
 
     public String getUserId(){
+        if (mAuth == null)
+            throw new NullPointerException();
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String userId = currentUser.getUid();
         return userId;
