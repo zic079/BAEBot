@@ -4,6 +4,8 @@ import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -54,14 +56,14 @@ public class TaskActivity extends AppCompatActivity
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
     private static DatabaseReference mDatabase = database.getReference();
     private String userId;
-    private PopupWindow popupWindow;
+    private popWindow popupWindow;
     //private LayoutInflater layoutInflater;
     //private TableLayout tl;
     private ArrayList<Task> taskList = new ArrayList<>();
     private ArrayList<Task> tasks = new ArrayList<>();
     private ArrayList<String> strTasks = new ArrayList<>();
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter recyclerViewAdapter;
+    //private RecyclerViewAdapter recyclerViewAdapter;
     private TaskAdapter adapter;
     private Task editedTask;
     private LinearLayout linearLayout;
@@ -101,19 +103,37 @@ public class TaskActivity extends AppCompatActivity
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.view:
-                        LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                        ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.popup_layout,null);
-                        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                        popupWindow.showAtLocation(linearLayout, Gravity.CENTER,0,0);
-                        TextView pop_content = (TextView)container.findViewById(R.id.pop_content);
-                        pop_content.setText("Hello!!!");
-                        container.setOnTouchListener(new View.OnTouchListener(){
+
+                        getTaskToEdit(adapter.getItem(position),new FirebaseCallbackEdit() {
                             @Override
-                            public boolean onTouch(View v, MotionEvent event) {
-                                popupWindow.dismiss();
-                                return true;
+                            public void onCallback(Task taskToEdit) {
+                                LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                                ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.popup_layout,null);
+                                if (popupWindow != null){
+                                    popupWindow.dismiss();
+                                }
+                                popupWindow = new popWindow(TaskActivity.this, taskToEdit);
+                                popupWindow.show(findViewById(R.id.linearLayout_task), 0,0);
                             }
                         });
+
+//                        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                        popupWindow.showAtLocation(linearLayout, Gravity.CENTER,0,0);
+//                        popupWindow.setOutsideTouchable(true);
+//                        popupWindow.setFocusable(true);
+//
+//                        // Removes default black background
+//                        popupWindow.setBackgroundDrawable(new ColorDrawable());
+//
+//                        TextView pop_content = (TextView)container.findViewById(R.id.pop_content);
+//                        pop_content.setText("Hello!!!");
+//                        container.setOnTouchListener(new View.OnTouchListener(){
+//                            @Override
+//                            public boolean onTouch(View v, MotionEvent event) {
+//                                popupWindow.dismiss();
+//                                return true;
+//                            }
+//                        });
                         return true;
                     case R.id.edit:
                         Toast.makeText(selectDate.getContext(), "Hello Edit!", Toast.LENGTH_SHORT).show();
@@ -159,6 +179,10 @@ public class TaskActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
+
+        if (popupWindow != null){
+            popupWindow.dismiss();
+        }
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {

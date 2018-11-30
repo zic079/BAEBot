@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class FragmentTask extends Fragment {
@@ -37,6 +38,10 @@ public class FragmentTask extends Fragment {
     }
 
     public FragmentTask() {
+    }
+
+    public ArrayList<com.sponge.baebot.Task> returnTasks(){
+        return taskList;
     }
 
     @Override
