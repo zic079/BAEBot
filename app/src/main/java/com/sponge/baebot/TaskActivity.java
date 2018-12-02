@@ -1,21 +1,34 @@
 package com.sponge.baebot;
 
+import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.TableLayout;
+import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -35,32 +48,125 @@ import java.util.UUID;
 
 
 public class TaskActivity extends AppCompatActivity
-        implements View.OnClickListener, PopupMenu.OnMenuItemClickListener, TaskAdapter.ItemClickListener {
+        implements View.OnClickListener, TaskAdapter.ItemClickListener {
     private Button selectDate, selectTime, saveTask;
-    private EditText title, description, taskIdInput;
+    private EditText title, description;
     private int year, month, dayOfMonth, hour, minute;
     private Calendar calendar = Calendar.getInstance();
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
     private static DatabaseReference mDatabase = database.getReference();
     private String userId;
+    private popWindow popupWindow;
+    //private LayoutInflater layoutInflater;
     //private TableLayout tl;
     private ArrayList<Task> taskList = new ArrayList<>();
     private ArrayList<Task> tasks = new ArrayList<>();
     private ArrayList<String> strTasks = new ArrayList<>();
     private RecyclerView recyclerView;
-    private RecyclerViewAdapter recyclerViewAdapter;
+    //private RecyclerViewAdapter recyclerViewAdapter;
     private TaskAdapter adapter;
+    private Task editedTask;
+    private LinearLayout linearLayout;
 
     private interface FirebaseCallback{
         void onCallback(ArrayList<com.sponge.baebot.Task> list);
     }
 
-    @Override
-    public void onItemClick(View view, int position){
-        mDatabase.child("task").child(userId).child(adapter.getTaskId(position)).removeValue();
-        Toast.makeText(this, "Delete Successfully!", Toast.LENGTH_SHORT).show();
+    private interface FirebaseCallbackEdit{
+        void onCallback(Task taskToEdit);
     }
 
+    public void getTaskToEdit(String id, final FirebaseCallbackEdit firebaseCallbackEdit){
+        mDatabase.child("task").child(userId).child(id).addListenerForSingleValueEvent(
+                new ValueEventListener(){
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        Task t = dataSnapshot.getValue(Task.class);
+                        Log.e("Task Activity edit",t.toString());
+                        firebaseCallbackEdit.onCallback(t);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @Override
+    public void onItemClick(View view, final int position){
+        PopupMenu popup = new PopupMenu(this, view);
+        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.view:
+
+                        getTaskToEdit(adapter.getItem(position),new FirebaseCallbackEdit() {
+                            @Override
+                            public void onCallback(Task taskToEdit) {
+                                LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
+                                ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.popup_layout,null);
+                                if (popupWindow != null){
+                                    popupWindow.dismiss();
+                                }
+                                popupWindow = new popWindow(TaskActivity.this, taskToEdit);
+                                popupWindow.show(findViewById(R.id.linearLayout_task), 0,0);
+                            }
+                        });
+
+//                        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                        popupWindow.showAtLocation(linearLayout, Gravity.CENTER,0,0);
+//                        popupWindow.setOutsideTouchable(true);
+//                        popupWindow.setFocusable(true);
+//
+//                        // Removes default black background
+//                        popupWindow.setBackgroundDrawable(new ColorDrawable());
+//
+//                        TextView pop_content = (TextView)container.findViewById(R.id.pop_content);
+//                        pop_content.setText("Hello!!!");
+//                        container.setOnTouchListener(new View.OnTouchListener(){
+//                            @Override
+//                            public boolean onTouch(View v, MotionEvent event) {
+//                                popupWindow.dismiss();
+//                                return true;
+//                            }
+//                        });
+                        return true;
+                    case R.id.edit:
+                        Toast.makeText(selectDate.getContext(), "Hello Edit!", Toast.LENGTH_SHORT).show();
+                        getTaskToEdit(adapter.getItem(position),new FirebaseCallbackEdit() {
+                            @Override
+                            public void onCallback(Task taskToEdit) {
+                                editedTask = taskToEdit;
+                                title.setText(editedTask.getTitle());
+                                description.setText(editedTask.getDescription());
+
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                                String dateAndTime = sdf.format(new Date((editedTask.getTimestamp()+28800)*1000));
+                                selectDate.setText(dateAndTime.substring(0,10));
+                                selectTime.setText(dateAndTime.substring(11));
+                            }
+                        });
+                        return true;
+                        case R.id.delete:
+                            mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
+                            Toast.makeText(selectDate.getContext(), "Delete Successfully!", Toast.LENGTH_SHORT).show();
+                            adapter.removeAt(position);
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            });
+            // here you can inflate your menu
+            popup.inflate(R.menu.popup_menu);
+            popup.setGravity(Gravity.RIGHT);
+            popup.show();
+
+    }
 
     @Override
     public void onBackPressed(){
@@ -74,6 +180,10 @@ public class TaskActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
+        if (popupWindow != null){
+            popupWindow.dismiss();
+        }
+
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             userId = extras.getString("userId");
@@ -81,6 +191,7 @@ public class TaskActivity extends AppCompatActivity
         }
         Intent intent = getIntent();
         User myUser = intent.getParcelableExtra("user");
+        linearLayout = (LinearLayout)findViewById(R.id.linearLayout_task);
 
 //        final Button deleteTask = findViewById(R.id.btnDelete);
 //        taskIdInput = findViewById(R.id.taskId_input);
@@ -113,6 +224,9 @@ public class TaskActivity extends AppCompatActivity
 //            }
 //        });
 
+        findViewById(R.id.search_bar).setOnClickListener(this);
+
+
         title = findViewById(R.id.title_input);
         description = findViewById(R.id.description);
 
@@ -129,14 +243,16 @@ public class TaskActivity extends AppCompatActivity
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addTask();
-                getAllTasks(new FirebaseCallback() {
-                    @Override
-                    public void onCallback(ArrayList<Task> list) {
-                        Intent intent = getIntent();
-                        startActivity(intent);
-                    }
-                });
+                if (addTask()) {
+                    getAllTasks(new FirebaseCallback() {
+                        @Override
+                        public void onCallback(ArrayList<Task> list) {
+                            Intent intent = getIntent();
+                            startActivity(intent);
+                        }
+                    });
+                    Toast.makeText(selectDate.getContext(), "Save Successfully", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -160,7 +276,16 @@ public class TaskActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v){
+        final View search = findViewById(R.id.search);
+
         switch (v.getId()) {
+            case R.id.search_bar:
+                Intent intent = new Intent(TaskActivity.this, SearchActivity.class);
+                ActivityOptions options1 = ActivityOptions
+                        .makeSceneTransitionAnimation(this, search, "search");
+                startActivity(intent, options1.toBundle());
+                break;
+
             case R.id.btnDate:
                 Log.w("button", "select date button clicked!");
                 year = calendar.get(Calendar.YEAR);
@@ -194,9 +319,9 @@ public class TaskActivity extends AppCompatActivity
         }
     }
 
-    private void addTask(){
+    private boolean addTask(){
         Log.w("button", "create task button clicked!");
-        String strTitle = title.getText().toString();
+        String strTitle = "";
         String strDescription = description.getText().toString();
         String strDate = "";
         String strTime = "";
@@ -204,10 +329,10 @@ public class TaskActivity extends AppCompatActivity
         if (selectDate != null && selectTime != null) {
             strDate = selectDate.getText().toString();
             strTime = selectTime.getText().toString();
+            strTitle = title.getText().toString().replaceAll("\n", "");
         }
 
         if (strDate.length() != 0 && strTime.length() != 0 && strTitle.length() != 0) {
-
 
             // xxxx-xx-xx or xxxx-x-xx or xxxx-xx-x or xxxx-x-x
             year = Integer.parseInt(strDate.substring(0, 4));
@@ -243,7 +368,7 @@ public class TaskActivity extends AppCompatActivity
             }
             hour = Integer.parseInt(strHour);
             minute = Integer.parseInt(strTime.substring(idx+1));
-
+            Timestamp ts;
 
             if (userId != null) {
                 String taskId = UUID.randomUUID().toString();
@@ -251,8 +376,19 @@ public class TaskActivity extends AppCompatActivity
                 try {
                     Log.d("date",year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
                     Date d = new SimpleDateFormat("yyyy/MM/dd/hh/mm").parse(year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
-                    Timestamp ts = new Timestamp(d.getTime());
+                    ts = new Timestamp(d.getTime());
                     task = new Task(taskId,strTitle,strDescription, ts.getTime()/1000 - 28800);
+
+                    if (editedTask == null) {
+                        mDatabase.child("task").child(userId).child(taskId).setValue(task);
+
+                    } else {
+                        task = new Task(editedTask.getTaskId(), strTitle, strDescription, ts.getTime()/1000 - 28800);
+                        mDatabase.child("task").child(userId).child(editedTask.getTaskId()).setValue(task);
+                        editedTask = null;
+                    }
+
+                    Log.d("add to db", "success");
                 }catch (Exception e){
                     Log.d("task", "date parsing error");
                 }
@@ -264,11 +400,14 @@ public class TaskActivity extends AppCompatActivity
                     Log.d("task","task not null");
                 }
 
-                mDatabase.child("task").child(userId).child(taskId).setValue(task);
-                Log.d("add to db", "success");
             } else {
                 Log.d("dataBase error", "No such User");
             }
+            return true;
+        }
+        else {
+            Toast.makeText(this, "Missing information", Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
@@ -314,26 +453,26 @@ public class TaskActivity extends AppCompatActivity
 //        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 //    }
 
-    public void showPopup(View v) {
-        PopupMenu popupMenu = new PopupMenu(this,v);
-        popupMenu.setOnMenuItemClickListener(this);
-        popupMenu.inflate(R.menu.popup_menu);
-        popupMenu.show();
-    }
-
-    @Override
-    public boolean onMenuItemClick(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.edit:
-                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
-                return true;
-            case R.id.delete:
-                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
-                return true;
-            default:
-                return false;
-        }
-    }
+//    public void showPopup(View v) {
+//        PopupMenu popupMenu = new PopupMenu(this,v);
+//        popupMenu.setOnMenuItemClickListener(this);
+//        popupMenu.inflate(R.menu.popup_menu);
+//        popupMenu.show();
+//    }
+//
+//    @Override
+//    public boolean onMenuItemClick(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.edit:
+//                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
+//                return true;
+//            case R.id.delete:
+//                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
+//                return true;
+//            default:
+//                return false;
+//        }
+//    }
 
 //    private void printTasks(){
 //        for (Task t : taskList) {

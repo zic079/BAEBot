@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/main_background"
-    tools:context=".MainActivity">
+    android:background="@drawable/main_background">
 
     <LinearLayout
         android:id="@+id/linearLayout_task"
@@ -19,22 +18,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0">
 
-        <LinearLayout
-            android:layout_width="394dp"
-            android:layout_height="48dp"
-            android:layout_weight="0"
-            android:orientation="vertical"></LinearLayout>
-
 
         <TextView
             android:id="@+id/sentence"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="72dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginRight="64dp"
             android:layout_weight="0"
-            android:background="@drawable/common_google_signin_btn_icon_dark_normal_background"
+            android:background="@drawable/text_bubble"
             android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingTop="8dp"
             android:text="Please input the details for your task."
             android:textAlignment="viewStart"
             android:textSize="16sp"
@@ -45,7 +40,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
-            android:layout_marginTop="0dp"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
             android:orientation="horizontal">
 
@@ -56,6 +50,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
+                android:paddingBottom="16dp"
                 android:scaleType="fitCenter"
                 android:transitionName="waifu"
                 app:srcCompat="@drawable/maid1" />
@@ -65,6 +60,7 @@
                 android:layout_width="219dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
                 android:background="@drawable/rectangle_27"
                 android:orientation="vertical">
 
@@ -258,9 +254,9 @@
                         android:layout_marginTop="0dp"
                         android:layout_marginRight="15dp"
                         android:layout_marginBottom="1dp"
-                        android:inputType="textMultiLine"
                         android:background="@drawable/rectangle_14"
                         android:gravity="start"
+                        android:inputType="textMultiLine"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -284,42 +280,60 @@
 
             </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/nav_header_vertical_spacing"
             android:layout_marginRight="@dimen/nav_header_vertical_spacing"
-            android:background="@drawable/calendar_background"
             android:orientation="vertical">
 
 
-            <android.support.design.widget.TextInputLayout
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
-                android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
-                android:layout_weight="0"
-                android:background="@color/colorPrimary">
+                android:layout_weight="0">
 
-
-                <android.support.design.widget.TextInputEditText
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                    android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:background="@drawable/ic_button"
-                    android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
-                    android:drawableLeft="?android:attr/actionModeWebSearchDrawable"
-                    android:padding="2dp"
-                    android:textSize="14sp" />
+                    android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
+                    android:layout_weight="0"
+                    android:background="@color/colorPrimary"
+                    android:transitionName="search">
 
-            </android.support.design.widget.TextInputLayout>
+
+                    <android.support.design.widget.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                        android:layout_marginRight="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/ic_button"
+                        android:backgroundTint="@color/common_google_signin_btn_text_dark_default"
+                        android:drawableLeft="?android:attr/actionModeWebSearchDrawable"
+                        android:textSize="14sp" />
+
+                </android.support.design.widget.TextInputLayout>
+
+                <Button
+                    android:id="@+id/search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:background="@color/colorPrimary" />
+
+            </FrameLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/task_recyclerView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/calendar_inner_background" />
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/calendar_background"
+                android:backgroundTint="#FFFFC57E"
+                android:padding="@dimen/activity_horizontal_margin" />
 
 
         </LinearLayout>

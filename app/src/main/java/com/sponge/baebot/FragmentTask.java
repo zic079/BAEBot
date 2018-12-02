@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class FragmentTask extends Fragment {
@@ -39,6 +40,10 @@ public class FragmentTask extends Fragment {
     public FragmentTask() {
     }
 
+    public ArrayList<com.sponge.baebot.Task> returnTasks(){
+        return taskList;
+    }
+
     @Override
     public void onResume(){
         super.onResume();
@@ -48,7 +53,7 @@ public class FragmentTask extends Fragment {
                 Log.e("On resume!!!!", list.toString());
                 tasks = list;
                 for (Task t : tasks) {
-                    strTasks.add(t.toString());
+                    strTasks.add(t.getTitle());
                 }
                 Log.e("On resume!!!!", strTasks.toString());
 //                recyclerViewAdapter.notifyDataSetChanged();
@@ -80,7 +85,7 @@ public class FragmentTask extends Fragment {
                     Log.e("get task main", list.toString());
                     tasks = list;
                     for (Task t : tasks) {
-                        strTasks.add(t.toString());
+                        strTasks.add(t.getTitle());
                     }
                     Log.e("here!!!!!", strTasks.toString());
                     recyclerView = (RecyclerView) v.findViewById(R.id.task_recyclerView);
@@ -124,6 +129,11 @@ public class FragmentTask extends Fragment {
                     }
                 });
     }
+
+    public int getCount() {
+        return strTasks.size();
+    }
+
 //    private void getAllTasks(){
 //        mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
 //                new ValueEventListener(){

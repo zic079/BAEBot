@@ -14,6 +14,10 @@
     <!-- permission for weather API -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- permission required to automatically restart a
+       repeating alarm if the user reboots the device -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/baebot"
@@ -22,7 +26,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
         <activity
             android:name=".SignInActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar">
@@ -34,7 +37,13 @@
         </activity>
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".CalendarActivity"
             android:label="@string/title_activity_calendar"
@@ -51,6 +60,30 @@
             android:name=".WeatherActivity"
             android:label="WeatherActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SearchActivity"
+            android:label="@string/title_activity_search"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+
+        <!-- Register the Alarm Receiver -->
+        <receiver
+            android:name=".AlarmReceiver$First"
+            android:enabled="true">
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Register the Alarm Receiver -->
+        <receiver
+            android:name=".AlarmReceiver$Second"
+            android:enabled="true">
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

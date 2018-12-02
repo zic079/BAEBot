@@ -1,14 +1,24 @@
 package com.sponge.baebot;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
+
+import static android.support.v4.content.ContextCompat.startActivity;
 
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
@@ -16,7 +26,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     private LayoutInflater mInflater;
     private ItemClickListener  mClickListener;
 
-    TaskAdapter(Context context, List<Task> data){
+    public TaskAdapter(Context context, List<Task> data){
         this.mInflater = LayoutInflater.from(context);
         this.mTask = data;
     }
@@ -38,13 +48,14 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return mTask.size();
+        return mTask == null ? 0 : mTask.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView myTextView;
 
-        ViewHolder(View itemView) {
+        private TextView myTextView;
+
+        public ViewHolder(final View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.event);
             itemView.setOnClickListener(this);
@@ -56,20 +67,23 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         }
     }
 
-    String getTaskId(int id) {
+    public String getItem(int id) {
         return mTask.get(id).getTaskId();
     }
 
-    void setClickListener(ItemClickListener itemClickListener) {
+    public void setClickListener(ItemClickListener itemClickListener) {
         this.mClickListener = itemClickListener;
     }
 
-    com.sponge.baebot.Task getItem(int id){
-        return mTask.get(id);
-    }
 
     public interface ItemClickListener{
         void onItemClick(View view, int position);
 
+    }
+
+    public void removeAt(int position) {
+        mTask.remove(position);
+        notifyItemRemoved(position);
+        notifyItemRangeChanged(position, mTask.size());
     }
 }
