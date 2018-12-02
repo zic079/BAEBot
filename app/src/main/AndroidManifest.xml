@@ -67,7 +67,7 @@
 
         <!-- Register the Alarm Receiver -->
         <receiver
-            android:name=".AlarmReceiver"
+            android:name=".AlarmReceiver$First"
             android:enabled="true">
             <intent-filter>
                 <action
@@ -75,7 +75,15 @@
             </intent-filter>
         </receiver>
 
+        <!-- Register the Alarm Receiver -->
+        <receiver
+            android:name=".AlarmReceiver$Second"
+            android:enabled="true">
+            <intent-filter>
+                <action
+                    android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
     </application>
-
 
 </manifest>

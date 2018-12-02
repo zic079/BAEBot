@@ -5,19 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-public class AlarmReceiver extends BroadcastReceiver {
+public class AlarmReceiver {
 
     String TAG = "AlarmReceiver";
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        Log.d(TAG, "onReceive**: ");
-
-        //Trigger the notification
-        NotificationScheduler.showNotification(context, MainActivity.class,
-                "BAEBot Task Reminder", "Wake up! It's time to check your daily tasks!");
-
+    public static class First extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //Trigger the notification
+            NotificationScheduler.showNotification(context, MainActivity.class,
+                    "BAEBot Reminder");
+        }
     }
+
+    public static class Second extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //Trigger the notification
+            NotificationScheduler.showNotification(context, MainActivity.class,
+                    "BAEBot Reminder");
+        }
+    }
+
 }
 
 

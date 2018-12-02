@@ -129,6 +129,11 @@ public class FragmentTask extends Fragment {
                     }
                 });
     }
+
+    public int getCount() {
+        return strTasks.size();
+    }
+
 //    private void getAllTasks(){
 //        mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
 //                new ValueEventListener(){

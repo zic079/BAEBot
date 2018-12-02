@@ -187,20 +187,29 @@ public class MainActivity extends AppCompatActivity
         tabLayout = (TabLayout)findViewById(R.id.tablayout);
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPagerAdapter.addFragment(new FragmentEvent(),"Event");
-        viewPagerAdapter.addFragment(new FragmentTask(),"Task");
+        FragmentEvent eventFrag = new FragmentEvent();
+        FragmentTask taskFrag = new FragmentTask();
+        viewPagerAdapter.addFragment(eventFrag,"Event");
+        viewPagerAdapter.addFragment(taskFrag,"Task");
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
-        // Alarm for tasks 8am
-        TimeInfo timeInfo;
-        timeInfo = new TimeInfo(getApplicationContext());
-        timeInfo.set_hour(2);
-        timeInfo.set_min(59);
-        Log.d("Alarm", "8am reminder");
-        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class, timeInfo.get_hour(), timeInfo.get_min());
+
+        Log.d("MAIN ACT", "### Event Count: " + eventFrag.getCount());
+        Log.d("MAIN ACT", "### Task Count: " + taskFrag.getCount());
+
+        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class);
+
     }
 
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        Log.d("MAIN ACTIVITY", "$$$onStart: ");
+        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class);
+
+    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
