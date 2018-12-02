@@ -23,41 +23,4 @@
 
     <include layout="@layout/content_search" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="40dp"
-        tools:layout_editor_absoluteY="0dp">
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
-
-
-        <Button
-            android:id="@+id/btn_search"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:text="Button" />
-
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/search_recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/calendar_background"
-            android:backgroundTint="#FFFFC57E"
-            android:padding="@dimen/activity_horizontal_margin" />
-
-    </LinearLayout>
-
 </android.support.constraint.ConstraintLayout>

@@ -14,7 +14,9 @@
             android:layout_width="394dp"
             android:layout_height="48dp"
             android:layout_weight="0"
-            android:orientation="vertical"></LinearLayout>
+            android:orientation="vertical">
+
+        </LinearLayout>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/search"
@@ -41,6 +43,13 @@
 
         </android.support.design.widget.TextInputLayout>
 
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:text="Button" />
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -50,6 +59,14 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/search_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:padding="@dimen/activity_horizontal_margin" />
             </LinearLayout>
         </ScrollView>
 

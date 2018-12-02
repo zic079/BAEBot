@@ -50,7 +50,7 @@
                     android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:paddingLeft="32dp"
+                    android:paddingLeft="40dp"
                     android:scaleType="fitCenter"
                     android:transitionName="waifu"
                     app:srcCompat="@drawable/maid1" />
@@ -60,7 +60,9 @@
                     android:layout_width="161dp"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/activity_horizontal_margin">
+                    android:paddingTop="16dp"
+                    android:paddingRight="40dp"
+                    android:paddingBottom="16dp">
 
 
                     <Button
