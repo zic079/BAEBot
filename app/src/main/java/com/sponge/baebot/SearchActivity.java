@@ -9,8 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
@@ -28,7 +32,7 @@ public class SearchActivity extends AppCompatActivity
     private ArrayList<com.sponge.baebot.Task> tempTaskList = new ArrayList<>();
     private TaskAdapter adapter;
     private RecyclerView recyclerView;
-    private TextInputEditText textInputEditText;
+    private EditText textInputEditText;
     private Button searchButton;
     private String userId;
 
@@ -47,41 +51,44 @@ public class SearchActivity extends AppCompatActivity
         setContentView(R.layout.activity_search);
         Toolbar toolbar =  findViewById(R.id.toolbar);
         textInputEditText = findViewById(R.id.search_text);
-        searchButton = findViewById(R.id.btn_search);
-        searchButton.setOnClickListener(new View.OnClickListener() {
+        textInputEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
-            public void onClick(View v) {
-                Log.e("search task", "button clicked!!!!");
-                tempTaskList.clear();
-                recyclerView = findViewById(R.id.search_recyclerView);
-                recyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
-                getAllTasks(new FirebaseCallback() {
-                    @Override
-                    public void onCallback(ArrayList<Task> list) {
-                        String keyWord = textInputEditText.getText().toString();
-                        if (keyWord != ""){
-                            keyWord = keyWord.toLowerCase();
-                            for (Task t : list){
-                                Log.e("hello!!!!", t.getTitle());
-                                String description  = t.getDescription().toLowerCase();
-                                String title = t.getTitle().toLowerCase();
-                                if ((description.contains(keyWord) || title.contains(keyWord))){
-                                    tempTaskList.add(t);
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    Log.e("search task", "button clicked!!!!");
+                    tempTaskList.clear();
+                    recyclerView = findViewById(R.id.search_recyclerView);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
+                    getAllTasks(new FirebaseCallback() {
+                        @Override
+                        public void onCallback(ArrayList<Task> list) {
+                            String keyWord = textInputEditText.getText().toString();
+                            if (keyWord != ""){
+                                keyWord = keyWord.toLowerCase();
+                                for (Task t : list){
+                                    Log.e("hello!!!!", t.getTitle());
+                                    String description  = t.getDescription().toLowerCase();
+                                    String title = t.getTitle().toLowerCase();
+                                    if ((description.contains(keyWord) || title.contains(keyWord))){
+                                        tempTaskList.add(t);
+                                    }
                                 }
                             }
+                            Log.e("list length", Integer.toString(tempTaskList.size()));
+                            if (tempTaskList.size() > list.size()){
+                                tempTaskList.clear();
+                                Toast.makeText(SearchActivity.this,
+                                        "You submit the search request to often. Please try again later",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            adapter = new TaskAdapter(SearchActivity.this, tempTaskList);
+                            adapter.setClickListener(SearchActivity.this);
+                            recyclerView.setAdapter(adapter);
                         }
-                        Log.e("list length", Integer.toString(tempTaskList.size()));
-                        if (tempTaskList.size() > list.size()){
-                            tempTaskList.clear();
-                            Toast.makeText(SearchActivity.this,
-                                    "You submit the search request to often. Please try again later",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                        adapter = new TaskAdapter(SearchActivity.this, tempTaskList);
-                        adapter.setClickListener(SearchActivity.this);
-                        recyclerView.setAdapter(adapter);
-                    }
-                });
+                    });
+                    return true;
+                }
+                return false;
             }
         });
         setSupportActionBar(toolbar);
@@ -96,11 +103,6 @@ public class SearchActivity extends AppCompatActivity
 
     @Override
     public void onClick(View v){
-        switch (v.getId()){
-            case R.id.btn_search:
-
-                break;
-        }
     }
 
     @Override
