@@ -25,7 +25,7 @@ public class FragmentEvent extends Fragment {
 
     private View v;
     private RecyclerView recyclerView;
-    private ArrayList<String> eventList;
+    private ArrayList<String> eventList = new ArrayList<>();
 
     private static final String[] EVENT_PROJECTION = new String[] {
             CalendarContract.Events._ID,                          // 0
@@ -61,13 +61,14 @@ public class FragmentEvent extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("FRAG EVENT", "onCreate: ");
         updateEvent();
     }
 
     private void updateEvent() {
+        Log.d("FRAG EVENT", "updateEvent: ");
 
         ContentResolver cr = getActivity().getContentResolver();
-        eventList = new ArrayList<>();
 
         // use CalendarContract.Instances for read data on calendar (rather than owner info)
         Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
@@ -138,6 +139,11 @@ public class FragmentEvent extends Fragment {
         //listView.setAdapter(stringArrayAdapter);
 
         //return calendarData;
+    }
+
+    public int getCount() {
+        Log.d("FRAG EVENT", "getCount: ");
+        return eventList.size();
     }
 
     // helper function - convert millisecond to readable date

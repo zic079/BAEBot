@@ -83,6 +83,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         this.mClickListener = itemClickListener;
     }
 
+
     public interface ItemClickListener{
         void onItemClick(View view, int position);
 

@@ -39,6 +39,38 @@
           }
         },
         {
+          "client_id": "575756981139-1691hi61dlnt6deq9u24l7abk4k5c8qp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sponge.baebot",
+            "certificate_hash": "f86fe1b2e4bc6e56f8432b3f8e7529f0e1ae96b3"
+          }
+        },
+        {
+          "client_id": "575756981139-emnse8at6clnoan510ffvj4tg1qbrelm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sponge.baebot",
+            "certificate_hash": "7898a0bb0e73096cfbe223d99c717fa48d287fd5"
+          }
+        },
+        {
+          "client_id": "575756981139-1peer7rimv0on5c96o12ih5u3ufnmm2a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sponge.baebot",
+            "certificate_hash": "49c673b2f241ef1f9c2833f3c38b801e2db10cc5"
+          }
+        },
+        {
+          "client_id": "575756981139-dquoqqa3tes3gbgonjp22v1diukjjooq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sponge.baebot",
+            "certificate_hash": "162c1945671abfcb1f5e8af0641f2c6cb9f30b15"
+          }
+        },
+        {
           "client_id": "575756981139-lc2bn402atgnfon37nf7ioogbgcs18oc.apps.googleusercontent.com",
           "client_type": 3
         }

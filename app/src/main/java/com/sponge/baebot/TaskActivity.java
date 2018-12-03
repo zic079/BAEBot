@@ -65,9 +65,13 @@ public class TaskActivity extends AppCompatActivity
     private interface FirebaseCallback{
         void onCallback(ArrayList<com.sponge.baebot.Task> list);
     }
+<<<<<<< HEAD
     private interface FirebaseCallback2{
         void onCallback(ArrayList<com.sponge.baebot.Task> list);
     }
+=======
+
+>>>>>>> 32a78f0550bfaccf46b60df220646eea44f0cd4e
     private interface FirebaseCallbackEdit{
         void onCallback(Task taskToEdit);
     }
@@ -82,7 +86,6 @@ public class TaskActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
-//                        Log.e("Task Activity", "edit task!");
                         Task t = dataSnapshot.getValue(Task.class);
                         Log.e("Task Activity edit",t.toString());
                         firebaseCallbackEdit.onCallback(t);
