@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.sql.Array;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -69,10 +70,6 @@ public class TaskActivity extends AppCompatActivity
     
     private interface FirebaseCallbackEdit{
         void onCallback(Task taskToEdit);
-    }
-
-    private interface RescheduleHandler{
-        void onCallback(ArrayList<Task> list);
     }
 
     public void getSingleTask(String id, final FirebaseCallbackEdit firebaseCallbackEdit){
@@ -247,86 +244,6 @@ public class TaskActivity extends AppCompatActivity
                 }
             }
         });
-        btnReschedule.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-//                getAllTasks(new FirebaseCallback() {
-//                    @Override
-//                    public void onCallback(ArrayList<Task> list) {
-//                        Log.e("aaaaaaaaaaaaaaaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab");
-//                        Log.e("aaareshcedule","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"+Integer.toString(list.size()));
-//                    }
-//                });
-
-                List<Task> task = adapter.getmTask();
-                Log.e("reschedule*********",Integer.toString(task.size()));
-
-                class SortByPriority implements Comparator<Task>
-                {
-
-                    // Used for sorting in ascending order of
-                    // roll number
-                    public int compare(Task a, Task b)
-                    {
-                        if(b.getPriority() - a.getPriority() > 0){
-                            return 1;
-                        }else if(b.getPriority() - a.getPriority() < 0){
-                            return -1;
-                        }else{
-                            return (int)(a.getTimestamp() - b.getTimestamp());
-                        }
-                    }
-                }
-
-                Date d = new Date();
-                long a = d.getTime();
-                Timestamp curTime = new Timestamp(a);
-                long cur = curTime.getTime()/1000-28800;
-                cur = cur/86400 * 86400;
-                Log.e("currentTime",Long.toString(cur));
-
-                ArrayList<Task> unfinished = new ArrayList<>();
-                int[] weeklyTaskCount = {0,0,0,0,0,0,0};
-
-                for(Task t : task){
-                    Log.e("reschedule","today's timestamp" +Long.toString(cur));
-                    Log.e("reschedule",t.getTaskId() +" "+ Long.toString(t.getTimestamp()));
-                    if(!t.isCompleted() && t.getTimestamp() < cur){
-                        unfinished.add(t);
-                    }else if(!t.isCompleted()){
-                        int day = (int) ((t.getTimestamp() - cur)/86400);
-                        if(day > 6){
-                            day = 6;
-                        }
-                        weeklyTaskCount[day] += 1;
-                    }
-                }
-
-
-                Collections.sort(unfinished, new SortByPriority());
-
-                int totalFinished = 0;
-                int totalUnfinished = unfinished.size();
-                for(int i = 0; i < 7; i++){
-                    totalFinished += weeklyTaskCount[i];
-                }
-                int total = totalUnfinished + totalFinished;
-                int avg = (int)total/7+1;
-                int curDay = 0;
-
-                for(Task t: unfinished){
-                    while (weeklyTaskCount[curDay] >= avg) {
-                        curDay++;
-                    }
-                    t.setTimestamp(curDay*86400+cur+28800);
-                    mDatabase.child("task").child(userId).child(t.getTaskId()).setValue(t);
-                }
-            }
-        });
-
-
-
-
 
         getAllTasks(new FirebaseCallback() {
             @Override
@@ -344,6 +261,132 @@ public class TaskActivity extends AppCompatActivity
                 recyclerView.setAdapter(adapter);
             }
         });
+
+        btnReschedule.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+//                getAllTasks(new FirebaseCallback() {
+//                    @Override
+//                    public void onCallback(ArrayList<Task> list) {
+//                        Log.e("aaaaaaaaaaaaaaaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab");
+//                        Log.e("aaareshcedule","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"+Integer.toString(list.size()));
+//                    }
+//                });
+
+                List<Task> localTask;
+
+                if (adapter != null) {
+                    localTask = adapter.getmTask();
+
+                    Log.e("reschedule*********", Integer.toString(localTask.size()));
+
+                    class SortByPriority implements Comparator<Task> {
+
+                        // Used for sorting in ascending order of
+                        // roll number
+                        public int compare(Task a, Task b) {
+                            if (b.getPriority() - a.getPriority() > 0) {
+                                return 1;
+                            } else if (b.getPriority() - a.getPriority() < 0) {
+                                return -1;
+                            } else {
+                                return (int) (a.getTimestamp() - b.getTimestamp());
+                            }
+                        }
+                    }
+
+                    Date d = new Date();
+                    long a = d.getTime();
+                    Timestamp curTime = new Timestamp(a);
+                    long cur = curTime.getTime() / 1000 - 28800;
+                    cur = cur / 86400 * 86400;
+                    Log.e("currentTime", Long.toString(cur));
+
+                    ArrayList<Task> unfinished = new ArrayList<>();
+                    int[] weeklyTaskCount = {0, 0, 0, 0, 0, 0, 0};
+
+                    for (Task t : localTask) {
+                        Log.e("reschedule", "today's timestamp" + Long.toString(cur));
+                        Log.e("reschedule", t.getTaskId() + " " + Long.toString(t.getTimestamp()));
+                        if (!t.isCompleted() && t.getTimestamp() < cur) {
+                            unfinished.add(t);
+                        } else if (!t.isCompleted()) {
+                            int day = (int) ((t.getTimestamp() - cur) / 86400);
+                            if (day > 6) {
+                                day = 6;
+                            }
+                            weeklyTaskCount[day] += 1;
+                        }
+                    }
+
+
+                    Collections.sort(unfinished, new SortByPriority());
+
+                    int totalFinished = 0;
+                    int totalUnfinished = unfinished.size();
+                    for (int i = 0; i < 7; i++) {
+                        totalFinished += weeklyTaskCount[i];
+                    }
+                    int total = totalUnfinished + totalFinished;
+                    int avg = (int) total / 7 + 1;
+                    int curDay = 0;
+
+                    for (Task t : unfinished) {
+                        while (weeklyTaskCount[curDay] >= avg) {
+                            curDay++;
+                        }
+                        t.setTimestamp(curDay * 86400 + cur + 28800);
+                        mDatabase.child("task").child(userId).child(t.getTaskId()).setValue(t);
+                    }
+
+                    //lty add here
+                    ArrayList<Task> toshowList = unfinished;
+                    for (Task t: localTask){
+                        boolean exist = false;
+                        for (Task t2: toshowList){
+                            if (t2.getTaskId() == t.getTaskId()){
+                                exist = true;
+                                break;
+                            }
+                        }
+                        if (!exist){
+                            toshowList.add(t);
+                        }
+                    }
+
+                    recyclerView = findViewById(R.id.task_recyclerView);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
+                    adapter = new TaskAdapter(TaskActivity.this, toshowList);
+                    adapter.setClickListener(TaskActivity.this);
+                    recyclerView.setAdapter(adapter);
+
+                }
+//                getAllTasks(new FirebaseCallback() {
+//                    @Override
+//                    public void onCallback(ArrayList<Task> list) {
+//                        Log.e("schedule task!!!!","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab");
+//                        Log.e("schedule task!!!!","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"+Integer.toString(list.size()));
+//                        tasks = list;
+//                        for (Task t : tasks) {
+//                            strTasks.add(t.toString());
+//                        }
+//                        recyclerView = findViewById(R.id.task_recyclerView);
+//                        recyclerView.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
+//                        adapter = new TaskAdapter(TaskActivity.this, tasks);
+//                        adapter.setClickListener(TaskActivity.this);
+//                        recyclerView.setAdapter(adapter);
+//                    }
+//                });
+            }
+
+
+        });
+
+
+
+
+
+
 
 
 
@@ -566,10 +609,10 @@ public class TaskActivity extends AppCompatActivity
 //                            Task tt = (Task)t;
                             i++;
 //                            Log.d("task-getAllTasks",tt.toString());
-                            Log.d("task-getAllTasks",t.toString());
-                            Log.d("task-getAllTasks",Integer.toString(i));
+                            Log.e("task-getAllTasks",t.toString());
+                            Log.e("task-getAllTasks",Integer.toString(i));
                             taskList.add(t);
-                            Log.d("task-getAllTasks",Integer.toString(taskList.size()));
+                            Log.e("task-getAllTasks",Integer.toString(taskList.size()));
                         }
                         tasks.clear();
                         firebaseCallback.onCallback(taskList);
