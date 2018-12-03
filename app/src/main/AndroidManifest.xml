@@ -70,10 +70,7 @@
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity
-            android:name=".TutorialActivity"
-            android:label="TutorialActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+
 
         <!-- Register the Alarm Receiver -->
         <receiver

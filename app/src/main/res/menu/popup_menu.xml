@@ -11,4 +11,7 @@
     <item
         android:id="@+id/view"
         android:title="View" />
+    <item
+        android:id="@+id/complete"
+        android:title="Complete" />
 </menu>

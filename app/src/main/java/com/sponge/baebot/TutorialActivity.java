@@ -11,20 +11,12 @@ public class TutorialActivity extends AppCompatActivity {
     ViewPager viewPager;
     ViewPageAdapter adapter;
 
-    //File f = new File("drawable/tutorial1.png");
-
-
-
     private String[] images = {
-            "https://firebasestorage.googleapis.com/v0/b/baebot-b798f.appspot.com/o/tutorial1.png?alt=media&token=3dbb52eb-3e48-42dd-9b17-5d69e2663e6e",
-                    "https://firebasestorage.googleapis.com/v0/b/baebot-b798f.appspot.com/o/tutorial2.png?alt=media&token=882fb5ed-9998-4d35-b0ca-14c6e20a28d7",
-                    "https://firebasestorage.googleapis.com/v0/b/baebot-b798f.appspot.com/o/tutorial3.png?alt=media&token=04ed6270-b4d3-4631-8f51-177a62ef3c06",
-                    "https://firebasestorage.googleapis.com/v0/b/baebot-b798f.appspot.com/o/tutorial4.png?alt=media&token=c00fca16-f0ba-4fc6-805e-466e25b17468"
-//        "drawable/tutorial1.png",
-//        "drawable/tutorial2.png",
-//            "drawable/tutorial3.png",
-//            "drawable/tutorial4.png"
-
+            "https://firebasestorage.googleapis.com/v0/b/baebot-b798f.appspot.com/o/Welcome%20to%20BaeBot%20Swipe%20to%20see%20the%20features..png?alt=media&token=5d231b54-4c9c-4b40-a68f-29ac16bffecd",
+            "https://firebasestorage.googleapis.com/v0/b/baebot-b798f.appspot.com/o/Group%205.png?alt=media&token=3d686b34-6ad7-49a9-8e7f-8c875fc7fbac",
+                    "https://firebasestorage.googleapis.com/v0/b/baebot-b798f.appspot.com/o/Group%206.png?alt=media&token=8599afc0-d376-4547-aaa0-4a64c1320767",
+                    "https://firebasestorage.googleapis.com/v0/b/baebot-b798f.appspot.com/o/Group%203.png?alt=media&token=d82a0bf9-34d1-4e4f-96a5-2f8292b93bb0",
+                    "https://firebasestorage.googleapis.com/v0/b/baebot-b798f.appspot.com/o/Group%208.png?alt=media&token=18c8b930-0980-41fa-9ac7-9a62d547fc8c"
 
     };
 

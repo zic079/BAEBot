@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Random;
@@ -382,7 +383,7 @@ public class MainActivity extends AppCompatActivity
         ImageView userImage = (ImageView)headerView.findViewById(R.id.userImage);
         TextView userNameText = (TextView)headerView.findViewById(R.id.userName);
         TextView userEmailText = (TextView)headerView.findViewById(R.id.userEmail);
-        Picasso.with(getApplicationContext()).load(user.getPhotoUrl()).resize(170, 170).into(userImage);
+        Picasso.get().load(user.getPhotoUrl()).resize(170, 170).into(userImage);
         userNameText.setText(mUser.getDisplayName());
         userEmailText.setText(mUser.getEmail());
     }

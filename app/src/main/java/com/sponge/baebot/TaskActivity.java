@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -74,7 +75,7 @@ public class TaskActivity extends AppCompatActivity
         void onCallback(ArrayList<Task> list);
     }
 
-    public void getTaskToEdit(String id, final FirebaseCallbackEdit firebaseCallbackEdit){
+    public void getSingleTask(String id, final FirebaseCallbackEdit firebaseCallbackEdit){
         mDatabase.child("task").child(userId).child(id).addListenerForSingleValueEvent(
                 new ValueEventListener(){
                     @Override
@@ -102,7 +103,7 @@ public class TaskActivity extends AppCompatActivity
                 switch (item.getItemId()) {
                     case R.id.view:
 
-                        getTaskToEdit(adapter.getItem(position),new FirebaseCallbackEdit() {
+                        getSingleTask(adapter.getItem(position),new FirebaseCallbackEdit() {
                             @Override
                             public void onCallback(Task taskToEdit) {
                                 LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
@@ -115,27 +116,10 @@ public class TaskActivity extends AppCompatActivity
                             }
                         });
 
-//                        popupWindow = new PopupWindow(container, ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//                        popupWindow.showAtLocation(linearLayout, Gravity.CENTER,0,0);
-//                        popupWindow.setOutsideTouchable(true);
-//                        popupWindow.setFocusable(true);
-//
-//                        // Removes default black background
-//                        popupWindow.setBackgroundDrawable(new ColorDrawable());
-//
-//                        TextView pop_content = (TextView)container.findViewById(R.id.pop_content);
-//                        pop_content.setText("Hello!!!");
-//                        container.setOnTouchListener(new View.OnTouchListener(){
-//                            @Override
-//                            public boolean onTouch(View v, MotionEvent event) {
-//                                popupWindow.dismiss();
-//                                return true;
-//                            }
-//                        });
                         return true;
                     case R.id.edit:
-                        Toast.makeText(selectDate.getContext(), "Hello Edit!", Toast.LENGTH_SHORT).show();
-                        getTaskToEdit(adapter.getItem(position),new FirebaseCallbackEdit() {
+                        //Toast.makeText(selectDate.getContext(), "Hello Edit!", Toast.LENGTH_SHORT).show();
+                        getSingleTask(adapter.getItem(position),new FirebaseCallbackEdit() {
                             @Override
                             public void onCallback(Task taskToEdit) {
                                 editedTask = taskToEdit;
@@ -149,20 +133,28 @@ public class TaskActivity extends AppCompatActivity
                             }
                         });
                         return true;
+
                         case R.id.delete:
                             mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
                             Toast.makeText(selectDate.getContext(), "Delete Successfully!", Toast.LENGTH_SHORT).show();
                             adapter.removeAt(position);
                             return true;
+                    case R.id.complete:
+                        mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
+                        Toast.makeText(selectDate.getContext(), "Completed!", Toast.LENGTH_SHORT).show();
+                        adapter.removeAt(position);
+                        return true;
+
+
                         default:
                             return false;
-                    }
                 }
-            });
-            // here you can inflate your menu
-            popup.inflate(R.menu.popup_menu);
-            popup.setGravity(Gravity.RIGHT);
-            popup.show();
+            }
+        });
+        // here you can inflate your menu
+        popup.inflate(R.menu.popup_menu);
+        popup.setGravity(Gravity.RIGHT);
+        popup.show();
 
     }
 
@@ -339,7 +331,7 @@ public class TaskActivity extends AppCompatActivity
 
 
 
-//
+
         getAllTasks(new FirebaseCallback() {
             @Override
             public void onCallback(ArrayList<Task> list) {
@@ -353,8 +345,6 @@ public class TaskActivity extends AppCompatActivity
                 recyclerView.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
                 adapter = new TaskAdapter(TaskActivity.this, tasks);
                 adapter.setClickListener(TaskActivity.this);
-//                recyclerViewAdapter = new RecyclerViewAdapter(strTasks, TaskActivity.this);
-//                recyclerView.setAdapter(recyclerViewAdapter);
                 recyclerView.setAdapter(adapter);
             }
         });

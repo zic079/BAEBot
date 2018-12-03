@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -22,6 +23,10 @@ import static android.support.v4.content.ContextCompat.startActivity;
 
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+
+
+
+
     public List<Task> getmTask() {
         return mTask;
     }
@@ -49,9 +54,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
 
     @Override
-    public void onBindViewHolder(@NonNull TaskAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final TaskAdapter.ViewHolder holder, int position) {
         Task t = mTask.get(position);
         holder.myTextView.setText(t.getTitle());
+        //holder.checkbox.setChecked(false);
     }
 
     @Override
@@ -62,10 +68,13 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView myTextView;
+        //CheckBox checkbox;
 
         public ViewHolder(final View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.event);
+            //checkbox = (CheckBox) itemView.findViewById(R.id.taskCompleteCheckBox);
+            //checkbox.setClickable(false);
             itemView.setOnClickListener(this);
         }
 
@@ -73,6 +82,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         public void onClick(View view) {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
+
+//        public void setCheckbox(boolean checked){
+//            checkbox.setChecked(checked);
+//        }
     }
 
     public String getItem(int id) {
@@ -86,8 +99,8 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
 
     public interface ItemClickListener{
         void onItemClick(View view, int position);
-
     }
+
 
     public void removeAt(int position) {
         mTask.remove(position);
