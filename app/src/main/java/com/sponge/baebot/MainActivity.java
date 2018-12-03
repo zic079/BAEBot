@@ -5,6 +5,7 @@ import android.Manifest;
 import android.app.ActivityOptions;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.provider.CalendarContract;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -13,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
@@ -42,6 +44,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.picasso.Picasso;
 
 
 public class MainActivity extends AppCompatActivity
@@ -88,6 +91,7 @@ public class MainActivity extends AppCompatActivity
     // Initialize client for authorization
     private GoogleSignInClient mGoogleSignInClient;         // Google sign in client
     private FirebaseAuth mAuth;                             // Firebase authorization
+    private FirebaseUser mUser;
 
     private static final int PERMISSION_REQUEST_CODE = 100;
 
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity
         // record firebase and google client instance
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
         mAuth = FirebaseAuth.getInstance();
+        mUser = mAuth.getCurrentUser();
 
         // checking / request user permission for calendar provider
         requestPermission();
@@ -368,11 +373,12 @@ public class MainActivity extends AppCompatActivity
 
     private void updateUserInfo(FirebaseUser user, NavigationView navView) {
         View headerView = navView.getHeaderView(0);
-
+        ImageView userImage = (ImageView)headerView.findViewById(R.id.userImage);
         TextView userNameText = (TextView)headerView.findViewById(R.id.userName);
         TextView userEmailText = (TextView)headerView.findViewById(R.id.userEmail);
-        userNameText.setText(user.getDisplayName());
-        userEmailText.setText(user.getEmail());
+        Picasso.get().load(user.getPhotoUrl()).resize(170, 170).into(userImage);
+        userNameText.setText(mUser.getDisplayName());
+        userEmailText.setText(mUser.getEmail());
     }
 
     // signOut function - sign out from current account and return to sign in page
