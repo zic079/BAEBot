@@ -382,7 +382,7 @@ public class MainActivity extends AppCompatActivity
         ImageView userImage = (ImageView)headerView.findViewById(R.id.userImage);
         TextView userNameText = (TextView)headerView.findViewById(R.id.userName);
         TextView userEmailText = (TextView)headerView.findViewById(R.id.userEmail);
-        Picasso.get().load(user.getPhotoUrl()).resize(170, 170).into(userImage);
+        Picasso.with(getApplicationContext()).load(user.getPhotoUrl()).resize(170, 170).into(userImage);
         userNameText.setText(mUser.getDisplayName());
         userEmailText.setText(mUser.getEmail());
     }
