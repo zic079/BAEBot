@@ -290,6 +290,15 @@
             android:orientation="vertical">
 
 
+            <Button
+                android:id="@+id/reschedule"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/rectangle_17"
+                tools:ignore="MissingConstraints"
+                tools:layout_editor_absoluteX="0dp"
+                tools:layout_editor_absoluteY="211dp"></Button>
+
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

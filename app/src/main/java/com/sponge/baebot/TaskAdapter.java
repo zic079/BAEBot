@@ -22,6 +22,14 @@ import static android.support.v4.content.ContextCompat.startActivity;
 
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
+    public List<Task> getmTask() {
+        return mTask;
+    }
+
+    public void setmTask(List<Task> mTask) {
+        this.mTask = mTask;
+    }
+
     private List<Task> mTask;
     private LayoutInflater mInflater;
     private ItemClickListener  mClickListener;

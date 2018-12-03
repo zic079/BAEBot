@@ -4,12 +4,8 @@ import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +14,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -26,9 +21,6 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
-import android.widget.PopupWindow;
-import android.widget.TableLayout;
-import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -42,6 +34,8 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -49,7 +43,7 @@ import java.util.UUID;
 
 public class TaskActivity extends AppCompatActivity
         implements View.OnClickListener, TaskAdapter.ItemClickListener {
-    private Button selectDate, selectTime, saveTask;
+    private Button selectDate, selectTime, saveTask,btnReschedule;
     private EditText title, description;
     private int year, month, dayOfMonth, hour, minute;
     private Calendar calendar = Calendar.getInstance();
@@ -71,8 +65,15 @@ public class TaskActivity extends AppCompatActivity
     private interface FirebaseCallback{
         void onCallback(ArrayList<com.sponge.baebot.Task> list);
     }
+    private interface FirebaseCallback2{
+        void onCallback(ArrayList<com.sponge.baebot.Task> list);
+    }
     private interface FirebaseCallbackEdit{
         void onCallback(Task taskToEdit);
+    }
+
+    private interface RescheduleHandler{
+        void onCallback(ArrayList<Task> list);
     }
 
     public void getTaskToEdit(String id, final FirebaseCallbackEdit firebaseCallbackEdit){
@@ -240,6 +241,8 @@ public class TaskActivity extends AppCompatActivity
 
         saveTask = findViewById(R.id.btnTask);
 
+        btnReschedule = findViewById(R.id.reschedule);
+
         saveTask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -255,10 +258,96 @@ public class TaskActivity extends AppCompatActivity
                 }
             }
         });
+        btnReschedule.setOnClickListener(new View.OnClickListener(){
 
+
+
+
+            @Override
+            public void onClick(View v) {
+//                getAllTasks(new FirebaseCallback() {
+//                    @Override
+//                    public void onCallback(ArrayList<Task> list) {
+//                        Log.e("aaaaaaaaaaaaaaaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab");
+//                        Log.e("aaareshcedule","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"+Integer.toString(list.size()));
+//                    }
+//                });
+
+                List<Task> task = adapter.getmTask();
+                Log.e("reschedule*********",Integer.toString(task.size()));
+
+                class SortByPriority implements Comparator<Task>
+                {
+
+                    // Used for sorting in ascending order of
+                    // roll number
+                    public int compare(Task a, Task b)
+                    {
+                        if(b.getPriority() - a.getPriority() > 0){
+                            return 1;
+                        }else if(b.getPriority() - a.getPriority() < 0){
+                            return -1;
+                        }else{
+                            return (int)(a.getTimestamp() - b.getTimestamp());
+                        }
+                    }
+                }
+
+                Date d = new Date();
+                long a = d.getTime();
+                Timestamp curTime = new Timestamp(a);
+                long cur = curTime.getTime()/1000-28800;
+                cur = cur/86400 * 86400;
+                Log.e("currentTime",Long.toString(cur));
+
+                ArrayList<Task> unfinished = new ArrayList<>();
+                int[] weeklyTaskCount = {0,0,0,0,0,0,0};
+
+                for(Task t : task){
+                    Log.e("reschedule","today's timestamp" +Long.toString(cur));
+                    Log.e("reschedule",t.getTaskId() +" "+ Long.toString(t.getTimestamp()));
+                    if(!t.isCompleted() && t.getTimestamp() < cur){
+                        unfinished.add(t);
+                    }else if(!t.isCompleted()){
+                        int day = (int) ((t.getTimestamp() - cur)/86400);
+                        if(day > 6){
+                            day = 6;
+                        }
+                        weeklyTaskCount[day] += 1;
+                    }
+                }
+
+
+                Collections.sort(unfinished, new SortByPriority());
+
+                int totalFinished = 0;
+                int totalUnfinished = unfinished.size();
+                for(int i = 0; i < 7; i++){
+                    totalFinished += weeklyTaskCount[i];
+                }
+                int total = totalUnfinished + totalFinished;
+                int avg = (int)total/7+1;
+                int curDay = 0;
+
+                for(Task t: unfinished){
+                    while (weeklyTaskCount[curDay] >= avg) {
+                        curDay++;
+                    }
+                    t.setTimestamp(curDay*86400+cur+28800);
+                    mDatabase.child("task").child(userId).child(t.getTaskId()).setValue(t);
+                }
+            }
+        });
+
+
+
+
+//
         getAllTasks(new FirebaseCallback() {
             @Override
             public void onCallback(ArrayList<Task> list) {
+                Log.e("aaaaaaaaaaaaaaaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab");
+                Log.e("aaaaaaaaaaaaaaaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"+Integer.toString(list.size()));
                 tasks = list;
                 for (Task t : tasks) {
                     strTasks.add(t.toString());
@@ -272,6 +361,73 @@ public class TaskActivity extends AppCompatActivity
                 recyclerView.setAdapter(adapter);
             }
         });
+
+
+
+
+//
+//        rescheduleAllUnfinishedTasks(new RescheduleHandler() {
+//            @Override
+//            public void onCallback(ArrayList<Task> taskList) {
+
+//                class SortByPriority implements Comparator<Task>
+//                {
+//
+//                    // Used for sorting in ascending order of
+//                    // roll number
+//                    public int compare(Task a, Task b)
+//                    {
+//                        if(b.getPriority() - a.getPriority() > 0){
+//                            return 1;
+//                        }else if(b.getPriority() - a.getPriority() < 0){
+//                            return -1;
+//                        }else{
+//                            return (int)(a.getTimestamp() - b.getTimestamp());
+//                        }
+//                    }
+//                }
+
+//                Date d = new Date();
+//                long a = d.getTime()/86400 * 86400;
+//                Timestamp curTime = new Timestamp(a);
+//                long cur = curTime.getTime()/1000-28800;
+//
+//
+//
+//                ArrayList<Task> unfinished = new ArrayList<>();
+//                int[] weeklyTaskCount = {0,0,0,0,0,0,0};
+//
+//                for(Task t : taskList){
+//                    if(!t.isCompleted() && t.getTimestamp() < cur){
+//                        unfinished.add(t);
+//                    }else if(!t.isCompleted()){
+//                        int day = (int) ((t.getTimestamp() - cur)/86400);
+//                        if(day > 6){
+//                            day = 6;
+//                        }
+//                        weeklyTaskCount[day] += 1;
+//                    }
+//                }
+//                Collections.sort(unfinished, new SortByPriority());
+//
+//                int totalUnfinished = unfinished.size();
+//                int totalFinished = 0;
+//                for(int i = 0; i < 7; i++){
+//                    totalFinished += weeklyTaskCount[i];
+//                }
+//                int total = totalUnfinished + totalFinished;
+//                int avg = (int)total/7+1;
+//                int curDay = 0;
+//
+//                for(Task t: unfinished){
+//                    while (weeklyTaskCount[curDay] >= avg) {
+//                        curDay++;
+//                    }
+//                    t.setTimestamp(curDay*86400+cur);
+//                    mDatabase.child("task").child(userId).child(t.getTaskId()).setValue(t);
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -433,7 +589,6 @@ public class TaskActivity extends AppCompatActivity
                         }
                         tasks.clear();
                         firebaseCallback.onCallback(taskList);
-
                     }
 
                     @Override
@@ -442,6 +597,8 @@ public class TaskActivity extends AppCompatActivity
                     }
                 });
     }
+
+
 //    private void showTasks(){
 //        RecyclerView recyclerView = findViewById(R.id.task_recyclerView);
 //        ArrayList<String> tasks = new ArrayList<>();
