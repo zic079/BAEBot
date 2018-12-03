@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity
         // button on main content
         findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.showCalendarBtn).setOnClickListener(this);
+        findViewById(R.id.tutorial).setOnClickListener(this);
         // findViewById(R.id.taskBtn).setOnClickListener(this);
         findViewById(R.id.weatherBtn).setOnClickListener(this);
         findViewById(R.id.Waifu).setOnClickListener(this);
@@ -296,6 +297,9 @@ public class MainActivity extends AppCompatActivity
         FirebaseUser currentUser = mAuth.getCurrentUser();
         String userId = currentUser.getUid();
         switch (v.getId()) {
+            case R.id.tutorial:
+                switchActivity(TutorialActivity.class);
+                break;
             case R.id.search_bar:
                 Intent intent = new Intent(MainActivity.this, SearchActivity.class);
                 intent.putExtra("userId", userId);
