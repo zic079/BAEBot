@@ -426,6 +426,7 @@ public class TaskActivity extends AppCompatActivity
                 Intent intent = new Intent(TaskActivity.this, SearchActivity.class);
                 ActivityOptions options1 = ActivityOptions
                         .makeSceneTransitionAnimation(this, search, "search");
+                intent.putExtra("userId", userId );
                 startActivity(intent, options1.toBundle());
                 break;
 
