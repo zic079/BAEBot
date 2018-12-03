@@ -88,7 +88,7 @@ public class ShowCalendarActivity extends AppCompatActivity{
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(ShowCalendarActivity.this,android.R.style.Theme_Translucent_NoTitleBar);
+                final Dialog dialog = new Dialog(ShowCalendarActivity.this,android.R.style.Theme_Translucent_NoTitleBar);
                 final View mView = getLayoutInflater().inflate(R.layout.activity_event,null);
                 newEventBtn = mView.findViewById(R.id.buttonNewEvent);
                 titleEdit = mView.findViewById(R.id.editTextTitle);
@@ -139,6 +139,7 @@ public class ShowCalendarActivity extends AppCompatActivity{
                             e.printStackTrace();
                         }
                         handler.insertEvent(v.getContext(), startMilliseconds, endMilliseconds, newEventTitle, "");
+                        dialog.dismiss();
                     }
                 });
                 Window window = dialog.getWindow();
