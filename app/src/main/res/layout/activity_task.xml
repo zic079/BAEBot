@@ -20,15 +20,16 @@
 
         <TextView
             android:id="@+id/sentence"
-            android:layout_width="261dp"
+            android:layout_width="wrap_content"
             android:layout_height="70dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="12dp"
+            android:layout_marginRight="12dp"
             android:layout_weight="0"
             android:background="@drawable/text_bubble"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingTop="8dp"
-            android:text="Please input the details for your task or reshedule your task."
+            android:text="Please input the details for your task or reschedule your tasks."
             android:textAlignment="viewStart"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -307,17 +308,17 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/weather_background"
-                android:orientation="vertical">
+                android:background="@drawable/path_56"
+                android:orientation="vertical"
+                android:gravity="center">
 
                 <Button
                     android:id="@+id/reschedule"
-                    android:layout_width="334dp"
-                    android:layout_height="30dp"
-                    android:layout_marginLeft="0dp"
-                    android:layout_marginTop="0dp"
-                    android:background="@color/colorPrimary"
-                    android:text="Reschule Unfinished Tasks"
+                    android:layout_width="156dp"
+                    android:layout_height="38dp"
+                    android:layout_centerInParent="true"
+                    android:background="@drawable/calendar_background"
+                    android:text="Reschedule "
                     android:textAllCaps="false"
                     android:textColor="@color/common_google_signin_btn_text_dark_pressed"
                     android:textSize="20sp"
