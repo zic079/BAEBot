@@ -94,6 +94,10 @@ public class CalendarActivity extends AppCompatActivity
 
         // calendar to handle dat and time input - set to current time
         mCalendar = Calendar.getInstance();
+        int year = mCalendar.get(Calendar.YEAR);
+        int month = mCalendar.get(Calendar.MONTH);
+        int dayOfMonth = mCalendar.get(Calendar.DAY_OF_MONTH);
+        dateSelectBtn.setText( year + "-" + (month + 2) + '-' + dayOfMonth);
 
         // initialize new CalendarQueryHandler to handle calendar CRUD operation
         handler = new CalendarQueryHandler(this, this.getContentResolver()) {};
