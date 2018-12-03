@@ -8,45 +8,43 @@
 
     <LinearLayout
         android:id="@+id/linearLayout_task"
-        android:layout_width="411dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.481"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/sentence"
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
+            android:layout_width="261dp"
+            android:layout_height="70dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="12dp"
-            android:layout_marginRight="64dp"
             android:layout_weight="0"
             android:background="@drawable/text_bubble"
             android:paddingLeft="@dimen/activity_horizontal_margin"
             android:paddingTop="8dp"
-            android:text="Please input the details for your task."
+            android:text="Please input the details for your task or reshedule your task."
             android:textAlignment="viewStart"
             android:textSize="16sp"
             android:textStyle="bold" />
-
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:gravity="center"
             android:orientation="horizontal">
 
 
             <ImageButton
-                android:id="@+id/Waifu"
-                android:layout_width="wrap_content"
+                android:id="@+id/Waifu_task"
+                android:layout_width="147dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:background="@android:color/transparent"
@@ -57,6 +55,7 @@
 
 
             <LinearLayout
+                android:id="@+id/input_box"
                 android:layout_width="219dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="10dp"
@@ -176,8 +175,8 @@
 
                     <Button
                         android:id="@+id/priority1"
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="25dp"
                         android:background="@drawable/rectangle_54"
@@ -187,9 +186,9 @@
 
                     <Button
                         android:id="@+id/priority2"
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:layout_marginLeft="5dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="25dp"
                         android:background="@drawable/rectangle_57"
                         android:padding="10dp"
@@ -198,33 +197,11 @@
 
                     <Button
                         android:id="@+id/priority3"
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:layout_marginLeft="5dp"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="20dp"
                         android:layout_marginTop="25dp"
                         android:background="@drawable/rectangle_58"
-                        android:padding="10dp"
-                        tools:layout_editor_absoluteX="0dp"
-                        tools:layout_editor_absoluteY="211dp" />
-
-                    <Button
-                        android:id="@+id/priority4"
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="25dp"
-                        android:background="@drawable/rectangle_59"
-                        android:padding="10dp"
-                        tools:layout_editor_absoluteX="0dp"
-                        tools:layout_editor_absoluteY="211dp" />
-
-                    <Button
-                        android:id="@+id/priority5"
-                        android:layout_width="14dp"
-                        android:layout_height="14dp"
-                        android:layout_marginLeft="5dp"
-                        android:layout_marginTop="25dp"
-                        android:background="@drawable/rectangle_60"
                         android:padding="10dp"
                         tools:layout_editor_absoluteX="0dp"
                         tools:layout_editor_absoluteY="211dp" />
@@ -280,6 +257,7 @@
 
 
             </LinearLayout>
+
         </LinearLayout>
 
         <LinearLayout
@@ -290,18 +268,6 @@
             android:orientation="vertical">
 
 
-            <Button
-                android:id="@+id/reschedule"
-                android:layout_width="133dp"
-                android:layout_height="30dp"
-                android:background="@drawable/rectangle_17"
-                android:text="Reschedule"
-                tools:ignore="MissingConstraints"
-                android:textColor="@android:color/white"
-                android:textSize="14sp"
-                tools:layout_editor_absoluteX="0dp"
-                tools:layout_editor_absoluteY="211dp"></Button>
-
             <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -311,7 +277,6 @@
                     android:id="@+id/search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/nav_header_vertical_spacing"
                     android:layout_weight="0"
                     android:background="@color/colorPrimary"
                     android:transitionName="search">
@@ -327,26 +292,45 @@
                         android:drawableLeft="?android:attr/actionModeWebSearchDrawable"
                         android:textSize="14sp" />
 
-                </android.support.design.widget.TextInputLayout>
+                    <Button
+                        android:id="@+id/search_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="15dp"
+                        android:background="@color/colorPrimary" />
 
-                <Button
-                    android:id="@+id/search_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:background="@color/colorPrimary" />
+                </android.support.design.widget.TextInputLayout>
 
             </FrameLayout>
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/task_recyclerView"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/calendar_background"
-                android:backgroundTint="#FFFFC57E"
-                android:padding="@dimen/activity_horizontal_margin" />
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:background="@drawable/weather_background"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/reschedule"
+                    android:layout_width="334dp"
+                    android:layout_height="30dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginTop="0dp"
+                    android:background="@color/colorPrimary"
+                    android:text="Reschule Unfinished Tasks"
+                    android:textAllCaps="false"
+                    android:textColor="@color/common_google_signin_btn_text_dark_pressed"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/task_recyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/calendar_background"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:paddingLeft="10dp" />
+            </LinearLayout>
 
 
         </LinearLayout>
