@@ -22,7 +22,6 @@
         android:allowBackup="true"
         android:icon="@mipmap/baebot"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/baebot_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
@@ -35,6 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -44,6 +44,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".TutorialActivity"
+            android:label="TutorialActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".CalendarActivity"
             android:label="@string/title_activity_calendar"
@@ -63,6 +69,10 @@
         <activity
             android:name=".SearchActivity"
             android:label="@string/title_activity_search"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".TutorialActivity"
+            android:label="TutorialActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
         <!-- Register the Alarm Receiver -->
