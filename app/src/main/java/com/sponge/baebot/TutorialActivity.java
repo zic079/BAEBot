@@ -37,4 +37,5 @@ public class TutorialActivity extends AppCompatActivity {
         adapter = new ViewPageAdapter(TutorialActivity.this, images);
         viewPager.setAdapter(adapter);
     }
+
 }

@@ -69,6 +69,22 @@ public class ShowCalendarActivity extends AppCompatActivity{
 
         // calendar to handle dat and time input - set to current time
         mCalendar = Calendar.getInstance();
+
+        // set default - today
+        inputYear = mCalendar.get(Calendar.YEAR);
+        inputMonth = mCalendar.get(Calendar.MONTH) + 1;
+        inputDay = mCalendar.get(Calendar.DAY_OF_MONTH);
+
+        mCalendarView = (CalendarView) findViewById(R.id.calendarView);
+        myDate = (TextView) findViewById(R.id.myDate);
+        String dateDisplay = inputYear + "/" + inputMonth + "/" + inputDay;
+        myDate.setText(dateDisplay);
+
+        Calendar startDate_offset = new GregorianCalendar(inputYear,inputMonth - 1,inputDay-1);
+        Calendar startDate = new GregorianCalendar(inputYear,inputMonth - 1,inputDay);
+        Calendar endDate = new GregorianCalendar(inputYear,inputMonth - 1,inputDay+1);
+        handler.readEvent(startDate_offset, startDate, endDate);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,11 +172,6 @@ public class ShowCalendarActivity extends AppCompatActivity{
 
             }
         });
-
-        mCalendarView = (CalendarView) findViewById(R.id.calendarView);
-        myDate = (TextView) findViewById(R.id.myDate);
-        DateFormat format1 = new SimpleDateFormat("yyyy/MM/dd");
-        myDate.setText(format1.format(calendar.getTime()));
 
         mCalendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
