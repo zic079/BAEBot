@@ -45,15 +45,22 @@ public class ViewPageAdapter extends PagerAdapter {
         activity.getWindowManager().getDefaultDisplay().getMetrics(dis);
         int height = dis.heightPixels;
         int width = dis.widthPixels;
-        image.getLayoutParams().height = height;
-        image.getLayoutParams().width = width;
+//        image.getLayoutParams().height = (int) (height - 0.25*height);
+//        image.getLayoutParams().width = (int) (width - 0.25*width);
 
         try{
-            Picasso.with(activity.getApplicationContext())
-                    .load(images[position])
-                    //.placeholder(R.mipmap.ic_launcher)
-                    //.error(R.mipmap.ic_launcher)
-                    .into(image);
+            if (position == 0){
+                Picasso.get()
+                        .load(images[0])
+                        .into(image);
+            } else {
+                Picasso.get()
+                        .load(images[position])
+                        //.placeholder(R.mipmap.ic_launcher)
+                        //.error(R.mipmap.ic_launcher)
+                        .into(image);
+            }
+
         }
         catch(Exception ex){
 

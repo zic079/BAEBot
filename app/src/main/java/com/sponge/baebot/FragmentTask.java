@@ -20,7 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.lang.reflect.Array;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class FragmentTask extends Fragment {
     private View v;
@@ -85,7 +87,10 @@ public class FragmentTask extends Fragment {
                     Log.e("get task main", list.toString());
                     tasks = list;
                     for (Task t : tasks) {
-                        strTasks.add(t.getTitle());
+
+                        Timestamp time  = new Timestamp(t.getTimestamp());
+                        Date date = new Date((time.getTime()+28800)*1000);
+                        strTasks.add(t.getTitle() + "\n"+ date.toString());
                     }
                     Log.e("here!!!!!", strTasks.toString());
                     recyclerView = (RecyclerView) v.findViewById(R.id.task_recyclerView);
