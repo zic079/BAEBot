@@ -33,7 +33,6 @@ public class SearchActivity extends AppCompatActivity
     private TaskAdapter adapter;
     private RecyclerView recyclerView;
     private EditText textInputEditText;
-    private Button searchButton;
     private String userId;
 
 
