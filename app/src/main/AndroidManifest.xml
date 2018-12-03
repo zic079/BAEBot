@@ -35,6 +35,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar" >
@@ -44,6 +45,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".TutorialActivity"
+            android:label="TutorialActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
             android:name=".CalendarActivity"
             android:label="@string/title_activity_calendar"

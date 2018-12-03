@@ -320,6 +320,8 @@ public class MainActivity extends AppCompatActivity
                 break;
 
             case R.id.weatherBtn:
+//                Intent iii = new Intent(MainActivity.this, TutorialActivity.class);
+//                startActivity(iii);
                 switchActivity(WeatherActivity.class);
                 break;
 
