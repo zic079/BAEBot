@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(resultTime < 18 && resultTime > 12) {
             sentence.setText("Good afternoon");
-            //rId = R.raw.good_afternoon;
+            rId = R.raw.good_afternoon;
         }
         else {
             sentence.setText("Good evening");
@@ -340,11 +340,11 @@ public class MainActivity extends AppCompatActivity
                     rv.reset();
                 }
                 Random rand = new Random();
-                int n = rand.nextInt(4) + 1;
+                int n = rand.nextInt(5) + 1;
                 switch (n) {
                     case 1:
-                        rId = R.raw.good_evening;
-                        sentence.setText("Good evening");
+                        rId = R.raw.motivation;
+                        sentence.setText("Today is your day");
                         break;
 
                     case 2:
@@ -353,12 +353,16 @@ public class MainActivity extends AppCompatActivity
                         break;
 
                     case 3:
-                        rId = R.raw.good_morning;
-                        sentence.setText("Good morning!");
+                        rId = R.raw.motivation2;
+                        sentence.setText("Optimism is the faith that leads to achievement");
                         break;
                     case 4:
-                        rId = R.raw.thank_you;
-                        sentence.setText("Thank you !");
+                        rId = R.raw.quote;
+                        sentence.setText("Start early, start often");
+                        break;
+                    case 5:
+                        rId = R.raw.hows;
+                        sentence.setText("How's your day?");
                         break;
                 }
                 rv = MediaPlayer.create(MainActivity.this, rId);
