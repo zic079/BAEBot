@@ -248,10 +248,6 @@ public class TaskActivity extends AppCompatActivity
             }
         });
         btnReschedule.setOnClickListener(new View.OnClickListener(){
-
-
-
-
             @Override
             public void onClick(View v) {
 //                getAllTasks(new FirebaseCallback() {

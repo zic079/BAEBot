@@ -17,6 +17,8 @@ import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import static android.support.v4.content.ContextCompat.startActivity;
@@ -56,7 +58,9 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull final TaskAdapter.ViewHolder holder, int position) {
         Task t = mTask.get(position);
-        holder.myTextView.setText(t.getTitle());
+        Timestamp time  = new Timestamp(t.getTimestamp());
+        Date date=new Date((time.getTime()+28800)*1000);
+        holder.myTextView.setText(t.getTitle() + "\n" + date.toString());
         //holder.checkbox.setChecked(false);
     }
 
