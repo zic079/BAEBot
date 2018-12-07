@@ -267,10 +267,6 @@ public class MainActivity extends AppCompatActivity
             voice_switcher.setChecked(!voice_switcher.isChecked());
             Snackbar.make(item.getActionView(), (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
-        if (id == R.id.weather_switch) {
-            weather_switcher.setChecked(!weather_switcher.isChecked());
-            Snackbar.make(item.getActionView(), (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-        }
         if (id == R.id.alarm_switch) {
             alarm_switcher.setChecked(!alarm_switcher.isChecked());
             Snackbar.make(item.getActionView(), (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -486,19 +482,6 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 //voice_switcher.setChecked(!voice_switcher.isChecked());
                 Snackbar.make(v, (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            }
-        });
-
-        //Weather
-        MenuItem menuItem_weather = menu.findItem(R.id.weather_switch);
-        View actionView_weather = menuItem_weather.getActionView();
-
-        weather_switcher = actionView_weather.findViewById(R.id.switcher_drawer);
-        weather_switcher.setChecked(true);
-        weather_switcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }
         });
 
