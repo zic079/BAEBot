@@ -341,7 +341,7 @@ public class MainActivity extends AppCompatActivity
                 switch (n) {
                     case 1:
                         rId = R.raw.good_evening;
-                        sentence.setText("Good evening");
+                        sentence.setText("Good evening!");
                         break;
 
                     case 2:
@@ -355,7 +355,7 @@ public class MainActivity extends AppCompatActivity
                         break;
                     case 4:
                         rId = R.raw.thank_you;
-                        sentence.setText("Thank you !");
+                        sentence.setText("Thank you!");
                         break;
                 }
                 rv = MediaPlayer.create(MainActivity.this, rId);
