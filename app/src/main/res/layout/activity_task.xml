@@ -300,7 +300,7 @@
                 <Button
                     android:id="@+id/search_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="28dp"
                     android:background="@color/colorPrimary" />
 
             </FrameLayout>
@@ -308,11 +308,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
                 android:background="@drawable/path_56"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/reschedule"
@@ -328,7 +326,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/task_recyclerView"
-                    android:layout_width="match_parent"
+                    android:layout_width="350dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/calendar_background"
                     android:backgroundTint="@color/colorPrimary"
