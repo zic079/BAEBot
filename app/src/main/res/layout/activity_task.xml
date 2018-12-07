@@ -164,38 +164,37 @@
 
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/priority1"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="25dp"
-                        android:background="@drawable/rectangle_54"
-                        android:padding="10dp"
-                        tools:layout_editor_absoluteX="0dp"
-                        tools:layout_editor_absoluteY="211dp" />
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/priority2"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="25dp"
-                        android:background="@drawable/rectangle_59"
-                        android:padding="10dp"
-                        tools:layout_editor_absoluteX="0dp"
-                        tools:layout_editor_absoluteY="211dp" />
+                        <CheckBox
+                            android:id="@+id/priority1"
+                            android:layout_width="30dp"
+                            android:layout_height="28dp"
+                            android:layout_marginTop="25dp"
+                            android:background="@color/colorPrimary"
+                            android:padding="10dp" />
 
-                    <Button
-                        android:id="@+id/priority3"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="25dp"
-                        android:background="@drawable/rectangle_57"
-                        android:padding="10dp"
-                        tools:layout_editor_absoluteX="0dp"
-                        tools:layout_editor_absoluteY="211dp" />
+                        <CheckBox
+                            android:id="@+id/priority2"
+                            android:layout_width="30dp"
+                            android:layout_height="28dp"
+                            android:layout_marginTop="25dp"
+                            android:background="@color/colorPrimary"
+                            android:padding="10dp"
+                            tools:layout_editor_absoluteX="0dp"
+                            tools:layout_editor_absoluteY="211dp" />
+
+                        <CheckBox
+                            android:id="@+id/priority3"
+                            android:layout_width="30dp"
+                            android:layout_height="28dp"
+                            android:layout_marginTop="25dp"
+                            android:background="@color/colorPrimary"
+                            android:padding="10dp" />
+                    </RadioGroup>
 
                 </LinearLayout>
 
@@ -217,7 +216,7 @@
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/description"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="0dp"
                         android:layout_marginRight="15dp"
@@ -297,7 +296,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/path_56"
+                android:background="@color/colorPrimary"
                 android:gravity="center"
                 android:orientation="vertical">
 
