@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -46,6 +47,7 @@ import java.util.UUID;
 public class TaskActivity extends AppCompatActivity
         implements View.OnClickListener, TaskAdapter.ItemClickListener {
     private Button selectDate, selectTime, saveTask,btnReschedule;
+    private CheckBox checkBoxA, checkBoxB, checkBoxC;
     private EditText title, description;
     private int year, month, dayOfMonth, hour, minute;
     private Calendar calendar = Calendar.getInstance();
@@ -127,6 +129,20 @@ public class TaskActivity extends AppCompatActivity
                                 String dateAndTime = sdf.format(new Date((editedTask.getTimestamp()+28800)*1000));
                                 selectDate.setText(dateAndTime.substring(0,10));
                                 selectTime.setText(dateAndTime.substring(11));
+                                int priority = editedTask.getPriority();
+                                if (priority == 2){
+                                    checkBoxA.setChecked(true);
+                                    checkBoxB.setChecked(false);
+                                    checkBoxC.setChecked(false);
+                                } else if (priority == 1){
+                                    checkBoxA.setChecked(false);
+                                    checkBoxB.setChecked(true);
+                                    checkBoxC.setChecked(false);
+                                } else {
+                                    checkBoxA.setChecked(false);
+                                    checkBoxB.setChecked(false);
+                                    checkBoxC.setChecked(true);
+                                }
                             }
                         });
                         return true;
@@ -161,6 +177,31 @@ public class TaskActivity extends AppCompatActivity
         this.startActivity(new Intent(TaskActivity.this,MainActivity.class));
         Log.w("Task Activity", "on back pressed");
         return;
+    }
+    public void onCheckboxClicked(View view) {
+
+        switch(view.getId()) {
+
+            case R.id.priority1:
+
+                checkBoxB.setChecked(false);
+                checkBoxC.setChecked(false);
+                break;
+
+            case R.id.priority2:
+
+                checkBoxC.setChecked(false);
+                checkBoxA.setChecked(false);
+
+                break;
+
+            case R.id.priority3:
+
+                checkBoxA.setChecked(false);
+                checkBoxB.setChecked(false);
+
+                break;
+        }
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -212,6 +253,34 @@ public class TaskActivity extends AppCompatActivity
 //        });
 
         findViewById(R.id.search_bar).setOnClickListener(this);
+
+        checkBoxA = (CheckBox) findViewById(R.id.priority1);
+        checkBoxA.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    onCheckboxClicked(buttonView);
+                }
+            }
+        });
+        checkBoxB = (CheckBox) findViewById(R.id.priority2);
+        checkBoxB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked){
+                    onCheckboxClicked(buttonView);
+                }
+            }
+        });
+        checkBoxC = (CheckBox) findViewById(R.id.priority3);
+        checkBoxC.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    onCheckboxClicked(buttonView);
+                }
+            }
+        });
 
 
         title = findViewById(R.id.title_input);
@@ -503,7 +572,6 @@ public class TaskActivity extends AppCompatActivity
     }
 
     private boolean addTask(){
-        Log.w("button", "create task button clicked!");
         String strTitle = "";
         String strDescription = description.getText().toString();
         String strDate = "";
@@ -560,13 +628,21 @@ public class TaskActivity extends AppCompatActivity
                     Log.d("date",year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
                     Date d = new SimpleDateFormat("yyyy/MM/dd/hh/mm").parse(year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
                     ts = new Timestamp(d.getTime());
-                    task = new Task(taskId,strTitle,strDescription, ts.getTime()/1000 - 28800);
+                    int priority = 0;
+                    if (checkBoxA.isChecked()){
+                        priority = 2;
+                    } else if (checkBoxB.isChecked()){
+                        priority = 1;
+                    } else {
+                        priority = 0;
+                    }
+                    task = new Task(taskId,strTitle,strDescription, ts.getTime()/1000 - 28800, priority);
 
                     if (editedTask == null) {
                         mDatabase.child("task").child(userId).child(taskId).setValue(task);
 
                     } else {
-                        task = new Task(editedTask.getTaskId(), strTitle, strDescription, ts.getTime()/1000 - 28800);
+                        task = new Task(editedTask.getTaskId(), strTitle, strDescription, ts.getTime()/1000 - 28800, priority);
                         mDatabase.child("task").child(userId).child(editedTask.getTaskId()).setValue(task);
                         editedTask = null;
                     }

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="priorityRed">#FF0000</color>
+    <color name="priorityYellow">#ffa536</color>
+    <color name="priorityGreen">#3aae3a</color>
+
     <color name="colorPrimary">@android:color/transparent</color>
     <color name="colorPrimaryDark">#90000000</color>
     <color name="colorAccent">#90000000</color>

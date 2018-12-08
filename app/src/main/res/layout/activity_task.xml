@@ -175,7 +175,8 @@
                             android:layout_height="28dp"
                             android:layout_marginTop="25dp"
                             android:background="@color/colorPrimary"
-                            android:padding="10dp" />
+                            android:padding="10dp"
+                            android:buttonTint="@color/priorityRed"/>
 
                         <CheckBox
                             android:id="@+id/priority2"
@@ -185,7 +186,8 @@
                             android:background="@color/colorPrimary"
                             android:padding="10dp"
                             tools:layout_editor_absoluteX="0dp"
-                            tools:layout_editor_absoluteY="211dp" />
+                            tools:layout_editor_absoluteY="211dp"
+                            android:buttonTint="@color/priorityYellow"/>
 
                         <CheckBox
                             android:id="@+id/priority3"
@@ -193,7 +195,8 @@
                             android:layout_height="28dp"
                             android:layout_marginTop="25dp"
                             android:background="@color/colorPrimary"
-                            android:padding="10dp" />
+                            android:padding="10dp"
+                            android:buttonTint="@color/priorityGreen"/>
                     </RadioGroup>
 
                 </LinearLayout>
