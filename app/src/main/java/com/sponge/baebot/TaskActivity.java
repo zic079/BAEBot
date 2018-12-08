@@ -4,6 +4,7 @@ import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
@@ -298,6 +299,7 @@ public class TaskActivity extends AppCompatActivity
         btnReschedule = findViewById(R.id.reschedule);
 
         saveTask.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 if (addTask()) {
@@ -310,6 +312,7 @@ public class TaskActivity extends AppCompatActivity
                     });
                     Toast.makeText(selectDate.getContext(), "Save Successfully", Toast.LENGTH_SHORT).show();
                 }
+
             }
         });
 
