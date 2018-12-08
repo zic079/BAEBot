@@ -27,7 +27,7 @@
                 android:layout_marginRight="12dp"
                 android:layout_weight="0"
                 android:background="@drawable/text_bubble"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingLeft="8dp"
                 android:paddingTop="8dp"
                 android:text="What would you like assistance on?"
                 android:textAlignment="viewStart"
