@@ -127,17 +127,6 @@
 
                     </LinearLayout>
 
-                    <CheckBox
-                        android:id="@+id/checkBox"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:buttonTint="@color/common_google_signin_btn_text_dark_default"
-                        android:text="No reminder"
-                        android:textAlignment="center"
-                        android:textColor="@color/common_google_signin_btn_text_dark_default"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
                 </LinearLayout>
 
 
@@ -175,38 +164,40 @@
 
                     </LinearLayout>
 
-                    <Button
-                        android:id="@+id/priority1"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginTop="25dp"
-                        android:background="@drawable/rectangle_54"
-                        android:padding="10dp"
-                        tools:layout_editor_absoluteX="0dp"
-                        tools:layout_editor_absoluteY="211dp" />
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    <Button
-                        android:id="@+id/priority2"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="25dp"
-                        android:background="@drawable/rectangle_57"
-                        android:padding="10dp"
-                        tools:layout_editor_absoluteX="0dp"
-                        tools:layout_editor_absoluteY="211dp" />
+                        <CheckBox
+                            android:id="@+id/priority1"
+                            android:layout_width="30dp"
+                            android:layout_height="28dp"
+                            android:layout_marginTop="25dp"
+                            android:background="@color/colorPrimary"
+                            android:padding="10dp"
+                            android:buttonTint="@color/priorityRed"/>
 
-                    <Button
-                        android:id="@+id/priority3"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginTop="25dp"
-                        android:background="@drawable/rectangle_58"
-                        android:padding="10dp"
-                        tools:layout_editor_absoluteX="0dp"
-                        tools:layout_editor_absoluteY="211dp" />
+                        <CheckBox
+                            android:id="@+id/priority2"
+                            android:layout_width="30dp"
+                            android:layout_height="28dp"
+                            android:layout_marginTop="25dp"
+                            android:background="@color/colorPrimary"
+                            android:padding="10dp"
+                            tools:layout_editor_absoluteX="0dp"
+                            tools:layout_editor_absoluteY="211dp"
+                            android:buttonTint="@color/priorityYellow"/>
+
+                        <CheckBox
+                            android:id="@+id/priority3"
+                            android:layout_width="30dp"
+                            android:layout_height="28dp"
+                            android:layout_marginTop="25dp"
+                            android:background="@color/colorPrimary"
+                            android:padding="10dp"
+                            android:buttonTint="@color/priorityGreen"/>
+                    </RadioGroup>
 
                 </LinearLayout>
 
@@ -228,7 +219,7 @@
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/description"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
+                        android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:layout_marginTop="0dp"
                         android:layout_marginRight="15dp"
@@ -300,7 +291,7 @@
                 <Button
                     android:id="@+id/search_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="28dp"
                     android:background="@color/colorPrimary" />
 
             </FrameLayout>
@@ -308,11 +299,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/path_56"
-                android:orientation="vertical"
-                android:gravity="center">
+                android:background="@color/colorPrimary"
+                android:gravity="center"
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/reschedule"
@@ -328,7 +317,7 @@
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/task_recyclerView"
-                    android:layout_width="match_parent"
+                    android:layout_width="350dp"
                     android:layout_height="match_parent"
                     android:background="@drawable/calendar_background"
                     android:backgroundTint="@color/colorPrimary"

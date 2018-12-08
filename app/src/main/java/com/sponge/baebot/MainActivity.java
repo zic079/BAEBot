@@ -150,7 +150,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if(resultTime < 18 && resultTime > 12) {
             sentence.setText("Good afternoon");
-            rId = R.raw.good_afternoon;
+            //rId = R.raw.good_afternoon;
         }
         else {
             sentence.setText("Good evening");
@@ -267,10 +267,6 @@ public class MainActivity extends AppCompatActivity
             voice_switcher.setChecked(!voice_switcher.isChecked());
             Snackbar.make(item.getActionView(), (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
-        if (id == R.id.weather_switch) {
-            weather_switcher.setChecked(!weather_switcher.isChecked());
-            Snackbar.make(item.getActionView(), (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-        }
         if (id == R.id.alarm_switch) {
             alarm_switcher.setChecked(!alarm_switcher.isChecked());
             Snackbar.make(item.getActionView(), (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -341,11 +337,11 @@ public class MainActivity extends AppCompatActivity
                     rv.reset();
                 }
                 Random rand = new Random();
-                int n = rand.nextInt(5) + 1;
+                int n = rand.nextInt(4) + 1;
                 switch (n) {
                     case 1:
-                        rId = R.raw.motivation;
-                        sentence.setText("Today is your day");
+                        rId = R.raw.good_evening;
+                        sentence.setText("Good evening!");
                         break;
 
                     case 2:
@@ -354,16 +350,12 @@ public class MainActivity extends AppCompatActivity
                         break;
 
                     case 3:
-                        rId = R.raw.motivation2;
-                        sentence.setText("Optimism is the faith that leads to achievement");
+                        rId = R.raw.good_morning;
+                        sentence.setText("Good morning!");
                         break;
                     case 4:
-                        rId = R.raw.quote;
-                        sentence.setText("Start early, start often");
-                        break;
-                    case 5:
-                        rId = R.raw.hows;
-                        sentence.setText("How's your day?");
+                        rId = R.raw.thank_you;
+                        sentence.setText("Thank you!");
                         break;
                 }
                 rv = MediaPlayer.create(MainActivity.this, rId);
@@ -490,19 +482,6 @@ public class MainActivity extends AppCompatActivity
             public void onClick(View v) {
                 //voice_switcher.setChecked(!voice_switcher.isChecked());
                 Snackbar.make(v, (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            }
-        });
-
-        //Weather
-        MenuItem menuItem_weather = menu.findItem(R.id.weather_switch);
-        View actionView_weather = menuItem_weather.getActionView();
-
-        weather_switcher = actionView_weather.findViewById(R.id.switcher_drawer);
-        weather_switcher.setChecked(true);
-        weather_switcher.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, (weather_switcher.isChecked()) ? "Weather On" : "Weather Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }
         });
 
