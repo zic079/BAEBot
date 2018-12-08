@@ -32,7 +32,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.sql.Array;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class TaskActivity extends AppCompatActivity
     private static FirebaseDatabase database = FirebaseDatabase.getInstance(); // Firebase databse
     private static DatabaseReference mDatabase = database.getReference();
     private String userId;
-    private popWindow popupWindow;
+    private PopWindow popupWindow;
     //private LayoutInflater layoutInflater;
     //private TableLayout tl;
     private ArrayList<Task> taskList = new ArrayList<>();
@@ -110,7 +109,7 @@ public class TaskActivity extends AppCompatActivity
                                 if (popupWindow != null){
                                     popupWindow.dismiss();
                                 }
-                                popupWindow = new popWindow(TaskActivity.this, taskToEdit);
+                                popupWindow = new PopWindow(TaskActivity.this, taskToEdit);
                                 popupWindow.show(findViewById(R.id.linearLayout_task), 0,0);
                             }
                         });

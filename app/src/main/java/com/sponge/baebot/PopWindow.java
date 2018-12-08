@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-public class popWindow extends android.widget.PopupWindow
+public class PopWindow extends android.widget.PopupWindow
 {
     Context ctx;
     TextView lblText;
     View popupView;
 
-    public popWindow(Context context, Task t)
+    public PopWindow(Context context, Task t)
     {
         super(context);
 
