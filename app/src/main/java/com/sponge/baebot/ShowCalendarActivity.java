@@ -46,8 +46,6 @@ public class ShowCalendarActivity extends AppCompatActivity{
     private RelativeLayout relativeLayout;
     private Button newEventBtn;
     private EditText titleEdit;
-    //private EditText dateEdit;
-    //private EditText timeEdit;
     private Button dateSelectBtn;
     private Button timeSelectBtn;
 

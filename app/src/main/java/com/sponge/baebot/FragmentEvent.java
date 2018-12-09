@@ -50,6 +50,7 @@ public class FragmentEvent extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.d("FRAG EVENT", "onCreateView: ");
         v=inflater.inflate(R.layout.event_fragment,container,false);
         recyclerView = (RecyclerView)v.findViewById(R.id.event_recyclerView);
         RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(eventList,getContext());
@@ -62,12 +63,29 @@ public class FragmentEvent extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("FRAG EVENT", "onCreate: ");
-        updateEvent();
     }
 
-    private void updateEvent() {
-        Log.d("FRAG EVENT", "updateEvent: ");
+    public void updateEvent(ArrayList<String> inputEvent) {
 
+        Log.d("FRAG EVENT", "updateEvent: ");
+        Log.d("FRAG EVENT", "updateE " + inputEvent);
+
+        eventList = new ArrayList<>();
+
+        for(int i = 0; i < inputEvent.size(); i++) {
+            eventList.add(inputEvent.get(i));
+        }
+
+        if(v != null) {
+            Log.d("FRAG EVENT", "updateE V EXIST!!!! ");
+            recyclerView = (RecyclerView)v.findViewById(R.id.event_recyclerView);
+            RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(eventList,getContext());
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setAdapter(recyclerViewAdapter);
+        }
+
+
+        /*
         ContentResolver cr = getActivity().getContentResolver();
 
         // use CalendarContract.Instances for read data on calendar (rather than owner info)
@@ -139,6 +157,7 @@ public class FragmentEvent extends Fragment {
         //listView.setAdapter(stringArrayAdapter);
 
         //return calendarData;
+        */
     }
 
     public int getCount() {
