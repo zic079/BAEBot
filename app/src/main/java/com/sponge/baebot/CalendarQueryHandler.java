@@ -152,13 +152,6 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
      */
     public void readEvent(Calendar startDate_offset, Calendar startDate, Calendar endDate) {
 
-        /*
-        // initialize the query handler if it didn't been initialized yet
-        if (calendarQueryHandler == null) {
-            calendarQueryHandler = new CalendarQueryHandler(cr);
-        }
-        */
-
         //queryDays = numsDay;
 
         // Reason for start date offset: all day event use PST time, causing offset
@@ -169,17 +162,6 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         Log.d(TAG, "readEvent: startDate - " + startDate);
 
         Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
-
-        // get current time
-        //Date currentTime = Calendar.getInstance().getTime();
-
-        // building selection - the start and end time range for calendar provider
-        //Calendar calendarStart= Calendar.getInstance();
-        //calendarStart.setTime(startDate);
-        //Calendar calendarEnd= Calendar.getInstance();
-        //calendarEnd.setTime(endDate);
-        //calendarEnd.add(Calendar.DATE, queryDays);
-
 
         // set selection and selectionArgs as null
         String selection = "((dtstart >= " + startDate_offset.getTimeInMillis() + ") AND (dtend <= " + endDate.getTimeInMillis()+"))";
@@ -194,29 +176,6 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         startQuery(EVENT, null, CALENDAR_URI,
                    EVENT_PROJECTION, selection, selectionArgs, CalendarContract.Events.DTSTART + " ASC");
 
-
-        /*
-        while (cur.moveToNext()) {
-            long calID = 0;
-            String displayName = null;
-            String accountName = null;
-            String ownerName = null;
-
-            // Get the field values
-            calID = cur.getLong(PROJECTION_ID_INDEX);
-            displayName = cur.getString(PROJECTION_DISPLAY_NAME_INDEX);
-            accountName = cur.getString(PROJECTION_ACCOUNT_NAME_INDEX);
-            ownerName = cur.getString(PROJECTION_OWNER_ACCOUNT_INDEX);
-
-            // building string of current cursor data
-            String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
-            calendarData.add(currentData);
-        }
-        */
-
-        //ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, calendarData);
-        //listView.setAdapter(stringArrayAdapter);
-
     }
 
 
@@ -224,7 +183,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     public void insertEvent(Context context, long startTime,
                                    long endTime, String title, String description) {
 
-        ContentResolver cr = context.getContentResolver();
+        //ContentResolver cr = context.getContentResolver();
 
         ContentValues values = new ContentValues();
         // hardcode calendar ID
@@ -251,7 +210,7 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
     }
 
     public void deleteEvent() {
-        Log.d(TAG, "deleteEvent: !!!!!!");
+        Log.d(TAG, "deleteEvent: !!!");
 
         // hard code test
         long eventID = 55;

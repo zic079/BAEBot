@@ -92,8 +92,6 @@ public class ShowCalendarActivity extends AppCompatActivity{
                 final View mView = getLayoutInflater().inflate(R.layout.activity_event,null);
                 newEventBtn = mView.findViewById(R.id.buttonNewEvent);
                 titleEdit = mView.findViewById(R.id.editTextTitle);
-                //dateEdit = findViewById(R.id.editTextDate);
-                //timeEdit = findViewById(R.id.editTextTime);
                 final String temp = inputYear + "-" + inputMonth + '-' + inputDay;
                 dateSelectBtn = mView.findViewById(R.id.buttonSelectDate);
                 dateSelectBtn.setText(temp);
@@ -127,7 +125,7 @@ public class ShowCalendarActivity extends AppCompatActivity{
                         String datetimeStr = temp + " " + timeSelectBtn.getText().toString();
                         try {
                             Date startTime = dateFormat.parse(datetimeStr);
-                            // hardcode endtime for test - 1 hour
+                            // endtime - 1 hour later
                             mCalendar.setTime(startTime);
                             mCalendar.add(Calendar.HOUR_OF_DAY, 1);
                             Date endTime = mCalendar.getTime();
@@ -149,28 +147,6 @@ public class ShowCalendarActivity extends AppCompatActivity{
                 dialog.setContentView(mView);
                 dialog.setCanceledOnTouchOutside(true);
                 dialog.show();
-//                dateSelectBtn.setOnClickListener(new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        inputYear = mCalendar.get(Calendar.YEAR);
-//                        inputMonth = mCalendar.get(Calendar.MONTH);
-//                        inputDay = mCalendar.get(Calendar.DAY_OF_MONTH);
-//
-//                        DatePickerDialog datePickerDialog = new DatePickerDialog(mView.getContext(),
-//                                new DatePickerDialog.OnDateSetListener() {
-//                                    @Override
-//                                    public void onDateSet(DatePicker view, int year,
-//                                                          int month, int day) {
-//                                        dateSelectBtn.setText( year + "-" + (month + 1) + '-' + day);
-//
-//                                    }
-//                                }, inputYear, inputMonth, inputDay);
-//                        datePickerDialog.show();
-//                    }
-//                });
-
-//                startActivity(new Intent(ShowCalendarActivity.this, Pop.class));
-
             }
         });
 
@@ -191,9 +167,6 @@ public class ShowCalendarActivity extends AppCompatActivity{
             }
         });
 
-        ////TESTING
-        //View mBtn = findViewById(R.id.imageButton);
-        //mBtn.setOnClickListener(this);
 
     }
 
