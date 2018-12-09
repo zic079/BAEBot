@@ -1,11 +1,11 @@
 # BAEBot (Android App)
 
 ### About：
-BAEBot is a calendar scheduling assistant app that helps you schedule your tasks and events.
+BAEBot is a calendar scheduling assistant app that helps you schedule your tasks and events.  
 Users can create/edit/delete tasks, add events, get notified for tasks and events, check weather and get daily motivational quote.
 
 ### Requirements:
-Pixel API 28
+Pixel API 28   
 Android Studio 3.2
 
 ### Installation:
@@ -21,7 +21,7 @@ Android Studio 3.2
 ..* Google Firebase
 ......
 
-### Developed By
+### Developed By:
 Team SPONGE
 
 ### Apps Feature:
