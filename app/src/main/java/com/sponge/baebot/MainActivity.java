@@ -280,6 +280,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.voice_switch) {
             voice_switcher.setChecked(!voice_switcher.isChecked());
             Snackbar.make(item.getActionView(), (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+
         }
         /*
         if (id == R.id.alarm_switch) {
@@ -376,7 +377,8 @@ public class MainActivity extends AppCompatActivity
 
             case R.id.Waifu:
                 // Prevent multiple media being played simultaneously.
-                if(voice_switcher.isChecked() && rv != null) {
+
+                if(rv != null) {
                     rv.reset();
                 }
 
