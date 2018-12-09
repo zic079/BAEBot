@@ -12,25 +12,13 @@
             app:actionLayout="@layout/action_view_switch" />
 
         <item
-            android:id="@+id/alarm_switch"
-            android:icon="@drawable/ic_alarm"
-            android:defaultValue="true"
-            android:title="Alarm"
-            app:actionLayout="@layout/action_view_switch" />
-
-        <item
             android:id="@+id/sleep_switch"
             android:icon="@drawable/ic_sleep"
             android:defaultValue="true"
             android:title="Sleep time"
-            app:actionLayout="@layout/action_view_switch" />
+            app:actionLayout="@layout/action_view_switch" /><![CDATA[
 
-        <item
-            android:id="@+id/quote_switch"
-            android:icon="@drawable/ic_quote"
-            android:defaultValue="true"
-            android:title="Daily Quote"
-            app:actionLayout="@layout/action_view_switch" />
-            -->
+        -->
+    ]]>
     </group>
 </menu>
