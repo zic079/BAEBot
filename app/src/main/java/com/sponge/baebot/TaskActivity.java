@@ -126,7 +126,7 @@ public class TaskActivity extends AppCompatActivity
                                 String strDateAndTime = sdf.
                                         format(new Date((editedTask.getTimestamp() + 28800) * 1000));
                                 selectDate.setText(strDateAndTime.substring(0, 10));
-                                selectTime.setText(dateAndTime.toString().substring(11, 20));
+                                selectTime.setText(dateAndTime.toString().substring(11, 16));
 
                                 int priority = editedTask.getPriority();
                                 if (priority == 2) {
@@ -258,7 +258,6 @@ public class TaskActivity extends AppCompatActivity
         description = findViewById(R.id.description);
 
         selectDate = findViewById(R.id.btnDate);
-        //date = findViewById(R.id.tvSelectedDate);
         selectDate.setOnClickListener(this);
 
         selectTime = findViewById(R.id.btnTime);
