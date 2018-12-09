@@ -9,16 +9,12 @@
             android:id="@+id/voice_switch"
             android:icon="@drawable/ic_voice"
             android:title="Voice"
-            app:actionLayout="@layout/action_view_switch" />
-
-        <item
-            android:id="@+id/sleep_switch"
-            android:icon="@drawable/ic_sleep"
-            android:defaultValue="true"
-            android:title="Sleep time"
             app:actionLayout="@layout/action_view_switch" /><![CDATA[
 
+
+
         -->
+
     ]]>
     </group>
 </menu>

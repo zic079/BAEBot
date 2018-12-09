@@ -274,10 +274,12 @@ public class MainActivity extends AppCompatActivity
             Snackbar.make(item.getActionView(), (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
         */
+        /*
         if (id == R.id.sleep_switch) {
             sleep_switcher.setChecked(!sleep_switcher.isChecked());
             Snackbar.make(item.getActionView(), (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
+        */
         /*
         if (id == R.id.quote_switch) {
             quote_switcher.setChecked(!quote_switcher.isChecked());
@@ -516,6 +518,7 @@ public class MainActivity extends AppCompatActivity
         });
         */
 
+        /*
         //Sleep
         MenuItem menuItem_sleep = menu.findItem(R.id.sleep_switch);
         View actionView_sleep = menuItem_sleep.getActionView();
@@ -528,6 +531,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(v, (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }
         });
+        */
 
         /*
         //Quote
