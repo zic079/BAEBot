@@ -1,18 +1,13 @@
 package com.sponge.baebot;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,7 +18,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class SearchActivity extends AppCompatActivity
@@ -54,10 +48,10 @@ public class SearchActivity extends AppCompatActivity
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    Log.e("search task", "button clicked!!!!");
                     tempTaskList.clear();
                     recyclerView = findViewById(R.id.search_recyclerView);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(SearchActivity.this));
+                    recyclerView.setLayoutManager(
+                            new LinearLayoutManager(SearchActivity.this));
                     getAllTasks(new FirebaseCallback() {
                         @Override
                         public void onCallback(ArrayList<Task> list) {
@@ -65,7 +59,6 @@ public class SearchActivity extends AppCompatActivity
                             if (keyWord != ""){
                                 keyWord = keyWord.toLowerCase();
                                 for (Task t : list){
-                                    Log.e("hello!!!!", t.getTitle());
                                     String description  = t.getDescription().toLowerCase();
                                     String title = t.getTitle().toLowerCase();
                                     if ((description.contains(keyWord) || title.contains(keyWord))){
@@ -73,11 +66,11 @@ public class SearchActivity extends AppCompatActivity
                                     }
                                 }
                             }
-                            Log.e("list length", Integer.toString(tempTaskList.size()));
                             if (tempTaskList.size() > list.size()){
                                 tempTaskList.clear();
                                 Toast.makeText(SearchActivity.this,
-                                        "You submit the search request to often. Please try again later",
+                                        "You submit the search request to often. " +
+                                                "Please try again later",
                                         Toast.LENGTH_SHORT).show();
                             }
                             adapter = new TaskAdapter(SearchActivity.this, tempTaskList);
@@ -91,8 +84,6 @@ public class SearchActivity extends AppCompatActivity
             }
         });
         setSupportActionBar(toolbar);
-
-        Log.e("search task", "created");
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -115,13 +106,10 @@ public class SearchActivity extends AppCompatActivity
                 new ValueEventListener(){
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d("Search", "onDataChange!");
                         taskList.clear();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             Task t = ds.getValue(Task.class);
-                            Log.d("search-getAllTasks",t.toString());
                             taskList.add(t);
-                            Log.d("search-getAllTasks",Integer.toString(taskList.size()));
                         }
                         firebaseCallback.onCallback(taskList);
                     }

@@ -14,12 +14,11 @@ import java.util.Date;
 
 public class WeatherUtils {
 
-    // From tutorial, https://androstock.com/tutorials/create-a-weather-app-on-android-android-studio.html
-
     // check network
     public static boolean isNetworkAvailable(Context context)
     {
-        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo() != null;
+        return ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE))
+                .getActiveNetworkInfo() != null;
     }
 
 
@@ -38,21 +37,14 @@ public class WeatherUtils {
             connection.setUseCaches(false);
             connection.setDoInput(true);
             connection.setDoOutput(false);
-            //connection.connect();
-
-
-            // BufferedReader rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
 
             InputStream is;
             int status = connection.getResponseCode();
-            Log.d("excuteGet", "status: " + status);
 
             if (status != HttpURLConnection.HTTP_OK) {
                 is = connection.getErrorStream();
             }
             else {
-                Log.d("excuteGet", "connection: " + connection.getInputStream());
                 is = connection.getInputStream();
             }
 
@@ -61,16 +53,13 @@ public class WeatherUtils {
             String line;
             StringBuffer response = new StringBuffer();
             while((line = rd.readLine()) != null) {
-                Log.d("excuteGet", "rd OK");
                 response.append(line);
                 response.append('\r');
             }
             rd.close();
 
-            //Log.d("excuteGet", "excuteGet return: " + response.toString());
             return response.toString();
         } catch (Exception e) {
-            Log.d("excuteGet","exception: " + e);
             return null;
         } finally {
             if(connection != null) {

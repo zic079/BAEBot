@@ -4,14 +4,12 @@ import android.app.ActivityOptions;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -22,7 +20,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -46,7 +43,8 @@ import java.util.UUID;
 
 public class TaskActivity extends AppCompatActivity
         implements View.OnClickListener, TaskAdapter.ItemClickListener {
-    private Button selectDate, selectTime, saveTask,btnReschedule;
+    private Button selectDate;
+    private Button selectTime;
     private CheckBox checkBoxA, checkBoxB, checkBoxC;
     private EditText title, description;
     private int year, month, dayOfMonth, hour, minute;
@@ -55,33 +53,28 @@ public class TaskActivity extends AppCompatActivity
     private static DatabaseReference mDatabase = database.getReference();
     private String userId;
     private PopWindow popupWindow;
-    //private LayoutInflater layoutInflater;
-    //private TableLayout tl;
     private ArrayList<Task> taskList = new ArrayList<>();
     private ArrayList<Task> tasks = new ArrayList<>();
     private ArrayList<String> strTasks = new ArrayList<>();
     private RecyclerView recyclerView;
-    //private RecyclerViewAdapter recyclerViewAdapter;
     private TaskAdapter adapter;
     private Task editedTask;
-    private LinearLayout linearLayout;
 
-    private interface FirebaseCallback{
+    private interface FirebaseCallback {
         void onCallback(ArrayList<com.sponge.baebot.Task> list);
     }
-    
-    private interface FirebaseCallbackEdit{
+
+    private interface FirebaseCallbackEdit {
         void onCallback(Task taskToEdit);
     }
 
-    public void getSingleTask(String id, final FirebaseCallbackEdit firebaseCallbackEdit){
+    public void getSingleTask(String id, final FirebaseCallbackEdit firebaseCallbackEdit) {
         mDatabase.child("task").child(userId).child(id).addListenerForSingleValueEvent(
-                new ValueEventListener(){
+                new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         Task t = dataSnapshot.getValue(Task.class);
-                        Log.e("Task Activity edit",t.toString());
                         firebaseCallbackEdit.onCallback(t);
                     }
 
@@ -94,7 +87,7 @@ public class TaskActivity extends AppCompatActivity
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
-    public void onItemClick(View view, final int position){
+    public void onItemClick(View view, final int position) {
         PopupMenu popup = new PopupMenu(this, view);
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -102,40 +95,45 @@ public class TaskActivity extends AppCompatActivity
                 switch (item.getItemId()) {
                     case R.id.view:
 
-                        getSingleTask(adapter.getItem(position),new FirebaseCallbackEdit() {
+                        getSingleTask(adapter.getItem(position), new FirebaseCallbackEdit() {
                             @Override
                             public void onCallback(Task taskToEdit) {
-                                LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(LAYOUT_INFLATER_SERVICE);
-                                ViewGroup container = (ViewGroup) layoutInflater.inflate(R.layout.popup_layout,null);
-                                if (popupWindow != null){
+                                LayoutInflater layoutInflater =
+                                        (LayoutInflater) getApplicationContext()
+                                                .getSystemService(LAYOUT_INFLATER_SERVICE);
+                                ViewGroup container = (ViewGroup) layoutInflater
+                                        .inflate(R.layout.popup_layout, null);
+                                if (popupWindow != null) {
                                     popupWindow.dismiss();
                                 }
                                 popupWindow = new PopWindow(TaskActivity.this, taskToEdit);
-                                popupWindow.show(findViewById(R.id.linearLayout_task), 0,0);
+                                popupWindow.show(findViewById(R.id.linearLayout_task), 0, 0);
                             }
                         });
 
                         return true;
                     case R.id.edit:
-                        //Toast.makeText(selectDate.getContext(), "Hello Edit!", Toast.LENGTH_SHORT).show();
-                        getSingleTask(adapter.getItem(position),new FirebaseCallbackEdit() {
+                        getSingleTask(adapter.getItem(position), new FirebaseCallbackEdit() {
                             @Override
                             public void onCallback(Task taskToEdit) {
                                 editedTask = taskToEdit;
                                 title.setText(editedTask.getTitle());
                                 description.setText(editedTask.getDescription());
 
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                                Date dateAndTime = new Date((editedTask.getTimestamp()+28800)*1000);
-                                String strDateAndTime = sdf.format(new Date((editedTask.getTimestamp()+28800)*1000));
-                                selectDate.setText(strDateAndTime.substring(0,10));
-                                selectTime.setText(dateAndTime.toString().substring(11,16));
+                                SimpleDateFormat sdf =
+                                        new SimpleDateFormat("yyyy-MM-dd hh:mm");
+                                Date dateAndTime = new Date((editedTask.getTimestamp() + 28800) * 1000);
+                                String strDateAndTime = sdf.
+                                        format(new Date((editedTask.getTimestamp() + 28800) * 1000));
+                                selectDate.setText(strDateAndTime.substring(0, 10));
+                                selectTime.setText(dateAndTime.toString().substring(11, 20));
+
                                 int priority = editedTask.getPriority();
-                                if (priority == 2){
+                                if (priority == 2) {
                                     checkBoxA.setChecked(true);
                                     checkBoxB.setChecked(false);
                                     checkBoxC.setChecked(false);
-                                } else if (priority == 1){
+                                } else if (priority == 1) {
                                     checkBoxA.setChecked(false);
                                     checkBoxB.setChecked(true);
                                     checkBoxC.setChecked(false);
@@ -148,20 +146,24 @@ public class TaskActivity extends AppCompatActivity
                         });
                         return true;
 
-                        case R.id.delete:
-                            mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
-                            Toast.makeText(selectDate.getContext(), "Delete Successfully!", Toast.LENGTH_SHORT).show();
-                            adapter.removeAt(position);
-                            return true;
+                    case R.id.delete:
+                        mDatabase.child("task").child(userId).child(adapter.getItem(position))
+                                .removeValue();
+                        Toast.makeText(selectDate.getContext(), "Delete Successfully!",
+                                Toast.LENGTH_SHORT).show();
+                        adapter.removeAt(position);
+                        return true;
                     case R.id.complete:
-                        mDatabase.child("task").child(userId).child(adapter.getItem(position)).removeValue();
-                        Toast.makeText(selectDate.getContext(), "Completed!", Toast.LENGTH_SHORT).show();
+                        mDatabase.child("task").child(userId).child(adapter.getItem(position))
+                                .removeValue();
+                        Toast.makeText(selectDate.getContext(), "Completed!",
+                                Toast.LENGTH_SHORT).show();
                         adapter.removeAt(position);
                         return true;
 
 
-                        default:
-                            return false;
+                    default:
+                        return false;
                 }
             }
         });
@@ -173,15 +175,15 @@ public class TaskActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         super.onBackPressed();
-        this.startActivity(new Intent(TaskActivity.this,MainActivity.class));
-        Log.w("Task Activity", "on back pressed");
+        this.startActivity(new Intent(TaskActivity.this, MainActivity.class));
         return;
     }
+
     public void onCheckboxClicked(View view) {
 
-        switch(view.getId()) {
+        switch (view.getId()) {
 
             case R.id.priority1:
 
@@ -204,12 +206,13 @@ public class TaskActivity extends AppCompatActivity
                 break;
         }
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_task);
 
-        if (popupWindow != null){
+        if (popupWindow != null) {
             popupWindow.dismiss();
         }
 
@@ -219,39 +222,6 @@ public class TaskActivity extends AppCompatActivity
             //The key argument here must match that used in the other activity
         }
         Intent intent = getIntent();
-        User myUser = intent.getParcelableExtra("user");
-        linearLayout = (LinearLayout)findViewById(R.id.linearLayout_task);
-
-//        final Button deleteTask = findViewById(R.id.btnDelete);
-//        taskIdInput = findViewById(R.id.taskId_input);
-//
-//        deleteTask.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                deleteTask();
-//            }
-//        });
-
-//        tl= findViewById(R.id.tastTable);
-//        Button getTask = findViewById(R.id.btnGetTask);
-//        getTask.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v){
-//                Log.w("button", "get Task button clicked!");
-//                getAllTasks();
-//                tl.removeAllViews();
-//
-//
-//                Log.d("list size", ""+Integer.toString(taskList.size()));
-//                Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    public void run() {
-//                        printTasks();
-//
-//                    }
-//                }, 100);
-//            }
-//        });
 
         findViewById(R.id.search_bar).setOnClickListener(this);
 
@@ -268,7 +238,7 @@ public class TaskActivity extends AppCompatActivity
         checkBoxB.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked){
+                if (isChecked) {
                     onCheckboxClicked(buttonView);
                 }
             }
@@ -295,9 +265,9 @@ public class TaskActivity extends AppCompatActivity
         //time = findViewById(R.id.tvSelectedTime);
         selectTime.setOnClickListener(this);
 
-        saveTask = findViewById(R.id.btnTask);
+        Button saveTask = findViewById(R.id.btnTask);
 
-        btnReschedule = findViewById(R.id.reschedule);
+        Button btnReschedule = findViewById(R.id.reschedule);
 
         saveTask.setOnClickListener(new View.OnClickListener() {
 
@@ -311,7 +281,8 @@ public class TaskActivity extends AppCompatActivity
                             startActivity(intent);
                         }
                     });
-                    Toast.makeText(selectDate.getContext(), "Save Successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(selectDate.getContext(), "Save Successfully",
+                            Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -320,8 +291,6 @@ public class TaskActivity extends AppCompatActivity
         getAllTasks(new FirebaseCallback() {
             @Override
             public void onCallback(ArrayList<Task> list) {
-                Log.e("aaaaaaaaaaaaaaaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab");
-                Log.e("aaaaaaaaaaaaaaaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"+Integer.toString(list.size()));
                 tasks = list;
                 for (Task t : tasks) {
                     strTasks.add(t.toString());
@@ -334,24 +303,14 @@ public class TaskActivity extends AppCompatActivity
             }
         });
 
-        btnReschedule.setOnClickListener(new View.OnClickListener(){
+        btnReschedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                getAllTasks(new FirebaseCallback() {
-//                    @Override
-//                    public void onCallback(ArrayList<Task> list) {
-//                        Log.e("aaaaaaaaaaaaaaaaaaaaa","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab");
-//                        Log.e("aaareshcedule","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"+Integer.toString(list.size()));
-//                    }
-//                });
 
                 List<Task> localTask;
 
                 if (adapter != null) {
                     localTask = adapter.getmTask();
-
-                    Log.e("reschedule*********", Integer.toString(localTask.size()));
-
                     class SortByPriority implements Comparator<Task> {
 
                         // Used for sorting in ascending order of
@@ -372,14 +331,10 @@ public class TaskActivity extends AppCompatActivity
                     Timestamp curTime = new Timestamp(a);
                     long cur = curTime.getTime() / 1000 - 28800;
                     cur = cur / 86400 * 86400;
-                    Log.e("currentTime", Long.toString(cur));
-
                     ArrayList<Task> unfinished = new ArrayList<>();
                     int[] weeklyTaskCount = {0, 0, 0, 0, 0, 0, 0};
 
                     for (Task t : localTask) {
-                        Log.e("reschedule", "today's timestamp" + Long.toString(cur));
-                        Log.e("reschedule", t.getTaskId() + " " + Long.toString(t.getTimestamp()));
                         if (!t.isCompleted() && t.getTimestamp() < cur) {
                             unfinished.add(t);
                         } else if (!t.isCompleted()) {
@@ -411,145 +366,57 @@ public class TaskActivity extends AppCompatActivity
                         mDatabase.child("task").child(userId).child(t.getTaskId()).setValue(t);
                     }
 
-                    //lty add here
                     ArrayList<Task> toshowList = unfinished;
-                    for (Task t: localTask){
+                    for (Task t : localTask) {
                         boolean exist = false;
-                        for (Task t2: toshowList){
-                            if (t2.getTaskId() == t.getTaskId()){
+                        for (Task t2 : toshowList) {
+                            if (t2.getTaskId() == t.getTaskId()) {
                                 exist = true;
                                 break;
                             }
                         }
-                        if (!exist){
+                        if (!exist) {
                             toshowList.add(t);
                         }
                     }
 
                     recyclerView = findViewById(R.id.task_recyclerView);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
+                    recyclerView.setLayoutManager(
+                            new LinearLayoutManager(TaskActivity.this));
                     adapter = new TaskAdapter(TaskActivity.this, toshowList);
                     adapter.setClickListener(TaskActivity.this);
                     recyclerView.setAdapter(adapter);
 
                 }
-//                getAllTasks(new FirebaseCallback() {
-//                    @Override
-//                    public void onCallback(ArrayList<Task> list) {
-//                        Log.e("schedule task!!!!","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab");
-//                        Log.e("schedule task!!!!","aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaab"+Integer.toString(list.size()));
-//                        tasks = list;
-//                        for (Task t : tasks) {
-//                            strTasks.add(t.toString());
-//                        }
-//                        recyclerView = findViewById(R.id.task_recyclerView);
-//                        recyclerView.setLayoutManager(new LinearLayoutManager(TaskActivity.this));
-//                        adapter = new TaskAdapter(TaskActivity.this, tasks);
-//                        adapter.setClickListener(TaskActivity.this);
-//                        recyclerView.setAdapter(adapter);
-//                    }
-//                });
             }
 
 
         });
-
-
-
-
-
-
-
-
-
-
-//
-//        rescheduleAllUnfinishedTasks(new RescheduleHandler() {
-//            @Override
-//            public void onCallback(ArrayList<Task> taskList) {
-
-//                class SortByPriority implements Comparator<Task>
-//                {
-//
-//                    // Used for sorting in ascending order of
-//                    // roll number
-//                    public int compare(Task a, Task b)
-//                    {
-//                        if(b.getPriority() - a.getPriority() > 0){
-//                            return 1;
-//                        }else if(b.getPriority() - a.getPriority() < 0){
-//                            return -1;
-//                        }else{
-//                            return (int)(a.getTimestamp() - b.getTimestamp());
-//                        }
-//                    }
-//                }
-
-//                Date d = new Date();
-//                long a = d.getTime()/86400 * 86400;
-//                Timestamp curTime = new Timestamp(a);
-//                long cur = curTime.getTime()/1000-28800;
-//
-//
-//
-//                ArrayList<Task> unfinished = new ArrayList<>();
-//                int[] weeklyTaskCount = {0,0,0,0,0,0,0};
-//
-//                for(Task t : taskList){
-//                    if(!t.isCompleted() && t.getTimestamp() < cur){
-//                        unfinished.add(t);
-//                    }else if(!t.isCompleted()){
-//                        int day = (int) ((t.getTimestamp() - cur)/86400);
-//                        if(day > 6){
-//                            day = 6;
-//                        }
-//                        weeklyTaskCount[day] += 1;
-//                    }
-//                }
-//                Collections.sort(unfinished, new SortByPriority());
-//
-//                int totalUnfinished = unfinished.size();
-//                int totalFinished = 0;
-//                for(int i = 0; i < 7; i++){
-//                    totalFinished += weeklyTaskCount[i];
-//                }
-//                int total = totalUnfinished + totalFinished;
-//                int avg = (int)total/7+1;
-//                int curDay = 0;
-//
-//                for(Task t: unfinished){
-//                    while (weeklyTaskCount[curDay] >= avg) {
-//                        curDay++;
-//                    }
-//                    t.setTimestamp(curDay*86400+cur);
-//                    mDatabase.child("task").child(userId).child(t.getTaskId()).setValue(t);
-//                }
-//            }
-//        });
-    }
+    } // end of onCreate
 
     @Override
-    public void onClick(View v){
+    public void onClick(View v) {
         final View search = findViewById(R.id.search);
 
         switch (v.getId()) {
             case R.id.search_bar:
                 Intent intent = new Intent(TaskActivity.this, SearchActivity.class);
                 ActivityOptions options1 = ActivityOptions
-                        .makeSceneTransitionAnimation(this, search, "search");
-                intent.putExtra("userId", userId );
+                        .makeSceneTransitionAnimation(this, search,
+                                "search");
+                intent.putExtra("userId", userId);
                 startActivity(intent, options1.toBundle());
                 break;
 
             case R.id.btnDate:
-                Log.w("button", "select date button clicked!");
                 year = calendar.get(Calendar.YEAR);
                 month = calendar.get(Calendar.MONTH);
                 dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
                 DatePickerDialog datePickerDialog = new DatePickerDialog(TaskActivity.this,
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
-                            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                            public void onDateSet(DatePicker datePicker, int year, int month,
+                                                  int day) {
                                 selectDate.setText(year + "-" + (month + 1) + "-" + day);
                             }
                         }, year, month, dayOfMonth);
@@ -557,7 +424,6 @@ public class TaskActivity extends AppCompatActivity
                 datePickerDialog.show();
                 break;
             case R.id.btnTime:
-                Log.w("button", "select time button clicked!");
                 hour = calendar.get(Calendar.HOUR);
                 minute = calendar.get(Calendar.MINUTE);
 
@@ -578,7 +444,7 @@ public class TaskActivity extends AppCompatActivity
         }
     }
 
-    private boolean addTask(){
+    private boolean addTask() {
         String strTitle = "";
         String strDescription = description.getText().toString();
         String strDate = "";
@@ -625,77 +491,65 @@ public class TaskActivity extends AppCompatActivity
                 }
             }
             hour = Integer.parseInt(strHour);
-            minute = Integer.parseInt(strTime.substring(idx+1));
+            minute = Integer.parseInt(strTime.substring(idx + 1));
             Timestamp ts;
 
-            if (userId != null) {
-                String taskId = UUID.randomUUID().toString();
-                Task task = null;
-                try {
-                    Log.d("date",year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
-                    Date d = new SimpleDateFormat("yyyy/MM/dd/hh/mm").parse(year + "/" + month + "/" + dayOfMonth + "/" + hour + "/" + minute);
-                    ts = new Timestamp(d.getTime());
-                    int priority = 0;
-                    if (checkBoxA.isChecked()){
-                        priority = 2;
-                    } else if (checkBoxB.isChecked()){
-                        priority = 1;
-                    } else {
-                        priority = 0;
+            try {
+                if (userId != null) {
+                    String taskId = UUID.randomUUID().toString();
+                    Task task = null;
+                    try {
+                        Date d = new SimpleDateFormat("yyyy/MM/dd/hh/mm")
+                                .parse(year + "/" + month + "/" + dayOfMonth +
+                                        "/" + hour + "/" + minute);
+                        ts = new Timestamp(d.getTime());
+                        int priority = 0;
+                        if (checkBoxA.isChecked()) {
+                            priority = 2;
+                        } else if (checkBoxB.isChecked()) {
+                            priority = 1;
+                        } else {
+                            priority = 0;
+                        }
+                        task = new Task(taskId, strTitle, strDescription,
+                                ts.getTime() / 1000 - 28800, priority);
+
+                        if (editedTask == null) {
+                            mDatabase.child("task").child(userId).child(taskId).setValue(task);
+
+                        } else {
+                            task = new Task(editedTask.getTaskId(), strTitle, strDescription,
+                                    ts.getTime() / 1000 - 28800, priority);
+                            mDatabase.child("task").child(userId).child(editedTask.getTaskId())
+                                    .setValue(task);
+                            editedTask = null;
+                        }
+
+                    } catch (Exception e) {
+
                     }
-                    task = new Task(taskId,strTitle,strDescription, ts.getTime()/1000 - 28800, priority);
 
-                    if (editedTask == null) {
-                        mDatabase.child("task").child(userId).child(taskId).setValue(task);
-
-                    } else {
-                        task = new Task(editedTask.getTaskId(), strTitle, strDescription, ts.getTime()/1000 - 28800, priority);
-                        mDatabase.child("task").child(userId).child(editedTask.getTaskId()).setValue(task);
-                        editedTask = null;
-                    }
-
-                    Log.d("add to db", "success");
-                }catch (Exception e){
-                    Log.d("task", "date parsing error");
                 }
+            } catch (Exception e) {
 
-                Log.d("task id", taskId);
-                if(task == null){
-                    Log.d("task","task null");
-                }else{
-                    Log.d("task","task not null");
-                }
-
-            } else {
-                Log.d("dataBase error", "No such User");
             }
+
             return true;
-        }
-        else {
+        } else {
             Toast.makeText(this, "Missing information", Toast.LENGTH_SHORT).show();
             return false;
         }
     }
 
-    private void getAllTasks(final FirebaseCallback firebaseCallback){
+    private void getAllTasks(final FirebaseCallback firebaseCallback) {
         mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
-                new ValueEventListener(){
+                new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.d("Tasks", "onDataChange!");
                         taskList.clear();
-                        int i = 0;
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
-//                            Log.d("Tasks", "" + ds.getKey());
                             Task t = ds.getValue(Task.class);
-//                            taskList.add(t);
-//                            Task tt = (Task)t;
-                            i++;
-//                            Log.d("task-getAllTasks",tt.toString());
-                            Log.e("task-getAllTasks",t.toString());
-                            Log.e("task-getAllTasks",Integer.toString(i));
                             taskList.add(t);
-                            Log.e("task-getAllTasks",Integer.toString(taskList.size()));
                         }
                         tasks.clear();
                         firebaseCallback.onCallback(taskList);
@@ -708,84 +562,4 @@ public class TaskActivity extends AppCompatActivity
                 });
     }
 
-
-//    private void showTasks(){
-//        RecyclerView recyclerView = findViewById(R.id.task_recyclerView);
-//        ArrayList<String> tasks = new ArrayList<>();
-//        for (Task t : taskList){
-//            tasks.add(t.toString());
-//        }
-//        RecyclerViewAdapter adapter = new RecyclerViewAdapter(tasks, this);
-//        recyclerView.setAdapter(adapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-//    }
-
-//    public void showPopup(View v) {
-//        PopupMenu popupMenu = new PopupMenu(this,v);
-//        popupMenu.setOnMenuItemClickListener(this);
-//        popupMenu.inflate(R.menu.popup_menu);
-//        popupMenu.show();
-//    }
-//
-//    @Override
-//    public boolean onMenuItemClick(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.edit:
-//                Toast.makeText(this, "Hello Edit!", Toast.LENGTH_SHORT).show();
-//                return true;
-//            case R.id.delete:
-//                Toast.makeText(this, "Hello Delete!", Toast.LENGTH_SHORT).show();
-//                return true;
-//            default:
-//                return false;
-//        }
-//    }
-
-//    private void printTasks(){
-//        for (Task t : taskList) {
-//            TableRow tr1 = new TableRow(TaskActivity.this);
-//            tr1.setLayoutParams(new TableRow.LayoutParams(
-//                    TableLayout.LayoutParams.MATCH_PARENT,
-//                    TableLayout.LayoutParams.WRAP_CONTENT));
-//            TextView textview = new TextView(TaskActivity.this);
-//            textview.setText(t.getTaskId()+ " " + t.getTitle() + " " + t.getDescription() + " " +
-//                    t.getYear() + "-" + t.getMonth() + "-" +
-//                    t.getDayOfMonth() + " " + t.getHour() + ":" + t.getMinute());
-//            textview.setTextColor(Color.BLACK);
-//            tr1.addView(textview);
-//            tl.addView(tr1, new TableLayout.LayoutParams(TableLayout.LayoutParams.MATCH_PARENT,
-//                    TableLayout.LayoutParams.WRAP_CONTENT));
-//        }
-//    }
-//
-//    private void deleteTask(){
-//        mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
-//                new ValueEventListener(){
-//                    String taskId = taskIdInput.getText().toString();
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        if (dataSnapshot.child(taskId).exists()) {
-//                            mDatabase.child("task").child(userId).child(taskId).removeValue(
-//                                    new DatabaseReference.CompletionListener() {
-//                                        @Override
-//                                        public void onComplete(
-//                                                @Nullable DatabaseError databaseError,
-//                                                @NonNull DatabaseReference databaseReference) {
-//                                            if (databaseError == null){
-//                                                Log.d("delete task", "success");
-//                                            } else {
-//                                                Log.d("delete task", "failure");
-//                                            }
-//                                        }
-//                                    }
-//                            );
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
 }

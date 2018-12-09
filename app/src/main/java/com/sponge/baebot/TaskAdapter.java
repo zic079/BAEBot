@@ -1,27 +1,17 @@
 package com.sponge.baebot;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.ImageButton;
-import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-import static android.support.v4.content.ContextCompat.startActivity;
 
 
 public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
@@ -61,7 +51,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
         Timestamp time  = new Timestamp(t.getTimestamp());
         Date date=new Date((time.getTime()+28800)*1000);
         holder.myTextView.setText(t.getTitle() + "\n" + date.toString());
-        //holder.checkbox.setChecked(false);
     }
 
     @Override
@@ -72,13 +61,10 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private TextView myTextView;
-        //CheckBox checkbox;
 
         public ViewHolder(final View itemView) {
             super(itemView);
             myTextView = itemView.findViewById(R.id.event);
-            //checkbox = (CheckBox) itemView.findViewById(R.id.taskCompleteCheckBox);
-            //checkbox.setClickable(false);
             itemView.setOnClickListener(this);
         }
 
@@ -87,9 +73,6 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.ViewHolder> {
             if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
         }
 
-//        public void setCheckbox(boolean checked){
-//            checkbox.setChecked(checked);
-//        }
     }
 
     public String getItem(int id) {

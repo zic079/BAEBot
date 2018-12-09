@@ -22,7 +22,7 @@ public class PopWindow extends android.widget.PopupWindow
         popupView = LayoutInflater.from(context).inflate(R.layout.popup_layout, null);
         setContentView(popupView);
 
-        lblText = (TextView)popupView.findViewById(R.id.pop_content);
+        lblText = popupView.findViewById(R.id.pop_content);
         lblText.setText(t.getDescription());
 
         setHeight(WindowManager.LayoutParams.WRAP_CONTENT);
@@ -35,24 +35,10 @@ public class PopWindow extends android.widget.PopupWindow
         // Removes default black background
         setBackgroundDrawable(new ColorDrawable());
 
-
-        // Closes the popup window when touch it
-/*     this.setTouchInterceptor(new View.OnTouchListener() {
-
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
-
-            if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                dismiss();
-            }
-            return true;
-        }
-    }); */
     } // End constructor
 
     // Attaches the view to its parent anchor-view at position x and y
-    public void show(View anchor, int x, int y)
-    {
+    public void show(View anchor, int x, int y) {
         showAtLocation(anchor, Gravity.CENTER, x, y);
     }
 }
