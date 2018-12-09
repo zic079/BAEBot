@@ -446,8 +446,14 @@ public class MainActivity extends AppCompatActivity
         Calendar startDate = new GregorianCalendar(year,month,dayOfMonth);
         Calendar endDate = new GregorianCalendar(year,month,dayOfMonth+1);
 
+        // up to event end 00:59 on next day
+        long endAdjust = endDate.getTimeInMillis() + 3599999;
+
+        Log.d("MAIN", "readEvent: READ START: " + startDate.getTimeInMillis());
+        Log.d("MAIN", "readEvent: READ END: " + endAdjust);
+
         // set selection and selectionArgs as null
-        String selection = "((dtstart >= " + startDate_offset.getTimeInMillis() + ") AND (dtend <= " + endDate.getTimeInMillis()+"))";
+        String selection = "((dtstart >= " + startDate_offset.getTimeInMillis() + ") AND (dtend <= " + endAdjust +"))";
         String[] selectionArgs = null;
 
 

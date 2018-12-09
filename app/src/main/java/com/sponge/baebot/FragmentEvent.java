@@ -63,6 +63,7 @@ public class FragmentEvent extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d("FRAG EVENT", "onCreate: ");
+        initEvent();
     }
 
     public void updateEvent(ArrayList<String> inputEvent) {
@@ -158,6 +159,87 @@ public class FragmentEvent extends Fragment {
 
         //return calendarData;
         */
+    }
+
+    private void initEvent() {
+        Log.d("FRAG EVENT", "Init Event: ");
+
+        ContentResolver cr = getActivity().getContentResolver();
+
+        // use CalendarContract.Instances for read data on calendar (rather than owner info)
+        Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
+        Cursor cur = null;
+
+        // show today's event
+        Calendar cal = Calendar.getInstance();
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH);
+        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+        eventList = new ArrayList<>();
+
+        Calendar startDate_offset = new GregorianCalendar(year,month,dayOfMonth-1);
+        Calendar startDate = new GregorianCalendar(year,month,dayOfMonth);
+        Calendar endDate = new GregorianCalendar(year,month,dayOfMonth+1);
+
+        // up to event end 00:59 on next day
+        long endAdjust = endDate.getTimeInMillis() + 3599999;
+
+        // set selection and selectionArgs as null
+        String selection = "((dtstart >= " + startDate_offset.getTimeInMillis() + ") AND (dtend <= " + endAdjust +"))";
+        String[] selectionArgs = null;
+
+
+        cur = cr.query(CALENDAR_URI, EVENT_PROJECTION, selection, selectionArgs, CalendarContract.Events.DTSTART + " ASC");
+        //ArrayList<String> calendarData = new ArrayList<>();
+
+        if(cur != null && cur.getCount() > 0) {
+            Log.d("readEvent", "events found");
+
+
+            cur.moveToFirst();
+            while (cur.moveToNext()) {
+                // information of event
+                String eventTitle;
+                String eventBeginMill;
+                String eventBeginDate;
+                String isAllDay;
+
+                Log.d("readEvent", "Event title: " + cur.getString(PROJECTION_TITLE_INDEX));
+                Log.d("readEvent", "Event ID: " + cur.getString(PROJECTION_ID_INDEX));
+
+                // Get the field values
+                eventTitle = cur.getString(PROJECTION_TITLE_INDEX);
+                // Note: event is in UTC time
+                eventBeginMill = cur.getString(PROJECTION_TIMESTART_INDEX);
+                // check event is all day event
+                isAllDay = cur.getString(PROJECTION_ALLDAY_INDEX);
+
+                // check event is in searching range, all day event has offset
+                if(Long.parseLong(eventBeginMill) >= startDate.getTimeInMillis() || Integer.parseInt(isAllDay) == 1) {
+                    // Building string of current cursor data
+                    // String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
+                    String currentData;
+
+                    if(Integer.parseInt(isAllDay) == 1) {
+                        currentData = String.format("%s          All Day", eventTitle);
+                    }
+
+                    else {
+                        eventBeginDate = milliToDate(eventBeginMill);
+                        currentData = String.format("%s          %s", eventTitle, eventBeginDate);
+                    }
+
+                    // Log.d("readEvent", currentData);
+                    eventList.add(currentData);
+                }
+            }
+        }
+
+        //ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, calendarData);
+        //listView.setAdapter(stringArrayAdapter);
+
+        //return calendarData;
+
     }
 
     public int getCount() {
