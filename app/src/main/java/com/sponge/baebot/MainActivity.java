@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity
             alarm_switcher.setChecked(!alarm_switcher.isChecked());
             Snackbar.make(item.getActionView(), (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
 
-            /*
+
             // alarm is enable
             if(alarm_switcher.isChecked()) {
                 NotificationScheduler.setMorningReminder(MainActivity.this);
@@ -313,14 +313,14 @@ public class MainActivity extends AppCompatActivity
             else {
                 NotificationScheduler.cancelMorningReminder(MainActivity.this);
             }
-            */
+
         }
         */
         /*
         if (id == R.id.sleep_switch) {
             sleep_switcher.setChecked(!sleep_switcher.isChecked());
             Snackbar.make(item.getActionView(), (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
-            /*
+
             // alarm is enable
             if(sleep_switcher.isChecked()) {
                 NotificationScheduler.setSleepReminder(MainActivity.this);
@@ -329,7 +329,7 @@ public class MainActivity extends AppCompatActivity
             else {
                 NotificationScheduler.cancelSleepReminder(MainActivity.this);
             }
-            */
+
         }
         */
         /*
