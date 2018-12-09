@@ -55,9 +55,9 @@ public class MainActivity extends AppCompatActivity
     // navigation drawer switch
     SwitchCompat voice_switcher;
     SwitchCompat weather_switcher;
-    SwitchCompat alarm_switcher;
+    //SwitchCompat alarm_switcher;
     SwitchCompat sleep_switcher;
-    SwitchCompat quote_switcher;
+    //SwitchCompat quote_switcher;
 
     private ImageButton Waifu;
     private TextView sentence;
@@ -143,8 +143,6 @@ public class MainActivity extends AppCompatActivity
         SimpleDateFormat sdf = new SimpleDateFormat("HH");
         String time = sdf.format(vu.getTime());
         int resultTime = Integer.parseInt(time);
-        //final MediaPlayer gt;
-        //int greet;
 
         Random rand = new Random();
         int n = rand.nextInt(2) + 1;
@@ -158,7 +156,7 @@ public class MainActivity extends AppCompatActivity
                     rId = R.raw.motivation2;
                     sentence.setText("Optimism is the faith that leads to achievement");
                     break;
-                }
+            }
 
         rv = MediaPlayer.create(MainActivity.this, rId);
 
@@ -301,6 +299,7 @@ public class MainActivity extends AppCompatActivity
             voice_switcher.setChecked(!voice_switcher.isChecked());
             Snackbar.make(item.getActionView(), (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
+        /*
         if (id == R.id.alarm_switch) {
             alarm_switcher.setChecked(!alarm_switcher.isChecked());
             Snackbar.make(item.getActionView(), (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -316,6 +315,8 @@ public class MainActivity extends AppCompatActivity
             }
             */
         }
+        */
+        /*
         if (id == R.id.sleep_switch) {
             sleep_switcher.setChecked(!sleep_switcher.isChecked());
             Snackbar.make(item.getActionView(), (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
@@ -330,10 +331,13 @@ public class MainActivity extends AppCompatActivity
             }
             */
         }
+        */
+        /*
         if (id == R.id.quote_switch) {
             quote_switcher.setChecked(!quote_switcher.isChecked());
             Snackbar.make(item.getActionView(), (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
+        */
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         //drawer.closeDrawer(GravityCompat.START);
@@ -400,17 +404,30 @@ public class MainActivity extends AppCompatActivity
                 int resultTime = Integer.parseInt(time);
                 //final MediaPlayer gt;
                 //int greet;
-                if(resultTime < 12 && resultTime > 6) {
-                    sentence.setText("Good Morning");
-                    rId = R.raw.good_morning;
-                }
-                else if(resultTime < 18 && resultTime > 12) {
-                    sentence.setText("Good Afternoon");
-                    rId = R.raw.good_afternoon;
-                }
-                else {
-                    sentence.setText("Good Evening");
-                    rId = R.raw.good_evening;
+                Random rand = new Random();
+                int n = rand.nextInt(2) + 1;
+
+                switch(n) {
+                    case 1:
+                        if (resultTime < 12 && resultTime > 6) {
+                            sentence.setText("Good Morning");
+                            rId = R.raw.good_morning;
+                        } else if (resultTime < 18 && resultTime > 12) {
+                            sentence.setText("Good Afternoon");
+                            rId = R.raw.good_afternoon;
+                        } else {
+                            sentence.setText("Good Evening");
+                            rId = R.raw.good_evening;
+                        }
+                        break;
+
+                    case 2:
+                        sentence.setText("How are u doing today");
+                        rId = R.raw.how_are_u_doing_today;
+
+                    case 3:
+                        sentence.setText("Start early, start often");
+                        rId = R.raw.quote;
                 }
 
                 rv = MediaPlayer.create(MainActivity.this, rId);
@@ -540,6 +557,7 @@ public class MainActivity extends AppCompatActivity
             }
         });
 
+        /*
         //Alarm
         MenuItem menuItem_alarm = menu.findItem(R.id.alarm_switch);
         View actionView_alarm = menuItem_alarm.getActionView();
@@ -552,7 +570,9 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(v, (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }
         });
+        */
 
+        /*
         //Sleep
         MenuItem menuItem_sleep = menu.findItem(R.id.sleep_switch);
         View actionView_sleep = menuItem_sleep.getActionView();
@@ -565,7 +585,9 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(v, (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }
         });
+        */
 
+        /*
         //Quote
         MenuItem menuItem_quote = menu.findItem(R.id.quote_switch);
         View actionView_quote = menuItem_quote.getActionView();
@@ -578,6 +600,7 @@ public class MainActivity extends AppCompatActivity
                 Snackbar.make(v, (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
             }
         });
+        */
     }
 //
 //    public void showPopup(View v) {

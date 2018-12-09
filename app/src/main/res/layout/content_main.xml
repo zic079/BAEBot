@@ -27,7 +27,7 @@
                 android:layout_marginRight="12dp"
                 android:layout_weight="0"
                 android:background="@drawable/text_bubble"
-                android:paddingLeft="8dp"
+                android:paddingLeft="16dp"
                 android:paddingTop="8dp"
                 android:text="What would you like assistance on?"
                 android:textAlignment="viewStart"
@@ -48,13 +48,12 @@
                     android:id="@+id/Waifu"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="8dp"
                     android:layout_weight="1"
                     android:background="@android:color/transparent"
-                    android:paddingLeft="40dp"
+                    android:paddingLeft="30dp"
                     android:scaleType="fitCenter"
                     android:transitionName="waifu"
-                    app:srcCompat="@drawable/maid1" />
+                    app:srcCompat="@drawable/maid2" />
 
 
                 <LinearLayout

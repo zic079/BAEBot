@@ -10,14 +10,15 @@
         android:id="@+id/linearLayout_task"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0"
-        android:focusable="true" android:focusableInTouchMode="true">
+        app:layout_constraintVertical_bias="0.0">
 
         <TextView
             android:id="@+id/sentence"
@@ -25,10 +26,10 @@
             android:layout_height="70dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="12dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="64dp"
             android:layout_weight="0"
             android:background="@drawable/text_bubble"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingLeft="16dp"
             android:paddingTop="8dp"
             android:text="Please input the details for your task or reschedule your tasks."
             android:textAlignment="viewStart"
@@ -40,9 +41,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/activity_horizontal_margin"
             android:layout_marginRight="@dimen/activity_horizontal_margin"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
             android:gravity="center"
-            android:orientation="horizontal"
-            android:focusable="true" android:focusableInTouchMode="true">
+            android:orientation="horizontal">
 
 
             <ImageButton
@@ -65,8 +67,9 @@
                 android:layout_marginEnd="10dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/rectangle_27"
-                android:orientation="vertical"
-                android:focusable="true" android:focusableInTouchMode="true">
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView9"
@@ -86,6 +89,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="0dp"
                     android:background="@drawable/rectangle_12"
+                    android:paddingLeft="4dp"
                     android:textColor="@color/common_google_signin_btn_text_dark_focused"
                     android:textSize="12sp"
                     tools:layout_editor_absoluteX="0dp"
@@ -96,8 +100,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="0"
-                    android:orientation="horizontal"
-                    android:focusable="true" android:focusableInTouchMode="true">
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -137,14 +142,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:focusable="true" android:focusableInTouchMode="true">
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="horizontal">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:focusable="true" android:focusableInTouchMode="true">
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/textView12"
@@ -158,7 +165,7 @@
 
                         <Button
                             android:id="@+id/btnTime"
-                            android:layout_width="78dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="35dp"
                             android:layout_marginLeft="15dp"
                             android:background="@drawable/rectangle_19"
@@ -173,7 +180,8 @@
                     <RadioGroup
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:paddingLeft="10dp">
 
                         <CheckBox
                             android:id="@+id/priority1"
@@ -181,8 +189,8 @@
                             android:layout_height="28dp"
                             android:layout_marginTop="25dp"
                             android:background="@color/colorPrimary"
-                            android:padding="10dp"
-                            android:buttonTint="@color/priorityRed"/>
+                            android:buttonTint="@color/priorityRed"
+                            android:padding="10dp" />
 
                         <CheckBox
                             android:id="@+id/priority2"
@@ -190,10 +198,10 @@
                             android:layout_height="28dp"
                             android:layout_marginTop="25dp"
                             android:background="@color/colorPrimary"
+                            android:buttonTint="@color/priorityYellow"
                             android:padding="10dp"
                             tools:layout_editor_absoluteX="0dp"
-                            tools:layout_editor_absoluteY="211dp"
-                            android:buttonTint="@color/priorityYellow"/>
+                            tools:layout_editor_absoluteY="211dp" />
 
                         <CheckBox
                             android:id="@+id/priority3"
@@ -201,8 +209,8 @@
                             android:layout_height="28dp"
                             android:layout_marginTop="25dp"
                             android:background="@color/colorPrimary"
-                            android:padding="10dp"
-                            android:buttonTint="@color/priorityGreen"/>
+                            android:buttonTint="@color/priorityGreen"
+                            android:padding="10dp" />
                     </RadioGroup>
 
                 </LinearLayout>
@@ -210,8 +218,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:focusable="true" android:focusableInTouchMode="true">
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/textView100"
@@ -234,6 +243,7 @@
                         android:background="@drawable/rectangle_14"
                         android:gravity="start"
                         android:inputType="textMultiLine"
+                        android:paddingLeft="4dp"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -265,8 +275,9 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/nav_header_vertical_spacing"
             android:layout_marginRight="@dimen/nav_header_vertical_spacing"
-            android:orientation="vertical"
-            android:focusable="true" android:focusableInTouchMode="true">
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
 
 
             <FrameLayout
@@ -278,7 +289,6 @@
                     android:id="@+id/search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_weight="0"
                     android:background="@color/colorPrimary"
                     android:transitionName="search">
@@ -299,7 +309,7 @@
                 <Button
                     android:id="@+id/search_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="28dp"
+                    android:layout_height="match_parent"
                     android:background="@color/colorPrimary" />
 
             </FrameLayout>
@@ -308,9 +318,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/colorPrimary"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:focusable="true" android:focusableInTouchMode="true">
+                android:orientation="vertical">
 
                 <Button
                     android:id="@+id/reschedule"
