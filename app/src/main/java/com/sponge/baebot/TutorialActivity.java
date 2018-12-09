@@ -3,9 +3,7 @@ package com.sponge.baebot;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import com.sponge.baebot.ViewPageAdapter;
 
-import java.io.File;
 
 public class TutorialActivity extends AppCompatActivity {
     ViewPager viewPager;
@@ -25,7 +23,7 @@ public class TutorialActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tutorial);
 
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager = findViewById(R.id.viewPager);
         adapter = new ViewPageAdapter(TutorialActivity.this, images);
         viewPager.setAdapter(adapter);
     }

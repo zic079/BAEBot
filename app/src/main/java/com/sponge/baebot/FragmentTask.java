@@ -1,25 +1,20 @@
 package com.sponge.baebot;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,24 +47,18 @@ public class FragmentTask extends Fragment {
         getTask(new FirebaseCallback() {
             @Override
             public void onCallback(ArrayList<com.sponge.baebot.Task> list) {
-                Log.e("On resume!!!!", list.toString());
                 tasks = list;
                 for (Task t : tasks) {
                     strTasks.add(t.getTitle());
                 }
-                Log.e("On resume!!!!", strTasks.toString());
-//                recyclerViewAdapter.notifyDataSetChanged();
-//                //recyclerView = (RecyclerView) v.findViewById(R.id.task_recyclerView);
-////                RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(strTasks, getContext());
-//                recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//                recyclerView.setAdapter(recyclerViewAdapter);
             }
         });
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         v=inflater.inflate(R.layout.task_fragment,container,false);
 
         return v;
@@ -84,7 +73,6 @@ public class FragmentTask extends Fragment {
             getTask(new FirebaseCallback() {
                 @Override
                 public void onCallback(ArrayList<com.sponge.baebot.Task> list) {
-                    Log.e("get task main", list.toString());
                     tasks = list;
                     for (Task t : tasks) {
 
@@ -92,8 +80,7 @@ public class FragmentTask extends Fragment {
                         Date date = new Date((time.getTime()+28800)*1000);
                         strTasks.add(t.getTitle() + "\n"+ date.toString());
                     }
-                    Log.e("here!!!!!", strTasks.toString());
-                    recyclerView = (RecyclerView) v.findViewById(R.id.task_recyclerView);
+                    recyclerView =  v.findViewById(R.id.task_recyclerView);
                     if (recyclerViewAdapter == null){
                         recyclerViewAdapter = new RecyclerViewAdapter(strTasks, getContext());
                     } else {
@@ -113,16 +100,10 @@ public class FragmentTask extends Fragment {
                 new ValueEventListener(){
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        Log.e("Tasks", "on frag!");
                         taskList.clear();
-                        int i = 0;
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             com.sponge.baebot.Task t = ds.getValue(com.sponge.baebot.Task.class);
                             taskList.add(t);
-                            i++;
-                            Log.e("frag-getAllTasks a",t.toString());
-                            Log.e("frag-getAllTasks b",Integer.toString(i));
-                            Log.e("frag-getAllTasks c",Integer.toString(taskList.size()));
                         }
                         tasks.clear();
                         firebaseCallback.onCallback(taskList);
@@ -139,32 +120,4 @@ public class FragmentTask extends Fragment {
         return strTasks.size();
     }
 
-//    private void getAllTasks(){
-//        mDatabase.child("task").child(userId).addListenerForSingleValueEvent(
-//                new ValueEventListener(){
-//                    @Override
-//                    public void onDataChange(DataSnapshot dataSnapshot) {
-//                        Log.e("FragmentTask", "!!!!!!!!!!!!!!!!!!!!!");
-//                        //taskList.clear();
-//                        int i = 0;
-//                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-////                            Log.d("Tasks", "" + ds.getKey());
-//                            Task t = ds.getValue(Task.class);
-////                            taskList.add(t);
-////                            Task tt = (Task)t;
-//                            i++;
-////                            Log.d("task-getAllTasks",tt.toString());
-//                            Log.e("task-getAllTasks",t.toString());
-//                            Log.e("task-getAllTasks",Integer.toString(i));
-//                            //taskList.add(t);
-//                            //Log.d("task-getAllTasks",Integer.toString(taskList.size()));
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
 }

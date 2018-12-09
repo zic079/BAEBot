@@ -3,14 +3,10 @@ package com.sponge.baebot;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.IgnoreExtraProperties;
-import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 
 @IgnoreExtraProperties
 public class User implements Parcelable {
@@ -56,21 +52,6 @@ public class User implements Parcelable {
     }
 
     public void writeUserToDB( String id, User user) {
-//        DatabaseReference userRef = database.getReference("users");
-//        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                User user = dataSnapshot.getValue(User.class);
-//                if (user == null){
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//                System.out.println("The read failed: " + databaseError.getCode());
-//            }
-//        })
             mDatabase.child("users").child(id).setValue(user);
     }
     @Override
