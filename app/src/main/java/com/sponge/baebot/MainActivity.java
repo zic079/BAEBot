@@ -226,6 +226,9 @@ public class MainActivity extends AppCompatActivity
     protected void onResume(){
         super.onResume();
 
+        // checking / request user permission for calendar provider
+        requestPermission();
+
         Log.d("MAIN", "onResume: ");
         eventFrag.updateEvent(readEvent());
     }
@@ -462,50 +465,6 @@ public class MainActivity extends AppCompatActivity
         cur = cr.query(CALENDAR_URI, EVENT_PROJECTION, selection, selectionArgs, CalendarContract.Events.DTSTART + " ASC");
 
         ArrayList<String> calendarData = new ArrayList<>();
-
-        /*
-        if(cur != null && cur.getCount() > 0) {
-            Log.d("readEvent", "events found");
-
-            cur.moveToFirst();
-            while (cur.moveToNext()) {
-                // information of event
-                String eventTitle;
-                String eventBeginMill;
-                String eventBeginDate;
-                String isAllDay;
-
-                Log.d("readEvent", "Event title: " + cur.getString(PROJECTION_TITLE_INDEX));
-                Log.d("readEvent", "Event ID: " + cur.getString(PROJECTION_ID_INDEX));
-
-                // Get the field values
-                eventTitle = cur.getString(PROJECTION_TITLE_INDEX);
-                // Note: event is in UTC time
-                eventBeginMill = cur.getString(PROJECTION_TIMESTART_INDEX);
-                // check event is all day event
-                isAllDay = cur.getString(PROJECTION_ALLDAY_INDEX);
-
-                // check event is in searching range, all day event has offset
-                if (Long.parseLong(eventBeginMill) >= startDate.getTimeInMillis() || Integer.parseInt(isAllDay) == 1) {
-                    // Building string of current cursor data
-                    // String currentData = String.format("Calendar ID: %s\nDisplay Name: %s\nAccount Name: %s\nOwner Name: %s", calID, displayName, accountName, ownerName);
-                    String currentData;
-
-                    if (Integer.parseInt(isAllDay) == 1) {
-                        currentData = String.format("%s          All Day", eventTitle);
-                    } else {
-                        eventBeginDate = milliToDate(eventBeginMill);
-                        currentData = String.format("%s          %s", eventTitle, eventBeginDate);
-                    }
-
-                    // Log.d("readEvent", currentData);
-                    calendarData.add(currentData);
-                }
-            }
-        }
-        //ArrayAdapter<String> stringArrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, android.R.id.text1, calendarData);
-        //listView.setAdapter(stringArrayAdapter);
-        */
 
         while (cur.moveToNext()) {
 
