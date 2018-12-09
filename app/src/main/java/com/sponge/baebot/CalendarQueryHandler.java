@@ -163,8 +163,11 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
 
         Uri CALENDAR_URI = Uri.parse("content://com.android.calendar/events");
 
+        // up to event end 00:59 on next day
+        long endAdjust = endDate.getTimeInMillis() + 3599999;
+
         // set selection and selectionArgs as null
-        String selection = "((dtstart >= " + startDate_offset.getTimeInMillis() + ") AND (dtend <= " + endDate.getTimeInMillis()+"))";
+        String selection = "((dtstart >= " + startDate_offset.getTimeInMillis() + ") AND (dtend <= " + (endAdjust)+"))";
         String[] selectionArgs = null;
 
         Log.d(TAG, "readEvent: startmill - " + startDate.getTimeInMillis());
