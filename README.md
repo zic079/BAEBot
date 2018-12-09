@@ -9,16 +9,20 @@ Pixel API 28
 Android Studio 3.2
 
 ### Installation:
-......
+Platform: Android
+Number for Required Devices: 1
+Minimum requirements for each device: The device must be a Google Pixel 3.
+
 
 ### Technolgy Used:
 1. Login / Account Control:
-..* Google account API
+..* FireBase authorization with Google Login
 2. Calendar
-..* Google Calendar
+..* Calendar Provider
 3. Database
-..* Google Calendar
-..* Google Firebase
+..* Firebase Realtime Database
+4. Weather
+..* Open Weather Map API
 ......
 
 ### Developed By:
@@ -28,15 +32,13 @@ Team SPONGE
 1. Tutorial Page
 2. User Login/Log-Out (Google account)
 3. Show Calendar
-4. Add Events
-5. Add/Edit/Delete Tasks
-6. Search For An Existing Task
-7. View The Details of Tasks
+4. Add/Edit/Delete Task
+5. Search For An Existing Task
+6. View The Details of Tasks
+7. Complete Existing Tasks
 8. Automatically Reschedule Unfinished Tasks
-9. Rewards for Completion of Tasks
-10. Reminder(Notification)
+9. Voice Setting
+10. Morning Push Notification
 11. Weather Information
 12. Sleep time Suggestion
 13. Daily Motivational Quotes 
-14. User Settings(Voice, sleep time, daily quote)
-......
