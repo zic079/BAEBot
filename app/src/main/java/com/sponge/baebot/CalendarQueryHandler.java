@@ -70,11 +70,8 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
 
     @Override
     public void onQueryComplete(int token, Object object, Cursor cursor) {
-        // Use the cursor to move through the returned records
-        //cursor.moveToFirst();
 
         // Get the field values
-        ///long calendarID = cursor.getLong(PROJECTION_ID_INDEX);
         Log.d(TAG, "onQueryComplete: complete query");
 
         ArrayList<String> calendarData = new ArrayList<>();
@@ -204,12 +201,6 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         }
 
         startInsert(CALENDAR, null, CalendarContract.Events.CONTENT_URI, values);
-
-        /*
-        // start the query
-        startQuery(CALENDAR, values, CalendarContract.Calendars.CONTENT_URI,
-                EVENT_PROJECTION, null, null, null);
-        */
     }
 
     public void deleteEvent() {
@@ -228,24 +219,9 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
 
     // helper function - convert millisecond to readable date
     private String milliToDate(String milliSec) {
-        String date;                    // date convert from millisecond
+        String date;                      // date convert from millisecond
         //int offset;                     // offset when event is all day event
-        SimpleDateFormat formatter;     //date formatter for millisecond conversion
-
-        /*
-        if(isAllDay == 1) {
-            // formatter without time, since it is all dat event
-            formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-            // set offset of the display Timezone (PST - UTC)
-            offset = TimeZone.getTimeZone("PST").getRawOffset() - TimeZone.getDefault().getRawOffset();
-        }
-
-        else {
-            formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            offset = 0;
-        }
-        */
+        SimpleDateFormat formatter;       //date formatter for millisecond conversion
 
         formatter = new SimpleDateFormat("HH:mm");
 

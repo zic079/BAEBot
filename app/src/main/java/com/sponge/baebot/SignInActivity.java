@@ -104,9 +104,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
         // store Google account Id with default settings
 
-        // [START_EXCLUDE silent] --- NOTE: testing loading time see if progress dialog is needed
-        // showProgressDialog();
-        // [END_EXCLUDE]
 
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         mAuth.signInWithCredential(credential)
@@ -127,9 +124,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
                         updateUI(null);
                     }
 
-                    // [START_EXCLUDE] --- NOTE: testing loading time see if progress dialog is needed
-                    // hideProgressDialog();
-                    // [END_EXCLUDE]
                 }
             });
     }
@@ -139,11 +133,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         //hideProgressDialog();
 
         if (user != null) {
-
-            /*
-            mStatusTextView.setText(getString(R.string.google_status_fmt, user.getEmail()));
-            mDetailTextView.setText(getString(R.string.firebase_status_fmt, user.getUid()));
-            */
 
             findViewById(R.id.signInButton).setVisibility(View.GONE);
             TextView successText = (TextView)findViewById(R.id.successLogin);
@@ -156,11 +145,6 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         }
 
         else {
-            /*
-            mStatusTextView.setText(R.string.signed_out);
-            mDetailTextView.setText(null);
-            */
-
             findViewById(R.id.signInButton).setVisibility(View.VISIBLE);
             findViewById(R.id.successLogin).setVisibility(View.GONE);
 
@@ -171,19 +155,4 @@ public class SignInActivity extends AppCompatActivity implements View.OnClickLis
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
     }
-/*
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-
-            // Signed in successfully, show authenticated UI.
-            updateUI(account);
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-            updateUI(null);
-        }
-    }
-*/
 }
