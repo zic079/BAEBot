@@ -144,18 +144,20 @@ public class MainActivity extends AppCompatActivity
         int resultTime = Integer.parseInt(time);
         //final MediaPlayer gt;
         //int greet;
-        if(resultTime < 12 && resultTime > 6) {
-            sentence.setText("Good morning");
-            rId = R.raw.good_morning;
-        }
-        else if(resultTime < 18 && resultTime > 12) {
-            sentence.setText("Good afternoon");
-            //rId = R.raw.good_afternoon;
-        }
-        else {
-            sentence.setText("Good evening");
-            rId = R.raw.good_evening;
-        }
+
+        Random rand = new Random();
+        int n = rand.nextInt(2) + 1;
+
+            switch (n) {
+                case 1:
+                    rId = R.raw.motivation;
+                    sentence.setText("Today is your day.");
+                    break;
+                case 2:
+                    rId = R.raw.motivation2;
+                    sentence.setText("Optimism is the faith that leads to achievement");
+                    break;
+                }
 
         rv = MediaPlayer.create(MainActivity.this, rId);
 
@@ -168,6 +170,7 @@ public class MainActivity extends AppCompatActivity
             public void onCompletion(MediaPlayer mp) {
                 rv.release();
                 rv = null;
+
             }
         });
 
@@ -336,28 +339,26 @@ public class MainActivity extends AppCompatActivity
                 if(voice_switcher.isChecked() && rv != null) {
                     rv.reset();
                 }
-                Random rand = new Random();
-                int n = rand.nextInt(4) + 1;
-                switch (n) {
-                    case 1:
-                        rId = R.raw.good_evening;
-                        sentence.setText("Good evening!");
-                        break;
 
-                    case 2:
-                        rId = R.raw.how_are_u_doing_today;
-                        sentence.setText("How are you doing today?");
-                        break;
-
-                    case 3:
-                        rId = R.raw.good_morning;
-                        sentence.setText("Good morning!");
-                        break;
-                    case 4:
-                        rId = R.raw.thank_you;
-                        sentence.setText("Thank you!");
-                        break;
+                Calendar vu = Calendar.getInstance();
+                SimpleDateFormat sdf = new SimpleDateFormat("HH");
+                String time = sdf.format(vu.getTime());
+                int resultTime = Integer.parseInt(time);
+                //final MediaPlayer gt;
+                //int greet;
+                if(resultTime < 12 && resultTime > 6) {
+                    sentence.setText("Good Morning");
+                    rId = R.raw.good_morning;
                 }
+                else if(resultTime < 18 && resultTime > 12) {
+                    sentence.setText("Good Afternoon");
+                    rId = R.raw.good_afternoon;
+                }
+                else {
+                    sentence.setText("Good Evening");
+                    rId = R.raw.good_evening;
+                }
+
                 rv = MediaPlayer.create(MainActivity.this, rId);
                 if(voice_switcher.isChecked()) {
                     rv.start();
