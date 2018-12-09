@@ -35,7 +35,7 @@ import java.util.GregorianCalendar;
 public class ShowCalendarActivity extends AppCompatActivity{
 
 
-    private static final String TAG = "CalendarActivity";
+    private static final String TAG = "ShowCalendarActivity";
     private CalendarView mCalendarView;
     private TextView myDate;
     private CalendarQueryHandler handler;
