@@ -26,10 +26,10 @@
             android:layout_height="70dp"
             android:layout_marginLeft="12dp"
             android:layout_marginTop="12dp"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="64dp"
             android:layout_weight="0"
             android:background="@drawable/text_bubble"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingLeft="16dp"
             android:paddingTop="8dp"
             android:text="Please input the details for your task or reschedule your tasks."
             android:textAlignment="viewStart"
@@ -89,6 +89,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="0dp"
                     android:background="@drawable/rectangle_12"
+                    android:paddingLeft="4dp"
                     android:textColor="@color/common_google_signin_btn_text_dark_focused"
                     android:textSize="12sp"
                     tools:layout_editor_absoluteX="0dp"
@@ -242,6 +243,7 @@
                         android:background="@drawable/rectangle_14"
                         android:gravity="start"
                         android:inputType="textMultiLine"
+                        android:paddingLeft="4dp"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -287,7 +289,6 @@
                     android:id="@+id/search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
                     android:layout_weight="0"
                     android:background="@color/colorPrimary"
                     android:transitionName="search">
@@ -308,7 +309,7 @@
                 <Button
                     android:id="@+id/search_bar"
                     android:layout_width="match_parent"
-                    android:layout_height="28dp"
+                    android:layout_height="match_parent"
                     android:background="@color/colorPrimary" />
 
             </FrameLayout>

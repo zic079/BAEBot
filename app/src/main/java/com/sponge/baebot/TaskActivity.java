@@ -127,6 +127,7 @@ public class TaskActivity extends AppCompatActivity
                                         format(new Date((editedTask.getTimestamp() + 28800) * 1000));
                                 selectDate.setText(strDateAndTime.substring(0, 10));
                                 selectTime.setText(dateAndTime.toString().substring(11, 20));
+
                                 int priority = editedTask.getPriority();
                                 if (priority == 2) {
                                     checkBoxA.setChecked(true);
@@ -430,7 +431,11 @@ public class TaskActivity extends AppCompatActivity
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                                selectTime.setText(hourOfDay + ":" + minute);
+                                String hourStr = Integer.toString(hourOfDay);
+                                String minuteStr = Integer.toString(minute);
+                                if(hourOfDay < 10) hourStr = "0" + hourStr;
+                                if(minute < 10) minuteStr = "0" + minuteStr;
+                                selectTime.setText(hourStr + ":" + minuteStr);
                             }
                         }, hour, minute, true);
                 timePickerDialog.show();
