@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity
     // navigation drawer switch
     SwitchCompat voice_switcher;
     SwitchCompat weather_switcher;
-    SwitchCompat alarm_switcher;
+    //SwitchCompat alarm_switcher;
     SwitchCompat sleep_switcher;
     //SwitchCompat quote_switcher;
 
@@ -268,18 +268,22 @@ public class MainActivity extends AppCompatActivity
             voice_switcher.setChecked(!voice_switcher.isChecked());
             Snackbar.make(item.getActionView(), (voice_switcher.isChecked()) ? "Voice On" : "Voice Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
+        /*
         if (id == R.id.alarm_switch) {
             alarm_switcher.setChecked(!alarm_switcher.isChecked());
             Snackbar.make(item.getActionView(), (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
+        */
         if (id == R.id.sleep_switch) {
             sleep_switcher.setChecked(!sleep_switcher.isChecked());
             Snackbar.make(item.getActionView(), (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
+        /*
         if (id == R.id.quote_switch) {
             quote_switcher.setChecked(!quote_switcher.isChecked());
             Snackbar.make(item.getActionView(), (quote_switcher.isChecked()) ? "Daily Quote On" : "Daily Quote Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
         }
+        */
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         //drawer.closeDrawer(GravityCompat.START);
