@@ -35,7 +35,7 @@ Team SPONGE
 8. Automatically Reschedule Unfinished Tasks
 9. Rewards for Completion of Tasks
 10. Reminder(Notification)
-11. Weather
+11. Weather Information
 12. Sleep time Suggestion
 13. Daily Motivational Quotes 
 14. User Settings(Voice, sleep time, daily quote)
