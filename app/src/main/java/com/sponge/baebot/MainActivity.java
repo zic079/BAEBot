@@ -218,13 +218,14 @@ public class MainActivity extends AppCompatActivity
 
         Log.d("MAIN ACTIVITY", "$$$onStart: ");
 
-        NotificationScheduler.setMorningReminder(MainActivity.this);
-        NotificationScheduler.setSleepReminder(MainActivity.this);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+
+        NotificationScheduler.setMorningReminder(MainActivity.this);
+        NotificationScheduler.setSleepReminder(MainActivity.this);
 
         // checking / request user permission for calendar provider
         requestPermission();
