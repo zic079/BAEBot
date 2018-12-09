@@ -9,9 +9,9 @@ Pixel API 28
 Android Studio 3.2
 
 ### Installation:
-Platform: Android
-Number for Required Devices: 1
-Minimum requirements for each device: The device must be a Google Pixel 3.
+Platform: Android   
+Number for Required Devices: 1   
+Minimum requirements for each device: The device must be a Google Pixel 3.   
 
 
 ### Technolgy Used:
