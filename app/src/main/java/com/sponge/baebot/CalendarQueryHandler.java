@@ -186,8 +186,9 @@ public class CalendarQueryHandler extends AsyncQueryHandler{
         //ContentResolver cr = context.getContentResolver();
 
         ContentValues values = new ContentValues();
-        // hardcode calendar ID
-        values.put(CalendarContract.Events.CALENDAR_ID, 3);
+
+
+        values.put(CalendarContract.Events.CALENDAR_ID, 1);
         values.put(CalendarContract.Events.DTSTART, startTime);
         values.put(CalendarContract.Events.DTEND, endTime);
         values.put(CalendarContract.Events.EVENT_TIMEZONE, "PST");
