@@ -89,6 +89,7 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginTop="0dp"
                     android:background="@drawable/rectangle_12"
+                    android:paddingLeft="4dp"
                     android:textColor="@color/common_google_signin_btn_text_dark_focused"
                     android:textSize="12sp"
                     tools:layout_editor_absoluteX="0dp"
@@ -242,6 +243,7 @@
                         android:background="@drawable/rectangle_14"
                         android:gravity="start"
                         android:inputType="textMultiLine"
+                        android:paddingLeft="4dp"
                         android:textSize="12sp" />
                 </LinearLayout>
 
