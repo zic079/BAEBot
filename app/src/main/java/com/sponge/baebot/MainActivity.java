@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SwitchCompat;
 import android.util.Log;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -205,12 +206,23 @@ public class MainActivity extends AppCompatActivity
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
 
+        /*
+        if(alarm_switcher.isChecked()) {
+            NotificationScheduler.setMorningReminder(MainActivity.this);
+        }
+        else{
+            NotificationScheduler.cancelMorningReminder(MainActivity.this);
+        }
 
-        Log.d("MAIN ACT", "### Event Count: " + eventFrag.getCount());
-        Log.d("MAIN ACT", "### Task Count: " + taskFrag.getCount());
-
-        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class);
-
+        if(sleep_switcher.isChecked()) {
+            NotificationScheduler.setSleepReminder(MainActivity.this);
+        }
+        else{
+            NotificationScheduler.cancelSleepReminder(MainActivity.this);
+        }
+        */
+        NotificationScheduler.setMorningReminder(MainActivity.this);
+        NotificationScheduler.setSleepReminder(MainActivity.this);
     }
 
     @Override
@@ -218,8 +230,25 @@ public class MainActivity extends AppCompatActivity
         super.onStart();
 
         Log.d("MAIN ACTIVITY", "$$$onStart: ");
-        NotificationScheduler.setReminder(MainActivity.this, AlarmReceiver.class);
 
+        /*
+        if(alarm_switcher.isChecked()) {
+            NotificationScheduler.setMorningReminder(MainActivity.this);
+        }
+        else{
+            NotificationScheduler.cancelMorningReminder(MainActivity.this);
+        }
+
+        if(sleep_switcher.isChecked()) {
+            NotificationScheduler.setSleepReminder(MainActivity.this);
+        }
+        else{
+            NotificationScheduler.cancelSleepReminder(MainActivity.this);
+        }
+        */
+
+        NotificationScheduler.setMorningReminder(MainActivity.this);
+        NotificationScheduler.setSleepReminder(MainActivity.this);
     }
     @Override
     public void onBackPressed() {
@@ -231,6 +260,8 @@ public class MainActivity extends AppCompatActivity
         }
 
     }
+
+
 
 
     /* This is the option menu on the top right, we are not using it for now
@@ -273,10 +304,31 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.alarm_switch) {
             alarm_switcher.setChecked(!alarm_switcher.isChecked());
             Snackbar.make(item.getActionView(), (alarm_switcher.isChecked()) ? "Alarm On" : "Alarm Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+
+            /*
+            // alarm is enable
+            if(alarm_switcher.isChecked()) {
+                NotificationScheduler.setMorningReminder(MainActivity.this);
+            }
+            // alarm is disable
+            else {
+                NotificationScheduler.cancelMorningReminder(MainActivity.this);
+            }
+            */
         }
         if (id == R.id.sleep_switch) {
             sleep_switcher.setChecked(!sleep_switcher.isChecked());
             Snackbar.make(item.getActionView(), (sleep_switcher.isChecked()) ? "Sleep Time On" : "Sleep Time Off", Snackbar.LENGTH_SHORT).setAction("Action", null).show();
+            /*
+            // alarm is enable
+            if(sleep_switcher.isChecked()) {
+                NotificationScheduler.setSleepReminder(MainActivity.this);
+            }
+            // alarm is disable
+            else {
+                NotificationScheduler.cancelSleepReminder(MainActivity.this);
+            }
+            */
         }
         if (id == R.id.quote_switch) {
             quote_switcher.setChecked(!quote_switcher.isChecked());
@@ -287,6 +339,8 @@ public class MainActivity extends AppCompatActivity
         //drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 
     @Override
     public void onClick(View v) {
