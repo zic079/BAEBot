@@ -126,9 +126,10 @@ public class TaskActivity extends AppCompatActivity
                                 description.setText(editedTask.getDescription());
 
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm");
-                                String dateAndTime = sdf.format(new Date((editedTask.getTimestamp()+28800)*1000));
-                                selectDate.setText(dateAndTime.substring(0,10));
-                                selectTime.setText(dateAndTime.substring(11));
+                                Date dateAndTime = new Date((editedTask.getTimestamp()+28800)*1000);
+                                String strDateAndTime = sdf.format(new Date((editedTask.getTimestamp()+28800)*1000));
+                                selectDate.setText(strDateAndTime.substring(0,10));
+                                selectTime.setText(dateAndTime.toString().substring(11,20));
                                 int priority = editedTask.getPriority();
                                 if (priority == 2){
                                     checkBoxA.setChecked(true);
