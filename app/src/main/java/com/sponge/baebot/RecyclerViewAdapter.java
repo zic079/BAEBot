@@ -78,12 +78,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         private TextView textView;
         private RelativeLayout parentLayout;
-        private ImageButton btnExpand;
 
 
         public ViewHolder(@NonNull final View itemView) {
             super(itemView);
-            btnExpand = itemView.findViewById(R.id.edit_link);
             textView = itemView.findViewById(R.id.event);
             parentLayout = itemView.findViewById(R.id.relativeLayout);
 //            btnExpand.setOnClickListener(new View.OnClickListener() {
